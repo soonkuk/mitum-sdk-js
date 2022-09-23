@@ -31,16 +31,12 @@ export class Key extends IBytes {
 
 export class KeyPair {
 	constructor(priv) {
-		const throwInvalidKeypair = (meta) => {
+		if (!priv instanceof Key) {
 			throw new InvalidInstanceError(
 				"invalid instance",
 				EC_INVALID_KEY_PAIR,
-				meta
+				priv.constructor.name
 			);
-		};
-
-		if (!priv instanceof Key) {
-			throwInvalidKeypair(priv.constructor.name);
 		}
 
 		this.privateKey = priv;
