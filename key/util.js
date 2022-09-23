@@ -2,9 +2,9 @@ import {
 	SUFFIX_ACCOUUNT_ADDRESS,
 	SUFFIX_KEY_PRIVATE,
 	SUFFIX_KEY_PUBLIC,
-} from "../alias/key";
+} from "../alias/key.js";
 
-import { EC_INVALID_KEY, InvalidFormatError } from "../error";
+import { EC_INVALID_KEY, InvalidFormatError } from "../error.js";
 
 export const isKeySuffix = (s) => {
 	switch (s) {
@@ -18,10 +18,9 @@ export const isKeySuffix = (s) => {
 };
 
 export const isKey = (s) => {
-	if (s.length < 47 || s.length > 48) {
+	if (s.length < 46 || s.length > 48) {
 		return false;
 	}
-
 	return isKeySuffix(s.substring(s.length - 3));
 };
 

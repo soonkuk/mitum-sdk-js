@@ -1,18 +1,20 @@
-import secp256k1 from "@noble/secp256k1";
-import eccrypto from "eccrypto-js";
+import * as secp256k1 from "@noble/secp256k1";
+import { getPublicCompressed } from "eccrypto-js";
 import bs58 from "bs58";
 
-import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key";
+import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 import {
 	EC_INVALID_KEY_PAIR,
 	EC_INVALID_PRIVATE_KEY,
 	InvalidFormatError,
 	InvalidInstanceError,
-} from "../error";
-import { isKey, parseKey } from "./util";
+} from "../error.js";
+import { isKey, parseKey } from "./util.js";
+import { IBytes } from "../base/interface.js";
 
 export class Key extends IBytes {
 	constructor(s) {
+		super();
 		const { key, suffix } = parseKey(s);
 		this.key = key;
 		this.suffix = suffix;
@@ -28,7 +30,7 @@ export class Key extends IBytes {
 }
 
 export class KeyPair {
-	constructor(priv, pub) {
+	constructor(priv) {
 		const throwInvalidKeypair = (meta) => {
 			throw new InvalidInstanceError(
 				"invalid instance",
@@ -41,46 +43,38 @@ export class KeyPair {
 			throwInvalidKeypair(priv.constructor.name);
 		}
 
-		if (!pub instanceof Key) {
-			throwInvalidKeypair(pub.constructor.name);
-		}
-
 		this.privateKey = priv;
-		this.publicKey = pub;
+		this.publicKey = new Key(this._generatePublicKey(priv));
 		this.signer = bs58.decode(priv.key);
 	}
 
 	_generatePublicKey(priv) {
-		return bs58.encode(eccrypto.getPublicCompressed(Buffer.from(priv)));
-	}
-
-	random() {
-		const priv = secp256k1.randomPrivateKey();
-		const spriv = bs58.encode(priv) + SUFFIX_KEY_PRIVATE;
-		const spub = this._generatePublicKey(priv) + SUFFIX_KEY_PUBLIC;
-
-		return new KeyPair(new Key(spriv), new Key(spub));
-	}
-
-	fromPrivateKey(priv) {
-		if (!isKey(priv)) {
-			throw new InvalidFormatError(
-				"invalid private key",
-				EC_INVALID_PRIVATE_KEY,
-				priv
-			);
-		}
-		return new KeyPair(
-			new Key(priv),
-			new Key(
-				this._generatePublicKey(
-					bs58.decode(priv.substring(0, priv.length - 3))
-				) + SUFFIX_KEY_PUBLIC
-			)
+		return (
+			bs58.encode(
+				getPublicCompressed(Buffer.from(bs58.decode(priv.key)))
+			) + SUFFIX_KEY_PUBLIC
 		);
 	}
 
-	fromSeed(seed) {}
-
 	sign(msg) {}
 }
+
+export const random = () => {
+	const spriv =
+		bs58.encode(secp256k1.utils.randomPrivateKey()) + SUFFIX_KEY_PRIVATE;
+
+	return new KeyPair(new Key(spriv));
+};
+
+export const fromPrivateKey = (priv) => {
+	if (!isKey(priv)) {
+		throw new InvalidFormatError(
+			"invalid private key",
+			EC_INVALID_PRIVATE_KEY,
+			priv
+		);
+	}
+	return new KeyPair(new Key(priv));
+};
+
+export const fromSeed = (seed) => {};
