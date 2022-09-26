@@ -2,6 +2,7 @@ import * as secp256k1 from "@noble/secp256k1";
 import { getPublicCompressed } from "eccrypto-js";
 import bs58 from "bs58";
 
+import { IBytes } from "../base/interface.js";
 import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 import {
 	EC_INVALID_KEY_PAIR,
@@ -9,8 +10,8 @@ import {
 	InvalidFormatError,
 	InvalidInstanceError,
 } from "../error.js";
+
 import { isKey, parseKey } from "./util.js";
-import { IBytes } from "../base/interface.js";
 
 export class Key extends IBytes {
 	constructor(s) {
@@ -56,10 +57,11 @@ export class KeyPair {
 }
 
 export const random = () => {
-	const spriv =
-		bs58.encode(secp256k1.utils.randomPrivateKey()) + SUFFIX_KEY_PRIVATE;
-
-	return new KeyPair(new Key(spriv));
+	return new KeyPair(
+		new Key(
+			bs58.encode(secp256k1.utils.randomPrivateKey()) + SUFFIX_KEY_PRIVATE
+		)
+	);
 };
 
 export const fromPrivateKey = (priv) => {

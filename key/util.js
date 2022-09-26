@@ -3,18 +3,14 @@ import {
 	SUFFIX_KEY_PRIVATE,
 	SUFFIX_KEY_PUBLIC,
 } from "../alias/key.js";
-
 import { EC_INVALID_KEY, InvalidFormatError } from "../error.js";
 
 export const isKeySuffix = (s) => {
-	switch (s) {
-		case SUFFIX_KEY_PRIVATE:
-		case SUFFIX_KEY_PUBLIC:
-		case SUFFIX_ACCOUUNT_ADDRESS:
-			return true;
-	}
+	return s === SUFFIX_KEY_PRIVATE || s === SUFFIX_KEY_PUBLIC;
+};
 
-	return false;
+export const isAddressSuffix = (s) => {
+	return s === SUFFIX_ACCOUUNT_ADDRESS;
 };
 
 export const isKey = (s) => {
