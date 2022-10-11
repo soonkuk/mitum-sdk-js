@@ -1,6 +1,6 @@
 import { random, fromPrivateKey, fromSeed } from "./key/keypair.js";
 
-export const kp = {
+export const KPGen = {
 	random,
 	fromPrivateKey,
 	fromSeed,

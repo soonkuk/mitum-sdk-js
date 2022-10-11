@@ -41,14 +41,14 @@ export class KeyPair {
 		}
 
 		this.privateKey = priv;
-		this.publicKey = new Key(this._generatePublicKey(priv));
+		this.publicKey = new Key(this._generatePublicKey());
 		this.signer = bs58.decode(priv.key);
 	}
 
-	_generatePublicKey(priv) {
+	_generatePublicKey() {
 		return (
 			bs58.encode(
-				getPublicCompressed(Buffer.from(bs58.decode(priv.key)))
+				getPublicCompressed(Buffer.from(bs58.decode(this.privateKey.key)))
 			) + SUFFIX_KEY_PUBLIC
 		);
 	}
