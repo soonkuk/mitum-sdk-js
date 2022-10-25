@@ -24,8 +24,10 @@
   "dependencies": {
     "@noble/secp256k1": "^1.7.0",
     "bs58": "^5.0.0",
+    "crypto": "^1.0.1",
     "eccrypto-js": "^5.4.0",
-    "jest": "^29.0.3"
+    "jest": "^29.0.3",
+    "js-sha3": "^0.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.1",

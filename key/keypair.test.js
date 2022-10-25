@@ -1,9 +1,8 @@
-import { random, fromPrivateKey } from "./keypair.js";
+import { random, fromPrivateKey, fromSeed } from "./keypair";
 
 describe("test keypair creation", () => {
 	it("random", () => {
 		const kp1 = random();
-
 		const kp2 = fromPrivateKey(kp1.privateKey.str);
 
 		expect(kp2.privateKey.str).toBe(kp1.privateKey.str);
@@ -56,6 +55,43 @@ describe("test keypair creation", () => {
 
 		testKps.forEach((tc) => {
 			const tkp = fromPrivateKey(tc.priv);
+
+			expect(tkp.privateKey.str).toBe(tc.priv);
+			expect(tkp.publicKey.str).toBe(tc.pub);
+		});
+	});
+
+	it("from seed", () => {
+		const testKps = [
+			{
+				seed: "mitummitummitummitummitummitummitummitum",
+				priv: "7kWSghrTyZ2tAX7ETPXFNiXDeLpAn8UiqGQH9KXn6RXXmpr",
+				pub: "24TbbrNYVngpPEdq6Zc5rD1PQSTGQpqwabB9nVmmonXjqmpu",
+			},
+			{
+				priv: "5QH1MUpwrsHpaLLd4yXJgpqEQJbFjyYPBgiWEjferGRXmpr",
+				pub: "28gnHT5DJtFygjCK3wbsdPfJtE45U9tXpzWyap5kXSHc3mpu",
+				seed: "abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde",
+			},
+			{
+				priv: "7cdDwK81MSYRPKnTPFTT7ssh6u8gremnjEuVkLR3ZQV4mpr",
+				pub: "x1YEvgC6Je8Y9JJBnWNVP2Nfag7cULQQTA4N3247ww1Dmpu",
+				seed: "aslkfjwelkfjlaskjflawkefjlwekjflwkefjlwkefj",
+			},
+			{
+				priv: "6QXXmgv2KiNiQ7Xag8pVDajxSaqSR12ND24ep5byru41mpr",
+				pub: "v99vuWLMn1rBcTi8GQna2wU61CpZh4GWzub3PGwqV7vfmpu",
+				seed: "lwkejfl#@439080sdfklj1o48u3.33323li4j2l3",
+			},
+			{
+				priv: "8y7AGQoSv2EtVoq2Gwt97scq3frjEf4baaXgMD6XAwu8mpr",
+				pub: "j3XadE7SLSDS5B7hgTrXmAvZBGWE38WDNyLQKWxn6N96mpu",
+				seed: "Hello, world! ㅍㅅㅍ~ Hello, world! ㅍㅅㅍ~",
+			},
+		];
+
+		testKps.forEach((tc) => {
+			const tkp = fromSeed(tc.seed);
 
 			expect(tkp.privateKey.str).toBe(tc.priv);
 			expect(tkp.publicKey.str).toBe(tc.pub);
