@@ -58,6 +58,7 @@ You can generate key pairs in the following ways:
 
 * Generate a random KeyPair
 * Generate a KeyPair from a private key
+* Generate a KeyPair from a seed
 
 * private key: [key]mpr
 * public key: [key]mpu 
