@@ -1,15 +1,15 @@
 import { random, fromPrivateKey, fromSeed } from "./keypair";
 
-describe("test keypair creation", () => {
-	it("random", () => {
+describe("test: keypair generation", () => {
+	it("case: random", () => {
 		const kp1 = random();
-		const kp2 = fromPrivateKey(kp1.privateKey.str);
+		const kp2 = fromPrivateKey(kp1.privateKey.toString());
 
-		expect(kp2.privateKey.str).toBe(kp1.privateKey.str);
-		expect(kp2.publicKey.str).toBe(kp1.publicKey.str);
+		expect(kp2.privateKey.toString()).toBe(kp1.privateKey.toString());
+		expect(kp2.publicKey.toString()).toBe(kp1.publicKey.toString());
 	});
 
-	it("from private key", () => {
+	it("case: from private key", () => {
 		const testKps = [
 			{
 				priv: "FErPVnjF9RZBB1KN1gBeeQQqohprAfFFcDBtUSSLPLn3mpr",
@@ -56,12 +56,12 @@ describe("test keypair creation", () => {
 		testKps.forEach((tc) => {
 			const tkp = fromPrivateKey(tc.priv);
 
-			expect(tkp.privateKey.str).toBe(tc.priv);
-			expect(tkp.publicKey.str).toBe(tc.pub);
+			expect(tkp.privateKey.toString()).toBe(tc.priv);
+			expect(tkp.publicKey.toString()).toBe(tc.pub);
 		});
 	});
 
-	it("from seed", () => {
+	it("case: from seed", () => {
 		const testKps = [
 			{
 				seed: "mitummitummitummitummitummitummitummitum",
@@ -93,8 +93,8 @@ describe("test keypair creation", () => {
 		testKps.forEach((tc) => {
 			const tkp = fromSeed(tc.seed);
 
-			expect(tkp.privateKey.str).toBe(tc.priv);
-			expect(tkp.publicKey.str).toBe(tc.pub);
+			expect(tkp.privateKey.toString()).toBe(tc.priv);
+			expect(tkp.publicKey.toString()).toBe(tc.pub);
 		});
 	});
 });

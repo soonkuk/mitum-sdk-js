@@ -60,10 +60,22 @@ export const isKey = (s) => {
 	return isKeySuffix(s.substring(s.length - 3));
 };
 
+export const isAddress = (s) => {
+	if (typeof s !== "string") {
+		return false;
+	}
+
+	if (s.length < 46 || s.length > 47) {
+		return false;
+	}
+
+	return isAddressSuffix(s.substring(s.length - 3));
+};
+
 export const parseKey = (s) => {
 	if (!isKey(s)) {
 		throw new InvalidFormatError(
-			"invalid key",
+			"invalid type, length or key suffix",
 			EC_INVALID_KEY,
 			jsonStringify({
 				type: typeof s,
@@ -83,15 +95,4 @@ export const parseKey = (s) => {
 		key,
 		suffix,
 	};
-};
-
-export const bufToBig = (buf) => {
-	const big = [];
-
-	Uint8Array.from(buf).forEach((b) => {
-		b = b.toString(16);
-		b.length % 2 ? big.push("0" + b) : big.push(b);
-	});
-
-	return BigInt("0x" + big.join(""));
 };

@@ -2,7 +2,6 @@ import bs58 from "bs58";
 import * as secp256k1 from "@noble/secp256k1";
 import { getPublicCompressed } from "eccrypto-js";
 
-import { IBytes } from "../base/interface.js";
 import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 import {
 	EC_INVALID_KEY_PAIR,
@@ -14,38 +13,18 @@ import {
 	InvalidTypeError,
 } from "../error.js";
 
-import {
-	bufToBig,
-	isKey,
-	isKeySuffix,
-	isPrivateKey,
-	parseKey,
-} from "./util.js";
+import { Key } from "./key.js";
+import { isPrivateKey } from "./util.js";
+
+import Big from "../utils/big.js";
 import { sum256 } from "../utils/hash.js";
 import { jsonStringify } from "../utils/json.js";
-
-export class Key extends IBytes {
-	constructor(s) {
-		super();
-		const { key, suffix } = parseKey(s);
-		this.key = key;
-		this.suffix = suffix;
-	}
-
-	get str() {
-		return this.key + this.suffix;
-	}
-
-	bytes() {
-		return Buffer.from(this.str);
-	}
-}
 
 export class KeyPair {
 	constructor(priv) {
 		if (!priv instanceof Key) {
 			throw new InvalidInstanceError(
-				"invalid instance",
+				"not Key instance",
 				EC_INVALID_KEY_PAIR,
 				priv.constructor.name
 			);
@@ -80,7 +59,7 @@ export const random = () => {
 export const fromPrivateKey = (priv) => {
 	if (typeof priv !== "string") {
 		throw new InvalidTypeError(
-			"invalid string private key",
+			"not string",
 			EC_INVALID_PRIVATE_KEY,
 			typeof priv
 		);
@@ -88,7 +67,7 @@ export const fromPrivateKey = (priv) => {
 
 	if (!isPrivateKey(priv)) {
 		throw new InvalidFormatError(
-			"invalid private key",
+			"invalid length or key suffix",
 			EC_INVALID_PRIVATE_KEY,
 			jsonStringify({
 				length: priv.length,
@@ -106,7 +85,7 @@ const MinSeedLength = 36;
 export const fromSeed = (seed) => {
 	if (typeof seed != "string") {
 		throw new InvalidTypeError(
-			"invalid string seed",
+			"not string",
 			EC_INVALID_SEED,
 			typeof seed
 		);
@@ -114,7 +93,7 @@ export const fromSeed = (seed) => {
 
 	if (seed.length < MinSeedLength) {
 		throw new InvalidLengthError(
-			"invalid seed length",
+			"seed length out of range",
 			EC_INVALID_SEED,
 			seed.length
 		);
@@ -124,7 +103,7 @@ export const fromSeed = (seed) => {
 	seed = seed.subarray(0, seed.length - (seed.length < 44 ? 3 : 4));
 
 	const N = secp256k1.CURVE.n - BigInt(1);
-	let k = bufToBig(seed);
+	let k = new Big(seed).big;
 	k %= N;
 	k += BigInt(1);
 
