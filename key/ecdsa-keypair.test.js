@@ -1,6 +1,8 @@
+import bs58 from "bs58";
+
 import { ecdsa } from "./ecdsa-keypair";
 
-describe("test: keypair generation", () => {
+describe("test: ecdsa; keypair generation", () => {
 	it("case: random", () => {
 		const kp1 = ecdsa.random();
 		const kp2 = ecdsa.fromPrivateKey(kp1.privateKey.toString());
@@ -95,6 +97,65 @@ describe("test: keypair generation", () => {
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
+		});
+	});
+});
+
+describe("test: ecdsa; sign", () => {
+	it("case: sign string msg", () => {
+		const tcs = [
+			{
+				msg: "mitum",
+				priv: "KztBmiKZXLRS83kTaJZJEh4M5hutKSYiHXtwXEikXKv7zZMZhQJ9mpr",
+				sig: "AN1rKvtoy4xsxMkgmM78L9F4pyWVJSPFgfPJJ2b5Sirv6XYgJEvu1hgm1hiaDHD762q1uEPwKQN5zqisEcgGn5nAn4NoKHZ5o",
+			},
+			{
+				msg: "this is a msg to test",
+				priv: "L11moS6v3gcM65NQxuTbzcov6kho5DZ7bVQ7nfoF1ZMUYprJFeiHmpr",
+				sig: "381yXYmdf6r5MaR9WbvPdjv26HAMaEaKLDv645FS4RKL7jUcZZU94pNv1CLexzMupTg2jWdhiqWfQRx9EQFWC121mWGi57mj",
+			},
+			{
+				msg: "te스타 forever~",
+				priv: "KzWrhaorLd2fj8WhBRgMMBo7igqdbCkXZg3SPBXCsT7QgDDy2QDympr",
+				sig: "381yXZSmyJhDLiuDg6VR566p5nm1CYek9i7y2JYbLxVXfiGhG6mmZpo77zwCEgCUT6TL7qLhHawsLKdMG5hesSoXgXXiwx4z",
+			},
+			{
+				msg: "drill",
+				priv: "Kxyaq11GP8Mufpa9YsMyhuXdjb1RkVu4vWbrb476smt79nKV4tHkmpr",
+				sig: "381yXZ8g971mh6pqHYSrD1Lwh9zwFr4M6nZWC18dHgeK31cbHP9sXLATVcMuL1EbDjTa75iSEBgnkj9VX3ieqVJGYAzrx4dM",
+			},
+			{
+				msg: "kim rabbit",
+				priv: "KxsUHF31KMX6uChLboqKndx57Jm8fJhXAU5wvUc7VWqwzTQDDw6jmpr",
+				sig: "381yXZGHqooWuvAWb3MwByTP1QJDN5y6tdBWNBEVWmUFJ9zj7dFJnrAEjED3qUK1iqaBZPZE2wtZgQj4Gqntg1FLfYH4zU9g",
+			},
+			{
+				msg: "mabeopsonyeon",
+				priv: "KzUqZezjAZXhBjjNART81PkzgQTB9rD86CS6cNaLx8wWT8vNN8E2mpr",
+				sig: "AN1rKvt8BkTHTHqbTKYh4KukzTRudAftrtzyYKFn1Qdsw4zwJudBBPNXW16wXeB9iT2P3DFRzHennsixsg7cQSAaq45HUPjpJ",
+			},
+			{
+				msg: "baehamzzi",
+				priv: "KzD68WytWYJ9K48zC1xMgxQzFjx5gQambwVYYQPZkjZtq4diAUgLmpr",
+				sig: "381yXZ3t71ixJAVUGYx8ecF3p3pEjYorshMDRw4q4hBgdEVy4hipS2tcs8Gk5TWVGJA7cYr6ifYnVm5cXZ6y9AKewyFRTVQR",
+			},
+			{
+				msg: "dynamite",
+				priv: "KyQrzciU81Li1MP5YZNUf4K834YDV5RdgcRV5SGL1MY38sgrgxTXmpr",
+				sig: "381yXYncqRDqcocKpvAXzpYsXzxSDNizz2NWzRGbxqRYjNP5GwUPvDXwsP3qaWygG8wfeen4KThhUwjHQz6QTTWHxRfNFCcD",
+			},
+			{
+				msg: "txt",
+				priv: "Ky7CzvAyNWE3AUSuo8ym8gkKvivQW11r6o8gbh37r7DPNEnY49dnmpr",
+				sig: "381yXZSLNoCmyyMqPypBHi79zELPGimaevV8q9qeEaer8yLwpArU6pvshC8U3UKqcxHDzMpTQj4nkDfKydZrWTYVadFAmJ7E",
+			},
+		];
+
+		tcs.forEach((tc) => {
+			const kp = ecdsa.fromPrivateKey(tc.priv);
+			const sig = bs58.encode(kp.sign(tc.msg));
+
+			expect(sig === tc.sig);
 		});
 	});
 });

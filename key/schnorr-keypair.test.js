@@ -1,6 +1,6 @@
 import { schnorr } from "./schnorr-keypair";
 
-describe("test: keypair generation", () => {
+describe("test: schnorr; keypair generation", () => {
 	it("case: random", () => {
 		const kp1 = schnorr.random();
 		const kp2 = schnorr.fromPrivateKey(kp1.privateKey.toString());
