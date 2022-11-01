@@ -1,23 +1,33 @@
 import bs58 from "bs58";
 
-import { hint } from "../base/hint.js";
-import { HINT_KEY, HINT_KEYS, SUFFIX_ACCOUUNT_ADDRESS } from "../alias/key.js";
+import {
+	MAX_KEYS_IN_ADDRESS,
+	MAX_THRESHOLD,
+	MAX_WEIGHT,
+	MIN_THRESHOLD,
+	MIN_WEIGHT,
+} from "../mitum.config.js";
+
+import { HINT_KEY, HINT_KEYS, SUFFIX_ACCOUNT_ADDRESS } from "../alias/key.js";
+import { Hint } from "../base/hint.js";
 import { IBytes, IBytesDict } from "../base/interface.js";
 import {
+	assert,
 	EC_INVALID_KEYS,
 	EC_INVALID_THRESHOLD,
 	EC_INVALID_WEIGHT,
 	InvalidInstanceError,
 	InvalidRangeError,
 	InvalidTypeError,
-} from "../error.js";
-
-import { Address } from "./address.js";
-import { parseKey } from "./util.js";
+} from "../base/error.js";
 
 import Big from "../utils/big.js";
 import { sum256 } from "../utils/hash.js";
 import { jsonStringify } from "../utils/json.js";
+import { name } from "../utils/string.js";
+
+import { Address } from "./address.js";
+import { parseKey } from "./util.js";
 
 export class Key extends IBytes {
 	constructor(s) {
@@ -39,21 +49,19 @@ export class Key extends IBytes {
 export class PublicKey extends Key {
 	constructor(s, weight) {
 		super(s);
-		if (typeof weight !== "number") {
-			throw new InvalidTypeError(
-				"not number",
-				EC_INVALID_WEIGHT,
-				typeof weight
-			);
-		}
-		if (weight < 1 || weight > 100) {
-			throw new InvalidRangeError(
+		assert(
+			typeof weight === "number",
+			new InvalidTypeError("not number", EC_INVALID_WEIGHT, typeof weight)
+		);
+		assert(
+			weight >= MIN_WEIGHT && weight <= MAX_WEIGHT,
+			new InvalidRangeError(
 				"weight out of range",
 				EC_INVALID_WEIGHT,
 				weight
-			);
-		}
-		this.hint = hint(HINT_KEY);
+			)
+		);
+		this.hint = new Hint(HINT_KEY);
 		this.weight = new Big(weight);
 	}
 
@@ -63,7 +71,7 @@ export class PublicKey extends Key {
 
 	dict() {
 		return {
-			hint: this.hint,
+			_hint: this.hint.toString(),
 			weight: this.weight.v,
 			key: this.toString(),
 		};
@@ -73,68 +81,74 @@ export class PublicKey extends Key {
 export class Keys extends IBytesDict {
 	constructor(keys, threshold) {
 		super();
-		if (typeof threshold !== "number") {
-			throw new InvalidTypeError(
+		assert(
+			typeof threshold === "number",
+			new InvalidTypeError(
 				"not number",
 				EC_INVALID_THRESHOLD,
 				typeof threshold
-			);
-		}
-		if (threshold < 1 || threshold > 100) {
-			throw new InvalidRangeError(
+			)
+		);
+		assert(
+			threshold >= MIN_THRESHOLD && threshold <= MAX_THRESHOLD,
+			new InvalidRangeError(
 				"threshold out of range",
 				EC_INVALID_THRESHOLD,
 				threshold
-			);
-		}
-		if (!Array.isArray(keys)) {
-			throw new InvalidInstanceError(
-				"not Array instance",
+			)
+		);
+		assert(
+			Array.isArray(keys),
+			new InvalidTypeError(
+				"not Array object",
 				EC_INVALID_KEYS,
 				jsonStringify({
 					type: typeof keys,
-					instance:
-						typeof keys === "object" ? keys.constructor.name : null,
+					name: name(keys),
 				})
-			);
-		}
+			)
+		);
+		assert(
+			keys.length > 0 && keys.length <= MAX_KEYS_IN_ADDRESS,
+			new InvalidRangeError(
+				"array size out of range",
+				EC_INVALID_KEYS,
+				keys.length
+			)
+		);
 
 		keys.forEach((key, idx) => {
-			if (!key instanceof PublicKey) {
-				throw new InvalidInstanceError(
+			assert(
+				key instanceof PublicKey,
+				new InvalidInstanceError(
 					"not PublicKey instance",
 					EC_INVALID_KEYS,
-					`idx ${idx} - ${
-						typeof key === "object"
-							? key.constructor.name
-							: key
-							? typeof key
-							: null
-					}`
-				);
-			}
+					`idx ${idx} - ${name(key)}`
+				)
+			);
 		});
 
 		const sum = keys.reduce((s, k) => s + k.weight.big, BigInt(0));
-		if (sum < threshold) {
-			throw new InvalidRangeError(
+		assert(
+			sum >= threshold,
+			new InvalidRangeError(
 				"threshold < sum(weights)",
 				EC_INVALID_THRESHOLD,
 				jsonStringify({
 					threshold,
-					sum,
+					sum: sum.toString(),
 				})
-			);
-		}
+			)
+		);
 
-		this.hint = hint(HINT_KEYS);
+		this.hint = new Hint(HINT_KEYS);
 		this.keys = keys;
 		this.threshold = new Big(threshold);
 		this.hash = sum256(this.bytes());
 	}
 
 	get address() {
-		return new Address(bs58.encode(this.hash) + SUFFIX_ACCOUUNT_ADDRESS);
+		return new Address(bs58.encode(this.hash) + SUFFIX_ACCOUNT_ADDRESS);
 	}
 
 	bytes() {
@@ -155,7 +169,7 @@ export class Keys extends IBytesDict {
 
 	dict() {
 		return {
-			hint: this.hint,
+			_hint: this.hint.toString(),
 			hash: bs58.encode(this.hash),
 			keys: this.keys.map((k) => k.dict()),
 			threshold: this.threshold.v,

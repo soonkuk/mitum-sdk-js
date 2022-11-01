@@ -1,10 +1,10 @@
-import { randomN } from "./address";
+import { schnorrRandomN } from "./address";
 import { Keys, PublicKey } from "./key";
 
 describe("test: keys and keypairs generation", () => {
 	it("case: random n", () => {
 		for (let n = 1; n <= 10; n++) {
-			const { keys, keypairs } = randomN(n);
+			const { keys, keypairs } = schnorrRandomN(n);
 
 			const pks = keys.keys.map(
 				(k) => new PublicKey(k.toString(), k.weight.v)

@@ -1,0 +1,1 @@
+export const HINT_FACT_SIGN = "base-fact-sign";

@@ -1,13 +1,29 @@
-import { random, fromPrivateKey, fromSeed } from "./key/keypair.js";
+import { ecdsa } from "./key/ecdsa-keypair.js";
+import { schnorr } from "./key/schnorr-keypair.js";
 import { PublicKey, Keys } from "./key/key.js";
-import { randomN } from "./key/address.js";
+import { schnorrRandomN, ecdsaRandomN } from "./key/address.js";
+import { Amount } from "./operations/currency/amount.js";
+import {
+	CreateAccountsItem,
+	CreateAccountsFact,
+	CreateAccountsOperation,
+} from "./operations/currency/create-accounts.js";
 
-export const KPGen = {
-	random,
-	randomN,
-	fromPrivateKey,
-	fromSeed,
+const KPGen = {
+	schnorr: {
+		...schnorr,
+		randomN: schnorrRandomN,
+	},
+	...ecdsa,
+	randomN: ecdsaRandomN,
 };
 
-export const MPubKey = PublicKey;
-export const MKeys = Keys;
+const PubKey = PublicKey;
+
+const Currency = {
+	CreateAccountsItem,
+	CreateAccountsFact,
+	CreateAccountsOperation,
+};
+
+export { KPGen, PubKey, Keys, Amount, Currency };

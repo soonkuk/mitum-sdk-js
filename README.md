@@ -33,13 +33,13 @@ $ npm test
 > jest
 
  PASS  key/key.test.js
- PASS  key/keypair.test.js
+ PASS  key/schnorr-keypair.test.js
  PASS  key/address.test.js
 
 Test Suites: 3 passed, 3 total
 Tests:       6 passed, 6 total
 Snapshots:   0 total
-Time:        2.72 s
+Time:        2.685 s, estimated 3 s
 Ran all test suites.
 ```
 
@@ -55,6 +55,11 @@ Ran all test suites.
 
 ## Generate a KeyPair
 
+__mitumjs__ supports two signature methods:
+
+- General ECDSA: v1
+- Schnorr DSA: v2
+
 You can generate key pairs in the following ways:
 
 * Generate a random KeyPair
@@ -69,11 +74,21 @@ The following functions are prepared for key pair generation.
 ```js
 import { KPGen } from "mitumjs";
 
-var rkp = KPGen.random();
-var nkp = KPGen.randomN(/* the number of keypairs */);
-var pkp = KPGen.fromPrivateKey(/* string private key */);
-var skp = KPGen.fromSeed(/* string seed */);
+// ecdsa key pair
+var ekp1 = KPGen.random();
+var ekp2 = KPGen.randomN(/* the number of keypairs */);
+var ekp3 = KPGen.fromPrivateKey(/* string private key */);
+var ekp4 = KPGen.fromSeed(/* string seed */);
+
+// schnorr key pair
+const { schnorr } = KPGen;
+var skp1 = schnorr.random();
+var skp2 = schnorr.randomN(/* the number of keypairs */);
+var skp3 = schnorr.fromPrivateKey(/* string private key */);
+var skp4 = schnorr.fromSeed(/* string seed */);
 ```
+
+_If you need a key pair for schnorr signatures, use `KPGen.schnorr.(function)` instead of `KPGen.(function)`._
 
 ### Random KeyPair
 
@@ -87,8 +102,8 @@ const keypair = KPGen.random(); // KeyPair instance
 const priv = keypair.privateKey; // Key instance
 const pub = keypair.publicKey; // Key instance
 
-const priveStr = priv.toString(); // 4HgoXsnnUDYxdeRmVizAtJQquRiKfVFM7C1CxmfQZgfVmpr
-const pubStr = pub.toString(); // wjJfptqCqXhBMJmqyDca2pwUb84aZq9LtEU37kGhJensmpu
+const priveStr = priv.toString(); // KwSKzHfNFKELkWs5gqbif1BqQhQjGhruKubqqU7AeKu5JPR36vKrmpr
+const pubStr = pub.toString(); // 22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu
 ```
 
 #### Get N random KeyPairs with an address
@@ -98,7 +113,7 @@ import { KPGen } from "mitumjs";
 
 const n = 5
 
-// keys: MKeys[Keys] instance; with 5 MKey(pub, weight) and threshold
+// keys: Keys[Keys] instance; with 5 MKey(pub, weight) and threshold
 // keypairs: Array; 5 KeyPair(priv, pub)
 const { keys, keypairs } = KPGen.randomN(5);
 
@@ -110,13 +125,13 @@ const address = keys.address // Address instance
 ```js
 import { KPGen } from "mitumjs";
 
-const keypair = KPGen.fromPrivateKey("4HgoXsnnUDYxdeRmVizAtJQquRiKfVFM7C1CxmfQZgfVmpr"); // KeyPair instance
+const keypair = KPGen.fromPrivateKey("KwkuLfcHsxY3yGLT2wYWNgbuGD3Q1j3c7DJvaRLfmT8ujmayJUaJmpr"); // KeyPair instance
 
 const priv = keypair.privateKey; // Key instance
 const pub = keypair.publicKey; // Key instance
 
-const priveStr = priv.toString(); // 4HgoXsnnUDYxdeRmVizAtJQquRiKfVFM7C1CxmfQZgfVmpr
-const pubStr = pub.toString(); // wjJfptqCqXhBMJmqyDca2pwUb84aZq9LtEU37kGhJensmpu
+const priveStr = priv.toString(); // KwkuLfcHsxY3yGLT2wYWNgbuGD3Q1j3c7DJvaRLfmT8ujmayJUaJmpr
+const pubStr = pub.toString(); // r3W57ffVSjnyMFQ6132ZoPj1jnbFhoSFCnDYYRq2tXQVmpu
 ```
 
 ### From seed
@@ -131,7 +146,7 @@ const keypair = KPGen.fromSeed("Hello, world! ㅍㅅㅍ~ Hello, world! ㅍㅅㅍ
 const priv = keypair.privateKey; // Key instance
 const pub = keypair.publicKey; // Key instance
 
-const priveStr = priv.toString(); // 8y7AGQoSv2EtVoq2Gwt97scq3frjEf4baaXgMD6XAwu8mpr
+const priveStr = priv.toString(); // L1BpsqZVzgMhkVCCvR1pyFLHNxBPYi5758uFzPdeLpjejfLxzd7Xmpr
 const pubStr = pub.toString(); // j3XadE7SLSDS5B7hgTrXmAvZBGWE38WDNyLQKWxn6N96mpu
 ```
 
@@ -156,10 +171,10 @@ An account can have up to __10 public keys__.
 To obtain an address from public keys, you must use the following classes:
 
 ```js
-import { MPubKey, MKeys } from "mitumjs";
+import { PubKey, Keys } from "mitumjs";
 
-var pub = new MPubKey(/* public key; string */, /* weight; number */);
-var keys = new MKeys(/* pub keys; MPubKey Array */, /* threshold; number */);
+var pub = new PubKey(/* public key; string */, /* weight; number */);
+var keys = new Keys(/* pub keys; PubKey Array */, /* threshold; number */);
 var address = keys.address.toString();
 ```
 
@@ -172,11 +187,11 @@ Let's do the following as an example.
 Since __20 * 3 = 60__, you must sign the operation with at least __three keys__ when using this account to transfer the operation.
 
 ```js
-import { MPubKey, MKeys } from "mitumjs";
+import { PubKey, Keys } from "mitumjs";
 
 const pubs = [
-  {
-    weight: 20,
+  	{
+    	weight: 20,
 		key: "23RWZ9McmTt5EpPYdLBeGYDn7nwyEB6qiPdU8DMjZ3dnkmpu",
 	},
 	{
@@ -192,14 +207,14 @@ const pubs = [
 		key: "282UNbzEAZQf3GdWJRPUrSaHWF88u297WTQbxfkytpcTsmpu",
 	},
 	{
-	  weight: 20,
+	  	weight: 20,
 		key: "bkPHGdsHSzRGe3NZ2hkzTSPyJx42BRaXetzy1bgBmbaAmpu",
 	},
 ]¸
 const threshold = 60;
 
-const mpubs = pubs.map(pub => new MPubKey(pub.key, pub.weight));
-const mkeys = new MKeys(mpubs, threshold); // MKeys[Keys] instance
+const mpubs = pubs.map(pub => new PubKey(pub.key, pub.weight));
+const mkeys = new Keys(mpubs, threshold); // Keys[Keys] instance
 
 const address = mkeys.address // Address instance;
 const stringAddress = address.toString(); // string address

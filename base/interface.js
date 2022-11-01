@@ -2,7 +2,7 @@ import {
 	EC_NOT_IMPLEMENTED_BYTES,
 	EC_NOT_IMPLEMENTED_DICT,
 	NotImplementedError,
-} from "../error.js";
+} from "./error.js";
 
 export class IBytes {
 	bytes() {

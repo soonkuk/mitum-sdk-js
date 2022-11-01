@@ -1,9 +1,12 @@
+import { SUFFIX_LENGTH } from "../mitum.config.js";
+
 import {
-	SUFFIX_ACCOUUNT_ADDRESS,
+	SUFFIX_ACCOUNT_ADDRESS,
 	SUFFIX_KEY_PRIVATE,
 	SUFFIX_KEY_PUBLIC,
 } from "../alias/key.js";
-import { EC_INVALID_KEY, InvalidFormatError } from "../error.js";
+import { assert, EC_INVALID_KEY, InvalidFormatError } from "../base/error.js";
+
 import { jsonStringify } from "../utils/json.js";
 
 export const isPrivateKeySuffix = (s) => {
@@ -21,10 +24,10 @@ export const isKeySuffix = (s) => {
 };
 
 export const isAddressSuffix = (s) => {
-	return typeof s === "string" && s === SUFFIX_ACCOUUNT_ADDRESS;
+	return typeof s === "string" && s === SUFFIX_ACCOUNT_ADDRESS;
 };
 
-export const isPrivateKey = (s) => {
+export const isSchnorrPrivateKey = (s) => {
 	if (typeof s !== "string") {
 		return false;
 	}
@@ -33,7 +36,19 @@ export const isPrivateKey = (s) => {
 		return false;
 	}
 
-	return isPrivateKeySuffix(s.substring(s.length - 3));
+	return isPrivateKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
+};
+
+export const isECDSAPrivateKey = (s) => {
+	if (typeof s !== "string") {
+		return false;
+	}
+
+	if (s.length !== 55) {
+		return false;
+	}
+
+	return isPrivateKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
 
 export const isPublicKey = (s) => {
@@ -45,10 +60,10 @@ export const isPublicKey = (s) => {
 		return false;
 	}
 
-	return isPublicKeySuffix(s.substring(s.length - 3));
+	return isPublicKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
 
-export const isKey = (s) => {
+export const isSchnorrKey = (s) => {
 	if (typeof s !== "string") {
 		return false;
 	}
@@ -57,7 +72,27 @@ export const isKey = (s) => {
 		return false;
 	}
 
-	return isKeySuffix(s.substring(s.length - 3));
+	return isKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
+};
+
+export const isECDSAKey = (s) => {
+	if (typeof s !== "string") {
+		return false;
+	}
+
+	if (isPublicKey(s) && (s.length < 46 || s.length > 48)) {
+		return false;
+	}
+
+	if (!isECDSAPrivateKey(s)) {
+		return false;
+	}
+
+	return true;
+};
+
+export const isKey = (s) => {
+	return isSchnorrKey(s) || isECDSAKey(s);
 };
 
 export const isAddress = (s) => {
@@ -69,27 +104,28 @@ export const isAddress = (s) => {
 		return false;
 	}
 
-	return isAddressSuffix(s.substring(s.length - 3));
+	return isAddressSuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
 
 export const parseKey = (s) => {
-	if (!isKey(s)) {
-		throw new InvalidFormatError(
+	assert(
+		isKey(s),
+		new InvalidFormatError(
 			"invalid type, length or key suffix",
 			EC_INVALID_KEY,
 			jsonStringify({
 				type: typeof s,
 				length: typeof s === "string" ? s.length : null,
 				suffix:
-					typeof s === "string" && s.length >= 3
-						? s.substring(s.length - 3)
+					typeof s === "string" && s.length >= SUFFIX_LENGTH
+						? s.substring(s.length - SUFFIX_LENGTH)
 						: null,
 			})
-		);
-	}
+		)
+	);
 
-	const key = s.substring(0, s.length - 3);
-	const suffix = s.substring(s.length - 3);
+	const key = s.substring(0, s.length - SUFFIX_LENGTH);
+	const suffix = s.substring(s.length - SUFFIX_LENGTH);
 
 	return {
 		key,

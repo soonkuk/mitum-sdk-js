@@ -1,9 +1,9 @@
-import { random, fromPrivateKey, fromSeed } from "./keypair";
+import { schnorr } from "./schnorr-keypair";
 
 describe("test: keypair generation", () => {
 	it("case: random", () => {
-		const kp1 = random();
-		const kp2 = fromPrivateKey(kp1.privateKey.toString());
+		const kp1 = schnorr.random();
+		const kp2 = schnorr.fromPrivateKey(kp1.privateKey.toString());
 
 		expect(kp2.privateKey.toString()).toBe(kp1.privateKey.toString());
 		expect(kp2.publicKey.toString()).toBe(kp1.publicKey.toString());
@@ -54,7 +54,7 @@ describe("test: keypair generation", () => {
 		];
 
 		testKps.forEach((tc) => {
-			const tkp = fromPrivateKey(tc.priv);
+			const tkp = schnorr.fromPrivateKey(tc.priv);
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
@@ -91,7 +91,7 @@ describe("test: keypair generation", () => {
 		];
 
 		testKps.forEach((tc) => {
-			const tkp = fromSeed(tc.seed);
+			const tkp = schnorr.fromSeed(tc.seed);
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
