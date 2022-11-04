@@ -1,5 +1,5 @@
-import { HINT_KEY, HINT_KEYS } from "../alias/key";
 import { PublicKey, Keys } from "./key";
+import { HINT_KEY, HINT_KEYS } from "../alias/key";
 
 describe("test: address generation", () => {
 	it("case: weighted public key", () => {

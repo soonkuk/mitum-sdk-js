@@ -32,14 +32,17 @@ $ npm test
 > mitumjs@0.0.1 test
 > jest
 
+ PASS  utils/time.test.js
  PASS  key/key.test.js
  PASS  key/schnorr-keypair.test.js
- PASS  key/address.test.js
+ PASS  key/ecdsa-keypair.test.js
+ PASS  key/address.test.js (5.262 s)
+ PASS  operations/currency/create-accounts.test.js (10.452 s)
 
-Test Suites: 3 passed, 3 total
-Tests:       6 passed, 6 total
+Test Suites: 6 passed, 6 total
+Tests:       15 passed, 15 total
 Snapshots:   0 total
-Time:        2.685 s, estimated 3 s
+Time:        10.57 s, estimated 11 s
 Ran all test suites.
 ```
 
@@ -47,13 +50,16 @@ Ran all test suites.
 
 ||Title|
 |---|---|
-|1|[Generate a KeyPair](#generate-a-keypair)|
+|1|[Generate KeyPairs](#generate-keypairs)|
 |-|[Random KeyPair](#random-keypair)|
 |-|[From private key](#from-private-key)|
 |-|[From seed](#from-seed)|
 |2|[Get address from public keys](#get-address-from-public-keys)|
+|3|[Generate Currency Operations](#generate-currency-operations)|
+|-|[create-account](#create-account)|
+|+|[Appendix](#appendix)|
 
-## Generate a KeyPair
+## Generate KeyPairs
 
 __mitumjs__ supports two signature methods:
 
@@ -219,3 +225,77 @@ const mkeys = new Keys(mpubs, threshold); // Keys[Keys] instance
 const address = mkeys.address // Address instance;
 const stringAddress = address.toString(); // string address
 ```
+
+## Generate Currency Operations
+
+__Mitum Currency__ can handle a total of six operations.
+
+You can use this package to create the following operations:
+
+For general accounts:
+
+* create-account
+
+coming soon...
+
+See [Appendix](#appendix) for other instructions on how to use `Operation`.
+
+### create-account
+
+__create-account__ is an operation to create a new general account.
+
+The rules for account creation are as described in [2. Get address from public keys](#get-address-from-public-keys).
+
+First, suppose you create an account with the following settings:
+
+* 5 public keys
+* each weight: 20
+* threshold: 100
+* initial balance: 1000 MCC, 500 PEN
+
+```js
+import { KPGen, PubKey, Keys, Amount, Currency } from "mitumjs";
+
+const networkId = "mitum"; // enter your network id
+
+// create 5 new public keys
+const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
+
+const mccAmount = new Amount("MCC", "1000");
+const penAmount = new Amount("PEN", "500");
+
+const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
+const fact = new Currency.CreateAccountsFact(new TimeStamp().UTC(), /* sender's account address */, [item]);
+
+const operation = new CreateAccountsOperation(networkId, fact, /* custom memo */, []);
+operation.sign(key);
+
+// see appendix
+// operation.export(/* file path */);
+// operation.send(/* digest api address */, /* headers */);
+```
+
+## Appendix
+
+1. Options and other methods for __Operation__.
+
+* If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
+
+```js
+const operation = new Currency.CreateAccountsOperation(/* id, fact, etc... */);
+operation.forceExtendedMessage = true
+operation.sign(/* sender's private key */)
+```
+
+* Send the operation directly to the network via Digest API.
+
+```js
+operation.send(/* digest api address */, /* headers */); // `headers` can be null or undefined
+```
+
+* You can export operation json to a file.
+
+```js
+operation.export(/* file path */);
+```
+

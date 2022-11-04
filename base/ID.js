@@ -1,11 +1,4 @@
 import {
-	MAX_CONTRACT_ID_LENGTH,
-	MAX_CURRENCY_ID_LENGTH,
-	MIN_CONTRACT_ID_LENGTH,
-	MIN_CURRENCY_ID_LENGTH,
-} from "../mitum.config.js";
-
-import {
 	assert,
 	EC_INVALID_CONTRACT_ID,
 	EC_INVALID_CURRENCY_ID,
@@ -14,8 +7,16 @@ import {
 } from "./error.js";
 import { IBytes } from "./interface.js";
 
+import {
+	MAX_CONTRACT_ID_LENGTH,
+	MAX_CURRENCY_ID_LENGTH,
+	MIN_CONTRACT_ID_LENGTH,
+	MIN_CURRENCY_ID_LENGTH,
+} from "../mitum.config.js";
+
 export class ID extends IBytes {
 	constructor(s, ec) {
+		super();
 		assert(
 			typeof s === "string",
 			new InvalidTypeError("not string", ec, typeof s)

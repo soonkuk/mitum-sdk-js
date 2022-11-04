@@ -2,13 +2,13 @@ import { IBytes } from "./interface.js";
 import { assert, EC_INVALID_TOKEN, InvalidTypeError } from "./error.js";
 
 export class Token extends IBytes {
-	constructor(token) {
+	constructor(s) {
+		super();
 		assert(
-			typeof token === "string",
-			new InvalidTypeError("not string", EC_INVALID_TOKEN, typeof token)
+			typeof s === "string",
+			new InvalidTypeError("not string", EC_INVALID_TOKEN, typeof s)
 		);
-
-		this.s = token;
+		this.s = s;
 	}
 
 	bytes() {

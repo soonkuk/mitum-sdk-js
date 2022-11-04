@@ -1,3 +1,4 @@
+import bs58 from "bs58";
 import { schnorr } from "./schnorr-keypair";
 
 describe("test: schnorr; keypair generation", () => {
@@ -95,6 +96,65 @@ describe("test: schnorr; keypair generation", () => {
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
+		});
+	});
+});
+
+describe("test: schnorr; sign", () => {
+	it("case: sign string msg", () => {
+		const tcs = [
+			{
+				msg: "mitum",
+				priv: "EBJgFK4ztAMcuYVXdBNWZqPXechG5GL84WK23HDYWeo4mpr",
+				sig: "AN1rKvtNQz4Tny6bUkkPNVEgGA5Wcjn5o96z9DeX8mYEdWrvy3VoU9uVjMNspjtQsVzcEkiSfbKCRhmAydabYaTCyF7SNRyTt",
+			},
+			{
+				msg: "this is a msg to test",
+				priv: "92dKbN1VAqRL8xqFieZCDFK4W7m3MDTEcFUG3E1dfNYVmpr",
+				sig: "381yXZB1gkdmH3ecUBA2VKivzqAGANmZGCQDCSskGKTnhW42uH2MCeKniX3yw7AM4HawYno8PN2ugZHwg9kX4YD2hovkRrCT",
+			},
+			{
+				msg: "te스타 forever~",
+				priv: "ACZDVWCJAa5jk6GoCrF9YFnwvfjy6CC44sVk4wkyuMymmpr",
+				sig: "AN1rKvtY2WVohtRda2QMeqGGJhj4ZjtRe3E3iDeLEu2ieR6EAYq7rYgqKej6tF5G7xYq5GCxzf45iq9Jtvk8sPsfbUCmsNTXM",
+			},
+			{
+				msg: "drill",
+				priv: "HydtqvoLBC8HpumcKgDcj6wq4RRXjEY6gi1pvMXuevNGmpr",
+				sig: "AN1rKvtianxQqpDCUpgTyJxtayKDqeTAcxgvoi177qB5U8rkooryHGPAtgyhKjDXz8Wk2YiCTkvdzBAKo5a1vLNUK3rgM1NdW",
+			},
+			{
+				msg: "kim rabbit",
+				priv: "Fd2n1YiMDKwujpp5KxiVHB5RShNKsQnibt9QYb67gT8Fmpr",
+				sig: "381yXYonu93MQAWMPzn9mHY5zqJAUFHy7DoCqKiAsCunfJ7jmMnwXJhPvzdXQy5mFSDoMDLA2hMtWQxXq1benD7oMfisvgrB",
+			},
+			{
+				msg: "mabeopsonyeon",
+				priv: "gtuA4YJcymcjyP7DWhtkcvL7j8UmwBE4LjZPxz8WYdkmpr",
+				sig: "AN1rKvti3wvvpAsjdu6VEGMqsE8fJ9B7xxc4vfN3h8mrHywFA8usvNgByuZFKEonbAxTvyizVtokX9oNsscjo87EnF3GffHNf",
+			},
+			{
+				msg: "baehamzzi",
+				priv: "35oN1fCRExBAPDKXqsbmuP9TmFKyMdDfQ6AVp1P4kpJXmpr",
+				sig: "381yXYvwC2qpz5scVeED5pRP5NQZGXeY4FWty7R2gNNfFYwKvDKcshc8Cy3izje1gjETydiys6DQsDHgot6njDZNZksncNyq",
+			},
+			{
+				msg: "dynamite",
+				priv: "2YfWjLX1kJ6DMtuVuhFQK8TMzEBNnzWKRNEdJ7bZ8z8ompr",
+				sig: "AN1rKvtCJw9N33a8GXhjnjgQ24cbaHuB78HvqLRDQCzGouQ8siSPCpAHnmtAAvfmJWoFKkBdV38A6qKX6tGPoRWDdiRuVjPzs",
+			},
+			{
+				msg: "txt",
+				priv: "BxpSL2SoBeH8Q2QbUHs8b1hq3sM2LuycUKDD8nbV1V1vmpr",
+				sig: "381yXYxZRzmDxiGw2dfRvraPo3FqPgnWtoX16vwutoXD9gBjeUrDgRibBHWjZnXcG2uCV5EQm98XikxaBxNTzdMdWooGzi2N",
+			},
+		];
+
+		tcs.forEach((tc) => {
+			const kp = schnorr.fromPrivateKey(tc.priv);
+			const sig = bs58.encode(kp.sign(tc.msg));
+
+			expect(sig === tc.sig);
 		});
 	});
 });

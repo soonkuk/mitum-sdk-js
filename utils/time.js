@@ -1,9 +1,10 @@
-import { assert, EC_INVALID_TOKEN, InvalidFormatError } from "../base/error.js";
 import { IBytes } from "../base/interface.js";
+import { assert, EC_INVALID_TOKEN, InvalidFormatError } from "../base/error.js";
 
 export class TimeStamp extends IBytes {
 	constructor(s) {
-		if (s === "") {
+		super();
+		if (s === "" || s === null || s === undefined) {
 			this.t = new Date();
 		} else {
 			try {

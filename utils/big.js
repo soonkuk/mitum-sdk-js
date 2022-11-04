@@ -1,5 +1,5 @@
-import bigInt from "big-integer";
 import Int64 from "int64-buffer";
+import bigInt from "big-integer";
 
 import { IBytes } from "../base/interface.js";
 import {

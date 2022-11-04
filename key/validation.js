@@ -1,10 +1,10 @@
 import { SUFFIX_LENGTH } from "../mitum.config.js";
-
 import {
 	SUFFIX_ACCOUNT_ADDRESS,
 	SUFFIX_KEY_PRIVATE,
 	SUFFIX_KEY_PUBLIC,
 } from "../alias/key.js";
+
 import { assert, EC_INVALID_KEY, InvalidFormatError } from "../base/error.js";
 
 import { jsonStringify } from "../utils/json.js";
@@ -45,6 +45,10 @@ export const isECDSAPrivateKey = (s) => {
 	}
 
 	if (s.length !== 55) {
+		return false;
+	}
+
+	if (!["L", "K"].includes(s.charAt(0))) {
 		return false;
 	}
 

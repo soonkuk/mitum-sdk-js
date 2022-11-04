@@ -1,17 +1,19 @@
 import { HINT_AMOUNT } from "../../alias/currency.js";
+
+import { Hint } from "../../base/hint.js";
+import { CurrencyID } from "../../base/ID.js";
+import { IBytesDict } from "../../base/interface.js";
 import {
 	assert,
 	EC_INVALID_AMOUNT,
 	InvalidRangeError,
 } from "../../base/error.js";
-import { Hint } from "../../base/hint.js";
-import { CurrencyID } from "../../base/ID.js";
-import { IBytesDict } from "../../base/interface.js";
 
 import Big from "../../utils/big.js";
 
 export class Amount extends IBytesDict {
 	constructor(currency, big) {
+		super();
 		this.hint = new Hint(HINT_AMOUNT);
 		this.currency = new CurrencyID(currency);
 		this.big = new Big(big);

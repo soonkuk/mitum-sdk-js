@@ -1,13 +1,18 @@
-import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js"
-
 import bs58 from "bs58";
 
+import { CurrencyItem } from "./item.js";
+
+import { Fact } from "../fact.js";
+import { Operation } from "../operation.js";
+
+import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js";
 import {
 	HINT_CREATE_ACCOUNTS_ITEM_MUL_AMOUNTS,
 	HINT_CREATE_ACCOUNTS_ITEM_SIN_AMOUNT,
 	HINT_CREATE_ACCOUNTS_OPERATION,
 	HINT_CREATE_ACCOUNTS_OPERATION_FACT,
 } from "../../alias/currency.js";
+
 import {
 	assert,
 	EC_INVALID_ITEM,
@@ -18,15 +23,11 @@ import {
 	InvalidTypeError,
 } from "../../base/error.js";
 
-import { Address } from "../../key/address.js";
 import { Keys } from "../../key/key.js";
+import { Address } from "../../key/address.js";
+
 import { jsonStringify } from "../../utils/json.js";
-import { name } from "../../utils/string.js";
-
-import { Fact } from "../fact.js";
-import { Operation } from "../operation.js";
-
-import { CurrencyItem } from "./item.js";
+import { name, sortStringAsBuf } from "../../utils/string.js";
 
 export class CreateAccountsItem extends CurrencyItem {
 	constructor(keys, amounts) {
@@ -52,7 +53,9 @@ export class CreateAccountsItem extends CurrencyItem {
 	bytes() {
 		return Buffer.concat([
 			this.keys.bytes(),
-			Buffer.concat(this.amounts.map((amount) => amount.bytes())),
+			Buffer.concat(
+				this.amounts.sort(sortStringAsBuf).map((amt) => amt.bytes())
+			),
 		]);
 	}
 
@@ -81,6 +84,7 @@ export class CreateAccountsFact extends Fact {
 				})
 			)
 		);
+
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
 			new InvalidRangeError(

@@ -1,5 +1,8 @@
 import bs58 from "bs58";
 
+import { Address } from "./address.js";
+import { parseKey } from "./validation.js";
+
 import {
 	MAX_KEYS_IN_ADDRESS,
 	MAX_THRESHOLD,
@@ -7,8 +10,8 @@ import {
 	MIN_THRESHOLD,
 	MIN_WEIGHT,
 } from "../mitum.config.js";
-
 import { HINT_KEY, HINT_KEYS, SUFFIX_ACCOUNT_ADDRESS } from "../alias/key.js";
+
 import { Hint } from "../base/hint.js";
 import { IBytes, IBytesDict } from "../base/interface.js";
 import {
@@ -24,10 +27,7 @@ import {
 import Big from "../utils/big.js";
 import { sum256 } from "../utils/hash.js";
 import { jsonStringify } from "../utils/json.js";
-import { name } from "../utils/string.js";
-
-import { Address } from "./address.js";
-import { parseKey } from "./util.js";
+import { name, sortStringAsBuf } from "../utils/string.js";
 
 export class Key extends IBytes {
 	constructor(s) {
@@ -154,14 +154,7 @@ export class Keys extends IBytesDict {
 	bytes() {
 		return Buffer.concat([
 			Buffer.concat(
-				this.keys
-					.sort((a, b) =>
-						Buffer.compare(
-							Buffer.from(a.toString()),
-							Buffer.from(b.toString())
-						)
-					)
-					.map((k) => k.bytes())
+				this.keys.sort(sortStringAsBuf).map((k) => k.bytes())
 			),
 			this.threshold.fillBytes(),
 		]);

@@ -1,4 +1,4 @@
-import bs58 from "bs58";
+import { Key } from "./key.js";
 
 import {
 	assert,
@@ -9,8 +9,6 @@ import {
 } from "../base/error.js";
 
 import { name } from "../utils/string.js";
-
-import { Key } from "./key.js";
 
 export class KeyPair {
 	constructor(privateKey) {
@@ -25,12 +23,20 @@ export class KeyPair {
 
 		this.privateKey = privateKey;
 		this.publicKey = new Key(this._generatePublicKey());
-		this.signer = bs58.decode(privateKey.key);
+		this.signer = this._generateSigner();
 	}
 
 	_generatePublicKey() {
 		throw new NotImplementedError(
 			"unimplemented method _generatePublicKey()",
+			EC_NOT_IMPLEMENTED_METHOD,
+			"KeyPair"
+		);
+	}
+
+	_generateSigner() {
+		throw new NotImplementedError(
+			"unimplemented method _generateSigner()",
 			EC_NOT_IMPLEMENTED_METHOD,
 			"KeyPair"
 		);

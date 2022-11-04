@@ -1,5 +1,4 @@
 import bs58 from "bs58";
-
 import { ecdsa } from "./ecdsa-keypair";
 
 describe("test: ecdsa; keypair generation", () => {

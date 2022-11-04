@@ -1,14 +1,17 @@
-import { MIN_SEED_LENGTH } from "../mitum.config.js";
-
 import bs58 from "bs58";
 import bs58check from "bs58check";
 
-import secureRandom from "secure-random";
 import elliptic from "elliptic";
+import secureRandom from "secure-random";
 import * as secp256k1 from "@noble/secp256k1";
 import { getPublicCompressed } from "eccrypto-js";
 
+import { Key } from "./key.js";
+import { KeyPair } from "./keypair.js";
+
+import { MIN_SEED_LENGTH } from "../mitum.config.js";
 import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
+
 import {
 	assert,
 	EC_INVALID_SEED,
@@ -16,28 +19,31 @@ import {
 	InvalidTypeError,
 } from "../base/error.js";
 
-import { sha256, sum256 } from "../utils/hash.js";
 import Big from "../utils/big.js";
-
-import { Key } from "./key.js";
-import { KeyPair } from "./keypair.js";
+import { sha256, sum256 } from "../utils/hash.js";
 
 class ECDSAKeyPair extends KeyPair {
 	constructor(privateKey) {
 		super(privateKey);
 	}
 
-	_generatePublicKey() {
+	_PKDecoded() {
 		let dk = bs58check.decode(this.privateKey.key);
 		dk = Buffer.from(dk.subarray(1, dk.length - 1));
-		this.keypair = new elliptic.ec("secp256k1").keyFromPrivate(dk);
+		return dk;
+	}
 
-		return bs58.encode(getPublicCompressed(dk)) + SUFFIX_KEY_PUBLIC;
+	_generateSigner() {
+		return new elliptic.ec("secp256k1").keyFromPrivate(this._PKDecoded());
+	}
+
+	_generatePublicKey() {
+		return bs58.encode(getPublicCompressed(this._PKDecoded())) + SUFFIX_KEY_PUBLIC;
 	}
 
 	sign(msg) {
 		const b = sha256(sha256(msg));
-		const signKey = this.keypair.getPrivate("hex");
+		const signKey = this.signer.getPrivate("hex");
 		const ecurve = new elliptic.ec("secp256k1");
 
 		return Buffer.from(

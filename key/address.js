@@ -1,3 +1,8 @@
+import { ecdsa } from "./ecdsa-keypair.js";
+import { schnorr } from "./schnorr-keypair.js";
+import { isAddress } from "./validation.js";
+import { Keys, PublicKey } from "./key.js";
+
 import {
 	MAX_KEYS_IN_ADDRESS,
 	MAX_THRESHOLD,
@@ -13,10 +18,6 @@ import {
 } from "../base/error.js";
 
 import { jsonStringify } from "../utils/json.js";
-
-import { Keys, PublicKey } from "./key.js";
-import { schnorr } from "./schnorr-keypair.js";
-import { isAddress } from "./util.js";
 
 export class Address extends IBytes {
 	constructor(s) {
@@ -52,7 +53,7 @@ export class Address extends IBytes {
 	}
 }
 
-export const schnorrRandomN = (n) => {
+const randomN = (n, f) => {
 	if (typeof n !== "number") {
 		return null;
 	}
@@ -69,7 +70,7 @@ export const schnorrRandomN = (n) => {
 	const ks = [];
 	const kps = [];
 	for (let i = 0; i < n; i++) {
-		kps.push(schnorr.random());
+		kps.push(f());
 		ks.push(new PublicKey(kps[i].publicKey.toString(), weight));
 	}
 
@@ -79,4 +80,10 @@ export const schnorrRandomN = (n) => {
 	};
 };
 
-export const ecdsaRandomN = (n) => {};
+export const ecdsaRandomN = (n) => {
+	return randomN(n, ecdsa.random);
+};
+
+export const schnorrRandomN = (n) => {
+	return randomN(n, schnorr.random);
+};

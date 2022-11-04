@@ -13,3 +13,6 @@ export const name = (obj) => {
 		return "";
 	}
 };
+
+export const sortStringAsBuf = (a, b) =>
+	Buffer.compare(Buffer.from(a.toString()), Buffer.from(b.toString()));

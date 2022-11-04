@@ -1,20 +1,20 @@
-import { MAX_AMOUNTS_IN_ITEM } from "../../mitum.config.js";
+import { Amount } from "./amount.js";
 
+import { Item } from "../item.js";
+
+import { MAX_AMOUNTS_IN_ITEM } from "../../mitum.config.js";
 import {
 	assert,
 	EC_INVALID_AMOUNT,
 	EC_INVALID_AMOUNTS,
+	EC_INVALID_ITEM,
 	InvalidInstanceError,
 	InvalidRangeError,
 	InvalidTypeError,
 } from "../../base/error.js";
 
-import { jsonStringify } from "../../utils/json.js";
 import { name } from "../../utils/string.js";
-
-import { Item } from "../item.js";
-
-import { Amount } from "./amount.js";
+import { jsonStringify } from "../../utils/json.js";
 
 export class CurrencyItem extends Item {
 	constructor(hint, amounts) {
@@ -31,16 +31,14 @@ export class CurrencyItem extends Item {
 				})
 			)
 		);
-
 		assert(
-			amounts.length > 0 && amounts.length < MAX_AMOUNTS_IN_ITEM,
+			amounts.length > 0 && amounts.length <= MAX_AMOUNTS_IN_ITEM,
 			new InvalidRangeError(
 				"array size out of range",
 				EC_INVALID_AMOUNTS,
 				amounts.length
 			)
 		);
-
 		amounts.forEach((amount) => {
 			assert(
 				amount instanceof Amount,
