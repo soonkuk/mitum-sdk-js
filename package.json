@@ -1,5 +1,5 @@
 {
-	"name": "mitumjs",
+	"name": "mitum-sdk",
 	"version": "0.0.1",
 	"description": "Javascript SDK for MITUM2",
 	"main": "index.js",
@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ProtoconNet/mitumjs.git"
+		"url": "git+https://github.com/ProtoconNet/mitum-sdkjs.git"
 	},
 	"keywords": [
 		"mitum",
@@ -18,9 +18,9 @@
 	"author": "ProtoconNet",
 	"license": "GPL-3.0-or-later",
 	"bugs": {
-		"url": "https://github.com/ProtoconNet/mitumjs/issues"
+		"url": "https://github.com/ProtoconNet/mitum-sdkjs/issues"
 	},
-	"homepage": "https://github.com/ProtoconNet/mitumjs#readme",
+	"homepage": "https://github.com/ProtoconNet/mitum-sdkjs#readme",
 	"dependencies": {
 		"@noble/hashes": "^1.1.3",
 		"@noble/secp256k1": "^1.7.0",

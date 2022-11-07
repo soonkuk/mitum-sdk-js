@@ -1,6 +1,6 @@
-# mitumjs
+# mitum-sdk
 
-__mitumjs__ is Javascript SDK that helps create operations for mitum models.
+__mitum-sdk__ is Javascript SDK that helps create operations for mitum models.
 
 * Mitum Currency
 
@@ -16,20 +16,20 @@ $ npm --version
 8.5.0
 ```
 
-~~You can install __mitumjs__ using this command:~~ Not yet published
+~~You can install __mitum-sdk__ using this command:~~ Not yet published
 
 ```sh
-$ npm i mitumjs
+$ npm i mitum-sdk
 ```
 
 ## Test
 
-You can test __mitumjs__ using this command:
+You can test __mitum-sdk__ using this command:
 
 ```sh
 $ npm test
 
-> mitumjs@0.0.1 test
+> mitum-sdk@0.0.1 test
 > jest
 
  PASS  utils/time.test.js
@@ -61,7 +61,7 @@ Ran all test suites.
 
 ## Generate KeyPairs
 
-__mitumjs__ supports two signature methods:
+__mitum-sdk__ supports two signature methods:
 
 - General ECDSA: v1
 - Schnorr DSA: v2
@@ -78,7 +78,7 @@ You can generate key pairs in the following ways:
 The following functions are prepared for key pair generation.
 
 ```js
-import { KPGen } from "mitumjs";
+import { KPGen } from "mitum-sdk";
 
 // ecdsa key pair
 var ekp1 = KPGen.random();
@@ -101,7 +101,7 @@ _If you need a key pair for schnorr signatures, use `KPGen.schnorr.(function)` i
 #### Get a random KeyPair
 
 ```js
-import { KPGen } from "mitumjs";
+import { KPGen } from "mitum-sdk";
 
 const keypair = KPGen.random(); // KeyPair instance
 
@@ -115,7 +115,7 @@ const pubStr = pub.toString(); // 22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSm
 #### Get N random KeyPairs with an address
 
 ```js
-import { KPGen } from "mitumjs";
+import { KPGen } from "mitum-sdk";
 
 const n = 5
 
@@ -129,7 +129,7 @@ const address = keys.address // Address instance
 ### From private key
 
 ```js
-import { KPGen } from "mitumjs";
+import { KPGen } from "mitum-sdk";
 
 const keypair = KPGen.fromPrivateKey("KwkuLfcHsxY3yGLT2wYWNgbuGD3Q1j3c7DJvaRLfmT8ujmayJUaJmpr"); // KeyPair instance
 
@@ -145,7 +145,7 @@ const pubStr = pub.toString(); // r3W57ffVSjnyMFQ6132ZoPj1jnbFhoSFCnDYYRq2tXQVmp
 The seed string length must be at least __36__.
 
 ```js
-import { KPGen } from "mitumjs";
+import { KPGen } from "mitum-sdk";
 
 const keypair = KPGen.fromSeed("Hello, world! ㅍㅅㅍ~ Hello, world! ㅍㅅㅍ~"); // KeyPair instance
 
@@ -177,7 +177,7 @@ An account can have up to __10 public keys__.
 To obtain an address from public keys, you must use the following classes:
 
 ```js
-import { PubKey, Keys } from "mitumjs";
+import { PubKey, Keys } from "mitum-sdk";
 
 var pub = new PubKey(/* public key; string */, /* weight; number */);
 var keys = new Keys(/* pub keys; PubKey Array */, /* threshold; number */);
@@ -193,7 +193,7 @@ Let's do the following as an example.
 Since __20 * 3 = 60__, you must sign the operation with at least __three keys__ when using this account to transfer the operation.
 
 ```js
-import { PubKey, Keys } from "mitumjs";
+import { PubKey, Keys } from "mitum-sdk";
 
 const pubs = [
   	{
@@ -254,7 +254,7 @@ First, suppose you create an account with the following settings:
 * initial balance: 1000 MCC, 500 PEN
 
 ```js
-import { KPGen, PubKey, Keys, Amount, Currency } from "mitumjs";
+import { KPGen, PubKey, Keys, Amount, Currency } from "mitum-sdk";
 
 const networkId = "mitum"; // enter your network id
 
