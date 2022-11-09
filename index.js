@@ -10,6 +10,11 @@ import {
 	CreateAccountsOperation,
 } from "./operations/currency/create-accounts.js";
 
+import {
+	KeyUpdaterFact,
+	KeyUpdaterOperation,
+} from "./operations/currency/key-updater.js";
+
 const KPGen = {
 	schnorr: {
 		...schnorr,
@@ -25,6 +30,8 @@ const Currency = {
 	CreateAccountsItem,
 	CreateAccountsFact,
 	CreateAccountsOperation,
+	KeyUpdaterFact,
+	KeyUpdaterOperation,
 };
 
 export { KPGen, PubKey, Keys, Amount, Currency };

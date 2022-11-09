@@ -16,6 +16,12 @@ $ npm --version
 8.5.0
 ```
 
+You can install this package locally using this command:
+
+```sh
+$ npm i
+```
+
 ~~You can install __mitum-sdk__ using this command:~~ Not yet published
 
 ```sh
@@ -23,6 +29,8 @@ $ npm i mitum-sdk
 ```
 
 ## Test
+
+Before testing, check `TEST_NODE` and `TEST_GENESIS` in [mitum.config.js](mitum.config.js).
 
 You can test __mitum-sdk__ using this command:
 
@@ -35,14 +43,15 @@ $ npm test
  PASS  utils/time.test.js
  PASS  key/key.test.js
  PASS  key/schnorr-keypair.test.js
+ PASS  key/address.test.js
  PASS  key/ecdsa-keypair.test.js
- PASS  key/address.test.js (5.262 s)
- PASS  operations/currency/create-accounts.test.js (10.452 s)
+ PASS  operations/currency/key-updater.test.js
+ PASS  operations/currency/create-accounts.test.js
 
-Test Suites: 6 passed, 6 total
-Tests:       15 passed, 15 total
+Test Suites: 7 passed, 7 total
+Tests:       17 passed, 17 total
 Snapshots:   0 total
-Time:        10.57 s, estimated 11 s
+Time:        1.721 s
 Ran all test suites.
 ```
 
@@ -57,6 +66,7 @@ Ran all test suites.
 |2|[Get address from public keys](#get-address-from-public-keys)|
 |3|[Generate Currency Operations](#generate-currency-operations)|
 |-|[create-account](#create-account)|
+|-|[key-updater](#key-updater)|
 |+|[Appendix](#appendix)|
 
 ## Generate KeyPairs
@@ -254,7 +264,7 @@ First, suppose you create an account with the following settings:
 * initial balance: 1000 MCC, 500 PEN
 
 ```js
-import { KPGen, PubKey, Keys, Amount, Currency } from "mitum-sdk";
+import { KPGen, Amount, Currency } from "mitum-sdk";
 
 const networkId = "mitum"; // enter your network id
 
@@ -267,12 +277,39 @@ const penAmount = new Amount("PEN", "500");
 const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
 const fact = new Currency.CreateAccountsFact(new TimeStamp().UTC(), /* sender's account address */, [item]);
 
-const operation = new CreateAccountsOperation(networkId, fact, /* custom memo */, []);
+const operation = new Currency.CreateAccountsOperation(networkId, fact, /* custom memo */, []);
 operation.sign(key);
 
 // see appendix
 // operation.export(/* file path */);
 // operation.send(/* digest api address */, /* headers */);
+```
+
+### key-updater
+
+__key-updater__ is an operation to replace keys from an existing regular account with other keys.
+
+See [2. Get address from public keys](#get-address-from-public-keys) for rules for the new key set.
+
+First, suppose you add a new key to your account as follows:
+
+* currency account keys: only 1 key (weight: 100; threshold: 100)
+* account keys after updating: 2 key (one is old, one is new; each weight: 50, threshold: 100)
+* currency to pay the fee: MCC
+
+```js
+import { KPGen, PubKey, Keys, Currency } from "mitum-sdk";
+
+const networkId = "mitum"; // enter your network id
+
+const pub1 = "22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu"; // old
+const pub2 = "yX3YBvu597eNgwuuJpsnZunZcDkABVeqfmiyveKuNregmpu"; // new
+const keys = [new PubKey(pub1, 50), new PubKey(pub2, 50)];
+
+const fact = new Currency.KeyUpdaterFact(new TimeStamp().UTC(), /* target account address */, new Keys(keys, 100), "MCC");
+
+const operation = new Currency.KeyUpdaterOperation(networkId, fact, /* custom memo */, []);
+operation.sign("KwSKzHfNFKELkWs5gqbif1BqQhQjGhruKubqqU7AeKu5JPR36vKrmpr"); // target account's private key; private key paired with pub1
 ```
 
 ## Appendix
@@ -299,3 +336,48 @@ operation.send(/* digest api address */, /* headers */); // `headers` can be nul
 operation.export(/* file path */);
 ```
 
+2. Amount timestamp
+
+__(1) Expression of timestamp__
+
+For blocks, seals, signatures, etc., mitum uses expressions `yyyy-MM-dd HH:mm:ss.* +0000 UTC` and `yyyy-MM-ddTHH:mm:ss.*Z` as the default.
+
+All other timezones are not allowed! Only +0000 timezone must be used for mitum.
+
+For example,
+
+a. When converting timestamps to byte format to generate block/seal/fact_sign hash
+    - convert string `2021-11-16 01:53:30.518 +0000 UTC` to byte format
+
+b. When are placed in block, seal, fact_sign of json files
+    - convert the timestamp to `2021-11-16T01:53:30.518Z` and put it in json
+
+To generate an operation hash, mitum concatenates byte arrays of network id, fact hash and each byte array of fact_sign.
+
+And to generate each byte array of fact_sign, mitum concatenates byte arrays of signer, signature digest and signed_at.
+
+Note that when converted to bytes, the format of `signed_at` is the same as `yyyy-MM-dd HH:mm:ss.* +0000 UTC`, but when put into json, it is displayed as `yyyy-MM-ddTHH:mm:ss.*Z`.
+
+__(2) How many decimal places to be expressed?__
+
+There is one more thing to note.
+
+First, there is no need to pay attention to the decimal places in the 'ss.*' part of the timestamp.
+
+Moreover, the timestamp can also be written without `.` or without decimal values below `.`.
+
+However, when converting timestamps to byte format, you should not add unnecessary zero(0) to floating point representations in seconds(ss.*).
+
+For example,
+
+a. `2021-11-16T01:53:30.518Z` is converted to `2021-11-16 01:53:30.518 +0000 UTC` without any change of the time itself.
+
+b. `2021-11-16T01:53:30.510Z` must be converted to `2021-11-16 01:53:30.51 +0000 UTC` when generating a hash.
+
+c. `2021-11-16T01:53:30.000Z` must be converted to `2021-11-16T01:53:30 +0000 UTC` when generating a hash.
+
+A timestamp with unnecessary zeros in the json file does not affect the processing of blocks, seals, or operations. Use caution when converting formats.
+
+## License
+
+[GNU GENERAL PUBLIC LICENSE Version 3](LICENSE)

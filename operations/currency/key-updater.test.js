@@ -1,11 +1,6 @@
 import axios from "axios";
 
-import { Amount } from "./amount";
-import {
-	CreateAccountsFact,
-	CreateAccountsItem,
-	CreateAccountsOperation,
-} from "./create-accounts";
+import { KeyUpdaterFact, KeyUpdaterOperation } from "./key-updater";
 
 import {
 	MAX_THRESHOLD,
@@ -24,39 +19,28 @@ const { key, address } = TEST_GENESIS.ecdsa;
 
 const id = "mitum";
 
-describe("test: create-account", () => {
+describe("test: key-updater", () => {
 	it("case: ecdsa; operation", () => {
 		const currency = "MCC";
-		const testAmount = "100";
 
 		for (let i = 0; i < 10; i++) {
-			const items = [];
-			for (let j = 0; j < i + 1; j++) {
-				const amounts = [];
-				const keys = [];
-				for (let k = 10 - i; k > 0; k--) {
-					amounts.push(new Amount(currency, testAmount));
-					keys.push(
-						new PublicKey(
-							ecdsa.random().publicKey.toString(),
-							MAX_WEIGHT
-						)
-					);
-				}
-				items.push(
-					new CreateAccountsItem(
-						new Keys(keys, MAX_THRESHOLD),
-						amounts
+			const keys = [];
+			for (let j = 10 - i; j > 0; j--) {
+				keys.push(
+					new PublicKey(
+						ecdsa.random().publicKey.toString(),
+						MAX_WEIGHT
 					)
 				);
 			}
 
-			const fact = new CreateAccountsFact(
+			const fact = new KeyUpdaterFact(
 				new TimeStamp().UTC(),
 				address,
-				items
+				new Keys(keys, MAX_THRESHOLD),
+				currency
 			);
-			const operation = new CreateAccountsOperation(id, fact, "", []);
+			const operation = new KeyUpdaterOperation(id, fact, "", []);
 			operation.sign(key);
 
 			axios
