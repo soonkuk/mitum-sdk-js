@@ -9,7 +9,7 @@ import {
 	InvalidRangeError,
 } from "../../base/error.js";
 
-import Big from "../../utils/big.js";
+import { Big } from "../../utils/number.js";
 
 export class Amount extends IBytesDict {
 	constructor(currency, big) {

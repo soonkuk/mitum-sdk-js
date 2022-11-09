@@ -40,19 +40,22 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  utils/time.test.js
  PASS  key/schnorr-keypair.test.js
- PASS  key/key.test.js
  PASS  key/address.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  utils/time.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  key/key.test.js
  PASS  key/ecdsa-keypair.test.js
  PASS  operations/currency/key-updater.test.js
- PASS  operations/currency/create-accounts.test.js
  PASS  operations/currency/transfers.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/create-accounts.test.js
 
-Test Suites: 8 passed, 8 total
-Tests:       19 passed, 19 total
+Test Suites: 11 passed, 11 total
+Tests:       33 passed, 33 total
 Snapshots:   0 total
-Time:        1.328 s, estimated 2 s
+Time:        1.603 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -69,6 +72,9 @@ Ran all test suites.
 |-|[create-account](#create-account)|
 |-|[key-updater](#key-updater)|
 |-|[transfer](#transfer)|
+|-|[currency-register](#currency-register)|
+|-|[currency-policy-updater](#currency-policy-updater)|
+|-|[suffrage-inflation](#suffrage-inflation)|
 |+|[Appendix](#appendix)|
 
 ## Generate KeyPairs
@@ -367,9 +373,15 @@ operation.sign(/* a private key of the sender */);
 // operation.send(/* digest api address */, /* headers */);
 ```
 
+### currency-register
+
+### currency-policy-updater
+
+### suffrage-inflation
+
 ## Appendix
 
-1. Options and other methods for __Operation__.
+### Options and other methods for __Operation__
 
 * If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
 
@@ -391,7 +403,7 @@ operation.send(/* digest api address */, /* headers */); // `headers` can be nul
 operation.export(/* file path */);
 ```
 
-2. Amount timestamp
+### About timestamp
 
 __(1) Expression of timestamp__
 

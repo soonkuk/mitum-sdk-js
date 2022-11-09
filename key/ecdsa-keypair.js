@@ -19,7 +19,7 @@ import {
 	InvalidTypeError,
 } from "../base/error.js";
 
-import Big from "../utils/big.js";
+import { Big } from "../utils/number.js";
 import { sha256, sum256 } from "../utils/hash.js";
 
 class ECDSAKeyPair extends KeyPair {

@@ -19,7 +19,7 @@ import {
 	InvalidTypeError,
 } from "../base/error.js";
 
-import Big from "../utils/big.js";
+import { Big } from "../utils/number.js";
 import { sum256 } from "../utils/hash.js";
 import { jsonStringify } from "../utils/json.js";
 

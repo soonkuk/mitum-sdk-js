@@ -23,6 +23,10 @@ export const TEST_NODE = {
 	url: "http://127.0.0.1:54320",
 	builder: "/builder/send",
 	lookup: "/block/operation/",
+	key: {
+		ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",
+		schnorr: "",
+	},
 };
 export const TEST_GENESIS = {
 	ecdsa: {

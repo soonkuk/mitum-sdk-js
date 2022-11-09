@@ -5,11 +5,12 @@ import { IBytes } from "../base/interface.js";
 import {
 	assert,
 	EC_INVALID_BIG_INTEGER,
+	EC_INVALID_FLOAT,
 	InvalidRangeError,
 	InvalidTypeError,
 } from "../base/error.js";
 
-import { jsonStringify } from "../utils/json.js";
+import { jsonStringify } from "./json.js";
 
 const toBig = (n) => {
 	const big = [];
@@ -22,7 +23,7 @@ const toBig = (n) => {
 	return BigInt("0x" + big.join(""));
 };
 
-class Big extends IBytes {
+export class Big extends IBytes {
 	constructor(n) {
 		super();
 		if (typeof n === "bigint") {
@@ -93,4 +94,23 @@ class Big extends IBytes {
 	}
 }
 
-export default Big;
+export class Float extends IBytes {
+	constructor(n) {
+		super();
+		assert(
+			typeof n === "number",
+			new InvalidTypeError("not number", EC_INVALID_FLOAT, typeof n)
+		);
+		this.n = n;
+	}
+
+	bytes() {
+		const b = Buffer.allocUnsafe(8);
+		b.writeDoubleBE(this.n);
+		return b;
+	}
+
+	toString() {
+		return `${this.n}`;
+	}
+}
