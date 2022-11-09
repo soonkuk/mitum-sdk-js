@@ -22,7 +22,7 @@ import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
-import { name } from "../utils/string.js";
+import { name, sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
 import { exportJson, jsonStringify } from "../utils/json.js";
@@ -190,7 +190,7 @@ export class Operation extends IBytesDict {
 	bytes() {
 		return Buffer.concat([
 			this.fact.hash,
-			Buffer.concat(this.factSigns.map((fs) => fs.bytes())),
+			Buffer.concat(this.factSigns.sort(sortBuf).map((fs) => fs.bytes())),
 			Buffer.from(this.memo),
 		]);
 	}
@@ -201,7 +201,7 @@ export class Operation extends IBytesDict {
 			_hint: this.hint.toString(),
 			fact: this.fact.dict(),
 			hash: bs58.encode(this.hash),
-			fact_signs: this.factSigns.map((fs) => fs.dict()),
+			fact_signs: this.factSigns.sort(sortBuf).map((fs) => fs.dict()),
 		};
 	}
 

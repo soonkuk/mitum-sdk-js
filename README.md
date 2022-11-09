@@ -287,6 +287,28 @@ operation.sign(/* a private key of the sender */);
 // operation.send(/* digest api address */, /* headers */);
 ```
 
+`KPGen.randomN(n)` and `KPGen.schnorr.randomN(n)` always return `Keys` with a threshold __100__.
+
+To generate `Keys` with custom thresholds and weights, use `PubKey` and `Keys` as follows:
+
+```js
+import { /* KPGen, */ PubKey, Keys } from "mitum-sdk";
+
+// const randomPub = KPGen.random().publicKey.toString();
+
+const pub1 = "your public key1";
+const pub2 = "your public key2";
+...
+
+const key1 = new PubKey(pub1, /* custom weight */);
+const key2 = new PubKey(pub2, /* custom weight */);
+...
+
+const keys = new Keys([key1, key2, ...], /* custom threshold */)
+
+const item = new Currency.CreateAccountsItem(keys, /* amounts */);
+```
+
 ### key-updater
 
 __key-updater__ is an operation to replace keys from an existing regular account with other keys.

@@ -27,7 +27,7 @@ import { Keys } from "../../key/key.js";
 import { Address } from "../../key/address.js";
 
 import { jsonStringify } from "../../utils/json.js";
-import { name, sortStringAsBuf } from "../../utils/string.js";
+import { name, sortBuf } from "../../utils/string.js";
 
 export class CreateAccountsItem extends CurrencyItem {
 	constructor(keys, amounts) {
@@ -54,7 +54,7 @@ export class CreateAccountsItem extends CurrencyItem {
 		return Buffer.concat([
 			this.keys.bytes(),
 			Buffer.concat(
-				this.amounts.sort(sortStringAsBuf).map((amt) => amt.bytes())
+				this.amounts.sort(sortBuf).map((amt) => amt.bytes())
 			),
 		]);
 	}
@@ -63,7 +63,7 @@ export class CreateAccountsItem extends CurrencyItem {
 		return {
 			_hint: this.hint.toString(),
 			keys: this.keys.dict(),
-			amounts: this.amounts.map((amount) => amount.dict()),
+			amounts: this.amounts.sort(sortBuf).map((amount) => amount.dict()),
 		};
 	}
 }
@@ -113,7 +113,7 @@ export class CreateAccountsFact extends Fact {
 		return Buffer.concat([
 			this.token.bytes(),
 			this.sender.bytes(),
-			Buffer.concat(this.items.map((item) => item.bytes())),
+			Buffer.concat(this.items.sort(sortBuf).map((item) => item.bytes())),
 		]);
 	}
 
@@ -123,7 +123,7 @@ export class CreateAccountsFact extends Fact {
 			hash: bs58.encode(this.hash),
 			token: this.token.toString(),
 			sender: this.sender.toString(),
-			items: this.items.map((item) => item.dict()),
+			items: this.items.sort(sortBuf).map((item) => item.dict()),
 		};
 	}
 }
