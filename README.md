@@ -41,17 +41,18 @@ $ npm test
 > jest
 
  PASS  utils/time.test.js
- PASS  key/key.test.js
  PASS  key/schnorr-keypair.test.js
+ PASS  key/key.test.js
  PASS  key/address.test.js
  PASS  key/ecdsa-keypair.test.js
  PASS  operations/currency/key-updater.test.js
  PASS  operations/currency/create-accounts.test.js
+ PASS  operations/currency/transfers.test.js
 
-Test Suites: 7 passed, 7 total
-Tests:       17 passed, 17 total
+Test Suites: 8 passed, 8 total
+Tests:       19 passed, 19 total
 Snapshots:   0 total
-Time:        1.721 s
+Time:        1.328 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -67,6 +68,7 @@ Ran all test suites.
 |3|[Generate Currency Operations](#generate-currency-operations)|
 |-|[create-account](#create-account)|
 |-|[key-updater](#key-updater)|
+|-|[transfer](#transfer)|
 |+|[Appendix](#appendix)|
 
 ## Generate KeyPairs
@@ -275,10 +277,10 @@ const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "500");
 
 const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
-const fact = new Currency.CreateAccountsFact(new TimeStamp().UTC(), /* sender's account address */, [item]);
+const fact = new Currency.CreateAccountsFact(new TimeStamp().UTC(), /* sender account address */, [item]);
 
 const operation = new Currency.CreateAccountsOperation(networkId, fact, /* custom memo */, []);
-operation.sign(key);
+operation.sign(/* a private key of the sender */);
 
 // see appendix
 // operation.export(/* file path */);
@@ -298,7 +300,7 @@ First, suppose you add a new key to your account as follows:
 * currency to pay the fee: MCC
 
 ```js
-import { KPGen, PubKey, Keys, Currency } from "mitum-sdk";
+import { PubKey, Keys, Currency } from "mitum-sdk";
 
 const networkId = "mitum"; // enter your network id
 
@@ -309,7 +311,38 @@ const keys = [new PubKey(pub1, 50), new PubKey(pub2, 50)];
 const fact = new Currency.KeyUpdaterFact(new TimeStamp().UTC(), /* target account address */, new Keys(keys, 100), "MCC");
 
 const operation = new Currency.KeyUpdaterOperation(networkId, fact, /* custom memo */, []);
-operation.sign("KwSKzHfNFKELkWs5gqbif1BqQhQjGhruKubqqU7AeKu5JPR36vKrmpr"); // target account's private key; private key paired with pub1
+operation.sign("KwSKzHfNFKELkWs5gqbif1BqQhQjGhruKubqqU7AeKu5JPR36vKrmpr"); // a private key of the target; private key paired with pub1
+```
+
+### transfer
+
+__transfer__ is an operation to transfer tokens to another account.
+
+For each type of token(aka. currency id), a fee based on the token policy is withdrawn together.
+
+Suppose you transfer tokens to a general account as follows:
+
+* receiver: DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca
+* tokens to transfer: 1000 MCC, 100 PEN
+
+```js
+import { Amount, Currency } from "mitum-sdk";
+
+const networkId = "mitum"; // enter your network id
+
+const receiver = "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca";
+const mccAmount = new Amount("MCC", "1000");
+const penAmount = new Amount("PEN", "100");
+
+const item = new Currency.TransfersItem(receiver, [mccAmount, penAmount]);
+const fact = new Currency.TransfersFact(new TimeStamp().UTC(), /* sender account address */, [item]);
+
+const operation = new Currency.TransfersOperation(networkId, fact, /* custom memo */, []);
+operation.sign(/* a private key of the sender */);
+
+// see appendix
+// operation.export(/* file path */);
+// operation.send(/* digest api address */, /* headers */);
 ```
 
 ## Appendix
