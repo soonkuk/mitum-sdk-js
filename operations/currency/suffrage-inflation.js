@@ -82,7 +82,7 @@ export class SuffrageInflationFact extends Fact {
 			assert(
 				item instanceof SuffrageInflationItem,
 				new InvalidInstanceError(
-					"not CreateAccountsItem instance",
+					"not SuffrageInflationItem instance",
 					EC_INVALID_ITEM,
 					`idx ${idx} - ${name(item)}`
 				)
