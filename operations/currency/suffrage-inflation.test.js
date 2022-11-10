@@ -2,18 +2,19 @@ import axios from "axios";
 
 import { Amount } from "./amount";
 
-import { TEST_NODE } from "../../mitum.config";
-
-import { ecdsaRandomN } from "../../key/address";
-import { TimeStamp } from "../../utils/time";
 import {
 	SuffrageInflationFact,
 	SuffrageInflationItem,
 	SuffrageInflationOperation,
 } from "./suffrage-inflation";
 
-const { url, builder, key } = TEST_NODE;
-const { ecdsa } = key;
+import { TEST_NODE } from "../../mitum.config";
+
+import { ecdsa } from "../../key/ecdsa-keypair";
+import { TimeStamp } from "../../utils/time";
+import { ecdsaRandomN } from "../../key/address";
+
+const { url, builder } = TEST_NODE;
 
 const id = "mitum";
 const currency = "MCC";
@@ -37,7 +38,7 @@ describe("test: suffrage-inflation", () => {
 				items
 			);
 			const operation = new SuffrageInflationOperation(id, fact, "", []);
-			operation.sign(ecdsa);
+			operation.sign(ecdsa.random().privateKey.toString());
 
 			axios
 				.post(`${url}${builder}`, operation.dict())

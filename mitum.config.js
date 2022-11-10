@@ -23,18 +23,4 @@ export const TEST_NODE = {
 	url: "http://127.0.0.1:54320",
 	builder: "/builder/send",
 	lookup: "/block/operation/",
-	key: {
-		ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",
-		schnorr: "",
-	},
-};
-export const TEST_GENESIS = {
-	ecdsa: {
-		key: "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr",
-		address: "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca",
-	},
-	schnorr: {
-		key: "",
-		address: "",
-	},
 };

@@ -16,10 +16,10 @@ import {
 import { TEST_NODE } from "../../mitum.config";
 
 import { TimeStamp } from "../../utils/time";
+import { ecdsa } from "../../key/ecdsa-keypair";
 import { ecdsaRandomN } from "../../key/address";
 
-const { url, builder, key } = TEST_NODE;
-const { ecdsa } = key;
+const { url, builder } = TEST_NODE;
 
 const id = "mitum";
 const currency = "MCC";
@@ -30,11 +30,15 @@ describe("test: currency-register", () => {
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const amount = new Amount(currency, "9999999999999999999999999999999");
-		const design = new CurrencyDesign(amount, ecdsaRandomN(1).keys.address.toString(), policy);
+		const design = new CurrencyDesign(
+			amount,
+			ecdsaRandomN(1).keys.address.toString(),
+			policy
+		);
 
 		const fact = new CurrencyRegisterFact(new TimeStamp().UTC(), design);
 		const operation = new CurrencyRegisterOperation(id, fact, "", []);
-		operation.sign(ecdsa);
+		operation.sign(ecdsa.random().privateKey.toString());
 
 		axios
 			.post(`${url}${builder}`, operation.dict())
@@ -43,15 +47,22 @@ describe("test: currency-register", () => {
 	});
 
 	it("case: ecdsa; fixed feeer", () => {
-		const feeer = new FixedFeeer(ecdsaRandomN(1).keys.address.toString(), "10");
+		const feeer = new FixedFeeer(
+			ecdsaRandomN(1).keys.address.toString(),
+			"10"
+		);
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const amount = new Amount(currency, "9999999999999999999999999999999");
-		const design = new CurrencyDesign(amount, ecdsaRandomN(1).keys.address.toString(), policy);
+		const design = new CurrencyDesign(
+			amount,
+			ecdsaRandomN(1).keys.address.toString(),
+			policy
+		);
 
 		const fact = new CurrencyRegisterFact(new TimeStamp().UTC(), design);
 		const operation = new CurrencyRegisterOperation(id, fact, "", []);
-		operation.sign(ecdsa);
+		operation.sign(ecdsa.random().privateKey.toString());
 
 		axios
 			.post(`${url}${builder}`, operation.dict())
@@ -60,20 +71,41 @@ describe("test: currency-register", () => {
 	});
 
 	it("case: ecdsa; ratio feeer", () => {
-		const feeer = new RatioFeeer(ecdsaRandomN(1).keys.address.toString(), 0.5, "1", "10");
-		const policy = new CurrencyPolicy("33", feeer);
+		const ratio = (n) => {
+			const feeer = new RatioFeeer(
+				ecdsaRandomN(1).keys.address.toString(),
+				n,
+				"1",
+				"10"
+			);
+			const policy = new CurrencyPolicy("33", feeer);
 
-		const amount = new Amount(currency, "9999999999999999999999999999999");
-		const design = new CurrencyDesign(amount, ecdsaRandomN(1).keys.address.toString(), policy);
+			const amount = new Amount(
+				currency,
+				"9999999999999999999999999999999"
+			);
+			const design = new CurrencyDesign(
+				amount,
+				ecdsaRandomN(1).keys.address.toString(),
+				policy
+			);
 
-		const fact = new CurrencyRegisterFact(new TimeStamp().UTC(), design);
-		const operation = new CurrencyRegisterOperation(id, fact, "", []);
-		operation.sign(ecdsa);
+			const fact = new CurrencyRegisterFact(
+				new TimeStamp().UTC(),
+				design
+			);
+			const operation = new CurrencyRegisterOperation(id, fact, "", []);
+			operation.sign(ecdsa.random().privateKey.toString());
 
-		axios
-			.post(`${url}${builder}`, operation.dict())
-			.then((res) => expect(res.status === 200))
-			.catch((_) => expect(false));
+			axios
+				.post(`${url}${builder}`, operation.dict())
+				.then((res) => expect(res.status === 200))
+				.catch((_) => expect(false));
+		};
+
+		ratio(0);
+		ratio(0.5);
+		ratio(1);
 	});
 
 	it("case: schnorr; nil feeer", () => {});

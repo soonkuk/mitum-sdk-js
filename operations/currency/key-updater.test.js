@@ -5,17 +5,16 @@ import { KeyUpdaterFact, KeyUpdaterOperation } from "./key-updater";
 import {
 	MAX_THRESHOLD,
 	MAX_WEIGHT,
-	TEST_GENESIS,
 	TEST_NODE,
 } from "../../mitum.config";
 
 import { ecdsa } from "../../key/ecdsa-keypair";
+import { ecdsaRandomN } from "../../key/address";
 import { Keys, PublicKey } from "../../key/key";
 
 import { TimeStamp } from "../../utils/time";
 
 const { url, builder } = TEST_NODE;
-const { key, address } = TEST_GENESIS.ecdsa;
 
 const id = "mitum";
 
@@ -36,12 +35,12 @@ describe("test: key-updater", () => {
 
 			const fact = new KeyUpdaterFact(
 				new TimeStamp().UTC(),
-				address,
+				ecdsaRandomN(1).keys.address.toString(),
 				new Keys(keys, MAX_THRESHOLD),
 				currency
 			);
 			const operation = new KeyUpdaterOperation(id, fact, "", []);
-			operation.sign(key);
+			operation.sign(ecdsa.random().privateKey.toString());
 
 			axios
 				.post(`${url}${builder}`, operation.dict())

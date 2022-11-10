@@ -14,10 +14,10 @@ import {
 import { TEST_NODE } from "../../mitum.config";
 
 import { TimeStamp } from "../../utils/time";
+import { ecdsa } from "../../key/ecdsa-keypair";
 import { ecdsaRandomN } from "../../key/address";
 
-const { url, builder, key } = TEST_NODE;
-const { ecdsa } = key;
+const { url, builder } = TEST_NODE;
 
 const id = "mitum";
 const currency = "MCC";
@@ -33,7 +33,7 @@ describe("test: currency-policy-updater", () => {
 			policy
 		);
 		const operation = new CurrencyPolicyUpdaterOperation(id, fact, "", []);
-		operation.sign(ecdsa);
+		operation.sign(ecdsa.random().privateKey.toString());
 
 		axios
 			.post(`${url}${builder}`, operation.dict())
@@ -42,7 +42,10 @@ describe("test: currency-policy-updater", () => {
 	});
 
 	it("case: ecdsa; fixed feeer", () => {
-		const feeer = new FixedFeeer(ecdsaRandomN(1).keys.address.toString(), "10");
+		const feeer = new FixedFeeer(
+			ecdsaRandomN(1).keys.address.toString(),
+			"10"
+		);
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const fact = new CurrencyPolicyUpdaterFact(
@@ -51,7 +54,7 @@ describe("test: currency-policy-updater", () => {
 			policy
 		);
 		const operation = new CurrencyPolicyUpdaterOperation(id, fact, "", []);
-		operation.sign(ecdsa);
+		operation.sign(ecdsa.random().privateKey.toString());
 
 		axios
 			.post(`${url}${builder}`, operation.dict())
@@ -60,7 +63,12 @@ describe("test: currency-policy-updater", () => {
 	});
 
 	it("case: ecdsa; ratio feeer", () => {
-		const feeer = new RatioFeeer(ecdsaRandomN(1).keys.address.toString(), 0.5, "1", "10");
+		const feeer = new RatioFeeer(
+			ecdsaRandomN(1).keys.address.toString(),
+			0.5,
+			"1",
+			"10"
+		);
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const fact = new CurrencyPolicyUpdaterFact(
@@ -69,7 +77,7 @@ describe("test: currency-policy-updater", () => {
 			policy
 		);
 		const operation = new CurrencyPolicyUpdaterOperation(id, fact, "", []);
-		operation.sign(ecdsa);
+		operation.sign(ecdsa.random().privateKey.toString());
 
 		axios
 			.post(`${url}${builder}`, operation.dict())

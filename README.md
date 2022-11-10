@@ -30,7 +30,7 @@ $ npm i mitum-sdk
 
 ## Test
 
-Before testing, check `TEST_NODE` and `TEST_GENESIS` in [mitum.config.js](mitum.config.js).
+Before testing, check `TEST_NODE` in [mitum.config.js](mitum.config.js).
 
 You can test __mitum-sdk__ using this command:
 
@@ -40,22 +40,22 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
+ PASS  key/key.test.js
  PASS  key/schnorr-keypair.test.js
- PASS  key/address.test.js
- PASS  operations/currency/currency-register.test.js
  PASS  utils/time.test.js
  PASS  operations/currency/currency-policy-updater.test.js
- PASS  key/key.test.js
+ PASS  key/address.test.js
+ PASS  operations/currency/currency-register.test.js
  PASS  key/ecdsa-keypair.test.js
- PASS  operations/currency/key-updater.test.js
  PASS  operations/currency/transfers.test.js
  PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/key-updater.test.js
  PASS  operations/currency/create-accounts.test.js
 
 Test Suites: 11 passed, 11 total
 Tests:       33 passed, 33 total
 Snapshots:   0 total
-Time:        1.603 s, estimated 2 s
+Time:        1.646 s, estimated 2 s
 Ran all test suites.
 ```
 
