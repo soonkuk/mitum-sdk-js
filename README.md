@@ -181,16 +181,16 @@ Each general account in __Mitum Currency__ consists of the following elements:
 * public keys
 * weights: each weight is paired with a public key
 * threshold
-* account address
+* address
 
-The account address is calculated based on the account's `public key`s, `weight`s, and `threshold`.
+The address is calculated based on the account's `public key`s, `weight`s, and `threshold`.
 
 In the case of a __multi-sig__ account, the sum of the weights of all public keys that signed the operation must be greater than or equal to the threshold. Otherwise, the operation will not be processed.
 
 Each weight and threshold range is __0 < weight, threshold <= 100__.
 An account can have up to __10 public keys__.
 
-* mitum general account address: [address]mca 
+* mitum general address: [address]mca 
 
 To obtain an address from public keys, you must use the following classes:
 
@@ -274,7 +274,7 @@ First, suppose you create an account with the following settings:
 ```js
 import { KPGen, Amount, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // enter your network id
+const networkId = "mitum"; // your network id
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -283,19 +283,19 @@ const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "500");
 
 const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
-const fact = new Currency.CreateAccountsFact(new TimeStamp().UTC(), /* sender account address */, [item]);
+const fact = new Currency.CreateAccountsFact(new TimeStamp().UTC()/* token; string */, /* sender address; string */, [item]);
 
-const operation = new Currency.CreateAccountsOperation(networkId, fact, /* custom memo */, []);
-operation.sign(/* a private key of the sender */);
+const operation = new Currency.CreateAccountsOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* a private key of the sender; string */);
 
 // see appendix
-// operation.export(/* file path */);
-// operation.send(/* digest api address */, /* headers */);
+// operation.export(/* file path; string */);
+// operation.send(/* digest api address; string */, /* headers; obj */);
 ```
 
 `KPGen.randomN(n)` and `KPGen.schnorr.randomN(n)` always return `Keys` with a threshold __100__.
 
-To generate `Keys` with custom thresholds and weights, use `PubKey` and `Keys` as follows:
+To generate `Keys` with thresholds and weights, use `PubKey` and `Keys` as follows:
 
 ```js
 import { /* KPGen, */ PubKey, Keys } from "mitum-sdk";
@@ -306,13 +306,13 @@ const pub1 = "your public key1";
 const pub2 = "your public key2";
 ...
 
-const key1 = new PubKey(pub1, /* custom weight */);
-const key2 = new PubKey(pub2, /* custom weight */);
+const key1 = new PubKey(pub1, /* weight; number */);
+const key2 = new PubKey(pub2, /* weight; number */);
 ...
 
-const keys = new Keys([key1, key2, ...], /* custom threshold */)
+const keys = new Keys([key1, key2, ...], /* threshold; number */)
 
-const item = new Currency.CreateAccountsItem(keys, /* amounts */);
+const item = new Currency.CreateAccountsItem(keys, /* amounts; Amount Array */);
 ```
 
 ### key-updater
@@ -330,15 +330,15 @@ First, suppose you add a new key to your account as follows:
 ```js
 import { PubKey, Keys, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // enter your network id
+const networkId = "mitum"; // your network id
 
 const pub1 = "22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu"; // old
 const pub2 = "yX3YBvu597eNgwuuJpsnZunZcDkABVeqfmiyveKuNregmpu"; // new
 const keys = [new PubKey(pub1, 50), new PubKey(pub2, 50)];
 
-const fact = new Currency.KeyUpdaterFact(new TimeStamp().UTC(), /* target account address */, new Keys(keys, 100), "MCC");
+const fact = new Currency.KeyUpdaterFact(new TimeStamp().UTC()/* token; string */, /* target address; string */, new Keys(keys, 100), "MCC");
 
-const operation = new Currency.KeyUpdaterOperation(networkId, fact, /* custom memo */, []);
+const operation = new Currency.KeyUpdaterOperation(networkId, fact, /* memo; string */, []);
 operation.sign("KwSKzHfNFKELkWs5gqbif1BqQhQjGhruKubqqU7AeKu5JPR36vKrmpr"); // a private key of the target; private key paired with pub1
 ```
 
@@ -356,28 +356,138 @@ Suppose you transfer tokens to a general account as follows:
 ```js
 import { Amount, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // enter your network id
+const networkId = "mitum"; // your network id
 
 const receiver = "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca";
 const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "100");
 
 const item = new Currency.TransfersItem(receiver, [mccAmount, penAmount]);
-const fact = new Currency.TransfersFact(new TimeStamp().UTC(), /* sender account address */, [item]);
+const fact = new Currency.TransfersFact(new TimeStamp().UTC()/* token; string */, /* sender address; string */, [item]);
 
-const operation = new Currency.TransfersOperation(networkId, fact, /* custom memo */, []);
-operation.sign(/* a private key of the sender */);
-
-// see appendix
-// operation.export(/* file path */);
-// operation.send(/* digest api address */, /* headers */);
+const operation = new Currency.TransfersOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* a private key of the sender; string */);
 ```
 
 ### currency-register
 
+__current-register__ is the operation to register the current id and policy of the new token.
+
+When registering a new token, you can choose one of the fee policies:
+
+* nil (no fee)
+* fixed (fixed fee)
+* ratio (proportional fee)
+
+__(1) Feeer__
+
+First, you need to create a `feeer` that contains the contents of each fee policy.
+
+```js
+import { Currency } from "mitum-sdk";
+
+const feeReceiver = "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca"; // receiver address to receive fees;
+
+/* nil */
+const nilFeeer = new Currency.NilFeeer();
+
+/* fixed */
+const fixedFeeer = new Currency.FixedFeeer(feeReceiver, "10");
+
+/* ration */
+const feeRatio = 0.5; // 0 <= fee ratio <= 1; float
+const minFee = "1"; // minimum fee
+const maxFee = "10000"; // maximum fee
+const ratioFeeer = new Currency.RatioFeeer(feeReceiver, feeRatio , minFee, maxFee);
+```
+
+__(2) Operation__
+
+Then, create an operation.
+
+```js
+import { Amount, Currency } from "mitum-sdk";
+
+// creating feeer
+// ...
+// done!
+
+const currency = "MCC"; // currency id to register
+const minBalance = "33"; // new account min balance(amount)
+const initialSupply = "999999999999999999999999999999999999";
+const genesis = "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca"; // genesis account address
+
+const policy = new Currency.CurrencyPolicy(minBalance, feeer); // feeer: NilFeeer || FixedFeeer || RatioFeeer 
+const amount = new Amount(currency, initialSupply);
+const design = new Currency.CurrencyDesign(amount, genesis, policy);
+
+const fact = new Currency.CurrencyRegisterFact(new TimeStamp().UTC()/* token; string */, design);
+const operation = new Currency.CurrencyRegisterOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* node private key; string */);
+```
+
 ### currency-policy-updater
 
+__currency-policy-updater__ is an operation that allows you to update policies of already registered tokens.
+
+Here, the way to create a feeer is the same as [currency-register](#currency-register).
+
+```js
+import { Currency } from "mitum-sdk";
+
+const networkId = "mitum"; // your network id
+const currency = "MCC"; // currency id to update `policy`
+
+// creating feeer
+// ...
+// done!
+
+const policy = new Currency.CurrencyPolicy(/* new account min balance; string */, feeer); // feeer: NilFeeer || FixedFeeer || RatioFeeer 
+
+const fact = new Currency.CurrencyPolicyUpdaterFact(new TimeStamp().UTC()/* token; string */, currency, policy);
+const operation = new Currency.CurrencyPolicyUpdaterOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* node private key; string */);
+```
+
 ### suffrage-inflation
+
+__suffrage-inflation__ is an operation to supply additional tokens to the network.
+
+You can specify accounts to deposit additional supplies to that account.
+
+Assume that you supply tokens as follows:
+
+* supply MCC: receiver1, 10000000 tokens
+* supply PEN: receiver2, 500000 tokens
+* supply TXT: receiver3, 999998888 tokens
+* supply BTS: receiver4, 292929292 tokens
+* supply TST: receiver5, 999991888 tokens
+
+```js
+import { Amount, Currency } from "mitum-sdk";
+
+const networkId = "mitum";
+
+const receiver1 = "receiver1's account address";
+...
+const receiver5 = "receiver5's account address";
+
+const mcc = new Amount("MCC", "10000000");
+const pen = new Amount("PEN", "500000");
+const txt = new Amount("TXT", "999998888");
+const bts = new Amount("BTS", "292929292");
+const tst = new Amount("TST", "999991888");
+
+const imcc = new Currency.SuffrageInflationItem(receiver1, mcc);
+const ipen = new Currency.SuffrageInflationItem(receiver2, pen);
+const itxt = new Currency.SuffrageInflationItem(receiver3, txt);
+const ibts = new Currency.SuffrageInflationItem(receiver4, bts);
+const itst = new Currency.SuffrageInflationItem(receiver5, tst);
+
+const fact = new Currency.SuffrageInflationFact(/* token; string */, [imcc, ipen, itxt, ibts, itst]);
+const operation = new Currency.SuffrageInflationOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* node private key */);
+```
 
 ## Appendix
 

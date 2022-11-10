@@ -15,6 +15,36 @@ import {
 	KeyUpdaterOperation,
 } from "./operations/currency/key-updater.js";
 
+import {
+	TransfersItem,
+	TransfersFact,
+	TransfersOperation,
+} from "./operations/currency/transfers.js";
+
+import {
+	CurrencyDesign,
+	CurrencyPolicy,
+	NilFeeer,
+	FixedFeeer,
+	RatioFeeer,
+} from "./operations/currency/currency-design.js";
+
+import {
+	CurrencyRegisterFact,
+	CurrencyRegisterOperation,
+} from "./operations/currency/currency-register.js";
+
+import {
+	CurrencyPolicyUpdaterFact,
+	CurrencyPolicyUpdaterOperation,
+} from "./operations/currency/currency-policy-updater.js";
+
+import {
+	SuffrageInflationItem,
+	SuffrageInflationFact,
+	SuffrageInflationOperation,
+} from "./operations/currency/suffrage-inflation.js";
+
 const KPGen = {
 	schnorr: {
 		...schnorr,
@@ -32,6 +62,21 @@ const Currency = {
 	CreateAccountsOperation,
 	KeyUpdaterFact,
 	KeyUpdaterOperation,
+	TransfersItem,
+	TransfersFact,
+	TransfersOperation,
+	CurrencyDesign,
+	CurrencyPolicy,
+	NilFeeer,
+	FixedFeeer,
+	RatioFeeer,
+	CurrencyRegisterFact,
+	CurrencyRegisterOperation,
+	CurrencyPolicyUpdaterFact,
+	CurrencyPolicyUpdaterOperation,
+	SuffrageInflationItem,
+	SuffrageInflationFact,
+	SuffrageInflationOperation,
 };
 
 export { KPGen, PubKey, Keys, Amount, Currency };
