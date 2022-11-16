@@ -1,4 +1,4 @@
-import axios from "axios";
+import bs58 from "bs58";
 
 import { Amount } from "./amount";
 import {
@@ -7,62 +7,34 @@ import {
 	CreateAccountsOperation,
 } from "./create-accounts";
 
-import {
-	MAX_THRESHOLD,
-	MAX_WEIGHT,
-	TEST_NODE,
-} from "../../mitum.config";
+import { TEST_GENESIS, TEST_ACCOUNT, TEST_ID } from "../../mitum.config";
 
-import { ecdsa } from "../../key/ecdsa-keypair";
-import { ecdsaRandomN } from "../../key/address";
 import { Keys, PublicKey } from "../../key/key";
-
 import { TimeStamp } from "../../utils/time";
-
-const { url, builder } = TEST_NODE;
-
-const id = "mitum";
 
 describe("test: create-account", () => {
 	it("case: ecdsa; operation", () => {
-		const currency = "MCC";
-		const testAmount = "100";
+		const amounts = [new Amount("MCC", "1000"), new Amount("PEN", "1000")];
+		const keys = new Keys(
+			[
+				new PublicKey(
+					TEST_ACCOUNT.public,
+					100
+				),
+			],
+			100
+		);
+		const fact = new CreateAccountsFact(
+			new TimeStamp("2022-11-16T06:05:14.889691Z").UTC(),
+			TEST_GENESIS.ecdsa.address,
+			[new CreateAccountsItem(keys, amounts)]
+		);
+		const operation = new CreateAccountsOperation(TEST_ID, fact, "", []);
+		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		for (let i = 0; i < 10; i++) {
-			const items = [];
-			for (let j = 0; j < i + 1; j++) {
-				const amounts = [];
-				const keys = [];
-				for (let k = 10 - i; k > 0; k--) {
-					amounts.push(new Amount(currency, testAmount));
-					keys.push(
-						new PublicKey(
-							ecdsa.random().publicKey.toString(),
-							MAX_WEIGHT
-						)
-					);
-				}
-				items.push(
-					new CreateAccountsItem(
-						new Keys(keys, MAX_THRESHOLD),
-						amounts
-					)
-				);
-			}
-
-			const fact = new CreateAccountsFact(
-				new TimeStamp().UTC(),
-				ecdsaRandomN(1).keys.address.toString(),
-				items
-			);
-			const operation = new CreateAccountsOperation(id, fact, "", []);
-			operation.sign(ecdsa.random().privateKey.toString());
-
-			axios
-				.post(`${url}${builder}`, operation.dict())
-				.then((res) => expect(res.status === 200))
-				.catch((_) => expect(false));
-		}
+		expect("3YQ6tUgKBKq6HdjREeFTVBYrTDWiTQEYARv6HX8wyQZP" === bs58.encode(fact.hash));
+		expect("Gz3KHZ85jSWJ3yueMoHL4TU2f7TQV5N2Cz6FDMHRyvGJ" === bs58.encode(operation.hash));
+		expect(TEST_ACCOUNT.address === keys.address.toString());
 	});
 
 	it("case: schnorr; operation", () => {});

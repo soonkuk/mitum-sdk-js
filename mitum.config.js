@@ -19,8 +19,25 @@ export const MAX_KEYS_IN_ADDRESS = 10;
 export const MAX_AMOUNTS_IN_ITEM = 10;
 export const MAX_ITEMS_IN_FACT = 10;
 
+export const TEST_ID = "mitum";
+
 export const TEST_NODE = {
-	url: "http://127.0.0.1:54320",
-	builder: "/builder/send",
-	lookup: "/block/operation/",
-};
+	ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",
+	schnorr: "",
+}
+
+export const TEST_GENESIS = {
+	ecdsa: {
+		address: "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca",
+		private: "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr",
+	},
+	schnorr: {
+		address: "",
+		private: "",
+	}
+}
+
+export const TEST_ACCOUNT = {
+	public: "2122tJTiK183VbZFsecRgvaybcqM1wwGRLrsru9e5FaJMmpu",
+	address: "AN91jfkYtje64GPrKPkGMrrPnb7iq9TZq1fBHxwML9wmmca",
+}

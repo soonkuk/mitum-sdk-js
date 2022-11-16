@@ -209,7 +209,7 @@ export class Operation extends IBytesDict {
 		exportJson(fp, this.dict());
 	}
 
-	send(url, headers) {
+	request(url, headers) {
 		if (headers) {
 			return axios.post(url, this.dict(), { headers });
 		}

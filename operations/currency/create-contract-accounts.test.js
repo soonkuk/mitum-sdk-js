@@ -1,4 +1,4 @@
-import axios from "axios";
+import bs58 from "bs58";
 
 import { Amount } from "./amount";
 import {
@@ -7,63 +7,39 @@ import {
 	CreateContractAccountsOperation,
 } from "./create-contract-accounts";
 
-import { MAX_THRESHOLD, MAX_WEIGHT, TEST_NODE } from "../../mitum.config";
+import { TEST_ACCOUNT, TEST_GENESIS, TEST_ID } from "../../mitum.config";
 
-import { ecdsa } from "../../key/ecdsa-keypair";
-import { ecdsaRandomN } from "../../key/address";
 import { Keys, PublicKey } from "../../key/key";
 
 import { TimeStamp } from "../../utils/time";
 
-const { url, builder } = TEST_NODE;
-
-const id = "mitum";
-
 describe("test: create-contract-account", () => {
 	it("case: ecdsa; operation", () => {
-		const currency = "MCC";
-		const testAmount = "100";
+		const amounts = [new Amount("MCC", "1000"), new Amount("PEN", "1000")];
+		const keys = new Keys([new PublicKey(TEST_ACCOUNT.public, 100)], 100);
+		const item = new CreateContractAccountsItem(keys, amounts);
+		const fact = new CreateContractAccountsFact(
+			new TimeStamp("2022-11-16T06:59:44.986806Z").UTC(),
+			TEST_GENESIS.ecdsa.address,
+			[item]
+		);
+		const operation = new CreateContractAccountsOperation(
+			TEST_ID,
+			fact,
+			"",
+			[]
+		);
+		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		for (let i = 0; i < 10; i++) {
-			const items = [];
-			for (let j = 0; j < i + 1; j++) {
-				const amounts = [];
-				const keys = [];
-				for (let k = 10 - i; k > 0; k--) {
-					amounts.push(new Amount(currency, testAmount));
-					keys.push(
-						new PublicKey(
-							ecdsa.random().publicKey.toString(),
-							MAX_WEIGHT
-						)
-					);
-				}
-				items.push(
-					new CreateContractAccountsItem(
-						new Keys(keys, MAX_THRESHOLD),
-						amounts
-					)
-				);
-			}
-
-			const fact = new CreateContractAccountsFact(
-				new TimeStamp().UTC(),
-				ecdsaRandomN(1).keys.address.toString(),
-				items
-			);
-			const operation = new CreateContractAccountsOperation(
-				id,
-				fact,
-				"",
-				[]
-			);
-			operation.sign(ecdsa.random().privateKey.toString());
-
-			axios
-				.post(`${url}${builder}`, operation.dict())
-				.then((res) => expect(res.status === 200))
-				.catch((_) => expect(false));
-		}
+		expect(
+			"79MQkuRZW26k4YXT7xhADF2JwJW4geMfFCVmwNcLsp4Q" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"3DoTQhHYhmtQt4qjQnq7p9TbYYh5x3UfoWBqyEovF7Qr" ===
+				bs58.encode(operation.hash)
+		);
+		expect(TEST_ACCOUNT.address === keys.address.toString());
 	});
 
 	it("case: schnorr; operation", () => {});

@@ -31,7 +31,7 @@ $ npm i mitum-sdk
 
 ## Test
 
-Before testing, check `TEST_NODE` in [mitum.config.js](mitum.config.js).
+Before testing, check `TEST_ID`, `TEST_NODE`, `TEST_GENESIS`, and `TEST_ACCOUNT` in [mitum.config.js](mitum.config.js).
 
 You can test __mitum-sdk__ using this command:
 
@@ -41,24 +41,24 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  operations/currency/currency-policy-updater.test.js
- PASS  operations/currency/currency-register.test.js
- PASS  key/schnorr-keypair.test.js
- PASS  key/ecdsa-keypair.test.js
  PASS  key/key.test.js
- PASS  utils/time.test.js
- PASS  operations/currency/key-updater.test.js
- PASS  operations/currency/transfers.test.js
- PASS  key/address.test.js
- PASS  operations/currency/suffrage-inflation.test.js
+ PASS  key/schnorr-keypair.test.js
  PASS  operations/currency/create-accounts.test.js
  PASS  operations/currency/withdraws.test.js
  PASS  operations/currency/create-contract-accounts.test.js
+ PASS  operations/currency/transfers.test.js
+ PASS  utils/time.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/key-updater.test.js
+ PASS  key/address.test.js
+ PASS  key/ecdsa-keypair.test.js
 
 Test Suites: 13 passed, 13 total
 Tests:       37 passed, 37 total
 Snapshots:   0 total
-Time:        1.864 s, estimated 2 s
+Time:        1.397 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -295,7 +295,7 @@ operation.sign(/* a private key of the sender; string */);
 
 // see appendix
 // operation.export(/* file path; string */);
-// operation.send(/* digest api address; string */, /* headers; obj */);
+// operation.request(/* digest api address; string */, /* headers; obj */);
 ```
 
 `KPGen.randomN(n)` and `KPGen.schnorr.randomN(n)` always return `Keys` with a threshold __100__.
@@ -569,7 +569,7 @@ operation.sign(/* sender's private key */)
 * Send the operation directly to the network via Digest API.
 
 ```js
-operation.send(/* digest api address */, /* headers */); // `headers` can be null or undefined
+operation.request(/* digest api address */, /* headers */); // `headers` can be null or undefined
 ```
 
 * You can export operation json to a file.

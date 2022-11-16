@@ -1,52 +1,33 @@
-import axios from "axios";
+import bs58 from "bs58";
 
 import { Amount } from "./amount";
 import { TransfersFact, TransfersItem, TransfersOperation } from "./transfers";
 
-import { TEST_NODE } from "../../mitum.config";
-
-import { ecdsa } from "../../key/ecdsa-keypair";
-import { ecdsaRandomN } from "../../key/address";
+import { TEST_ACCOUNT, TEST_GENESIS, TEST_ID } from "../../mitum.config";
 
 import { TimeStamp } from "../../utils/time";
 
-const { url, builder } = TEST_NODE;
-
-const id = "mitum";
-
 describe("test: transfers", () => {
 	it("case: ecdsa; operation", () => {
-		const currency = "MCC";
-		const testAmount = "100";
+		const amounts = [new Amount("MCC", "1000"), new Amount("PEN", "1000")];
+		const item = new TransfersItem(TEST_ACCOUNT.address, amounts);
+		const fact = new TransfersFact(
+			new TimeStamp("2022-11-16T06:26:07.47499Z").UTC(),
+			TEST_GENESIS.ecdsa.address,
+			[item]
+		);
 
-		for (let i = 0; i < 10; i++) {
-			const items = [];
-			for (let j = 0; j < i + 1; j++) {
-				const amounts = [];
-				for (let k = 10 - i; k > 0; k--) {
-					amounts.push(new Amount(currency, testAmount));
-				}
-				items.push(
-					new TransfersItem(
-						ecdsaRandomN(1).keys.address.toString(),
-						amounts
-					)
-				);
-			}
+		const operation = new TransfersOperation(TEST_ID, fact, "", []);
+		operation.sign(TEST_GENESIS.ecdsa.private);
 
-			const fact = new TransfersFact(
-				new TimeStamp().UTC(),
-				ecdsaRandomN(1).keys.address.toString(),
-				items
-			);
-			const operation = new TransfersOperation(id, fact, "", []);
-			operation.sign(ecdsa.random().privateKey.toString());
-
-			axios
-				.post(`${url}${builder}`, operation.dict())
-				.then((res) => expect(res.status === 200))
-				.catch((_) => expect(false));
-		}
+		expect(
+			"GTXjBCvb183KaCtiprpjC4e4XDor6XeBfijZfqwMPsBx" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"3YDbp8fSa46fhAdUnpk3u6JPCWGPSypUbTT2DE67Jiqj" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: schnorr; operation", () => {});

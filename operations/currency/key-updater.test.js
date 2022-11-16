@@ -1,52 +1,67 @@
-import axios from "axios";
+import bs58 from "bs58";
 
 import { KeyUpdaterFact, KeyUpdaterOperation } from "./key-updater";
 
 import {
-	MAX_THRESHOLD,
-	MAX_WEIGHT,
-	TEST_NODE,
+	TEST_GENESIS,
+	TEST_ACCOUNT,
+	TEST_ID,
 } from "../../mitum.config";
 
-import { ecdsa } from "../../key/ecdsa-keypair";
-import { ecdsaRandomN } from "../../key/address";
 import { Keys, PublicKey } from "../../key/key";
-
 import { TimeStamp } from "../../utils/time";
 
-const { url, builder } = TEST_NODE;
-
-const id = "mitum";
+	// 		"_hint": "mitum-currency-keyupdater-operation-v0.0.1",
+	// 		"hash": "9dg658G5HedDcSpN65cWD7UPCQD2HSvoShycx3cRwE6x",
+	// 		"fact": {
+	// 		  "_hint": "mitum-currency-keyupdater-operation-fact-v0.0.1",
+	// 		  "hash": "",
+	// 		  "token": "MjAyMi0xMS0xNlQwNjoxNjo1MS45NzI4NFo=",
+	// 		  "target": "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca",
+	// 		  "keys": {
+	// 			"_hint": "mitum-currency-keys-v0.0.1",
+	// 			"hash": "AN91jfkYtje64GPrKPkGMrrPnb7iq9TZq1fBHxwML9wm",
+	// 			"keys": [
+	// 			  {
+	// 				"_hint": "mitum-currency-key-v0.0.1",
+	// 				"weight": 100,
+	// 				"key": "2122tJTiK183VbZFsecRgvaybcqM1wwGRLrsru9e5FaJMmpu"
+	// 			  }
+	// 			],
+	// 			"threshold": 100
+	// 		  },
+	// 		  "currency": "MCC"
+	// 		},
+	// 		"fact_signs": [
+	// 		  {
+	// 			"_hint": "base-fact-sign-v0.0.1",
+	// 			"signer": "zzeo6WAS4uqwCss4eRibtLnYHqJM21zhzPbKWQVPttxWmpu",
+	// 			"signature": "AN1rKvtJFrckgFJAp6XVNbmPqBbbQrLb6fuNY2PLSfbtBKjwFve5hGkikWVxZeLBqg8XbMRJFyMa3ChXtG1pCWonP1va5ra6W",
+	// 			"signed_at": "2022-11-16T06:16:51.972947Z"
+	// 		  }
+	// 		],
+	// 		"memo": ""
+	// 	  }
 
 describe("test: key-updater", () => {
 	it("case: ecdsa; operation", () => {
-		const currency = "MCC";
+		const keys = new Keys([new PublicKey(
+			TEST_ACCOUNT.public,
+			100
+		)], 100);
 
-		for (let i = 0; i < 10; i++) {
-			const keys = [];
-			for (let j = 10 - i; j > 0; j--) {
-				keys.push(
-					new PublicKey(
-						ecdsa.random().publicKey.toString(),
-						MAX_WEIGHT
-					)
-				);
-			}
+		const fact = new KeyUpdaterFact(
+			new TimeStamp("2022-11-16T06:16:51.97284Z").UTC(),
+			TEST_GENESIS.ecdsa.address,
+			keys,
+			"MCC"
+		);
+		const operation = new KeyUpdaterOperation(TEST_ID, fact, "", []);
+		operation.sign(TEST_GENESIS.ecdsa.private);
 
-			const fact = new KeyUpdaterFact(
-				new TimeStamp().UTC(),
-				ecdsaRandomN(1).keys.address.toString(),
-				new Keys(keys, MAX_THRESHOLD),
-				currency
-			);
-			const operation = new KeyUpdaterOperation(id, fact, "", []);
-			operation.sign(ecdsa.random().privateKey.toString());
-
-			axios
-				.post(`${url}${builder}`, operation.dict())
-				.then((res) => expect(res.status === 200))
-				.catch((_) => expect(false));
-		}
+		expect("8o6KNp9rvbmed783f38mnVPb3ss1Q2sZFYj9MpRy9Axa" === bs58.encode(fact.hash));
+		expect("9dg658G5HedDcSpN65cWD7UPCQD2HSvoShycx3cRwE6x" === bs58.encode(operation.hash));
+		expect(TEST_ACCOUNT.address === keys.address.toString());
 	});
 
 	it("case: schnorr; operation", () => {});

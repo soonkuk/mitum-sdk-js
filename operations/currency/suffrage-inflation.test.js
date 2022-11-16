@@ -1,4 +1,4 @@
-import axios from "axios";
+import bs58 from "bs58";
 
 import { Amount } from "./amount";
 
@@ -8,43 +8,38 @@ import {
 	SuffrageInflationOperation,
 } from "./suffrage-inflation";
 
-import { TEST_NODE } from "../../mitum.config";
+import { TEST_GENESIS, TEST_ID, TEST_NODE } from "../../mitum.config";
 
-import { ecdsa } from "../../key/ecdsa-keypair";
 import { TimeStamp } from "../../utils/time";
-import { ecdsaRandomN } from "../../key/address";
-
-const { url, builder } = TEST_NODE;
-
-const id = "mitum";
-const currency = "MCC";
-const amount = "99999999999999";
 
 describe("test: suffrage-inflation", () => {
 	it("case: ecdsa; operation", () => {
-		for (let i = 0; i < 10; i++) {
-			const items = [];
-			for (let j = 0; j < i + 1; j++) {
-				items.push(
-					new SuffrageInflationItem(
-						ecdsaRandomN(1).keys.address.toString(),
-						new Amount(currency, amount)
-					)
-				);
-			}
+		const items = [
+			new SuffrageInflationItem(
+				TEST_GENESIS.ecdsa.address,
+				new Amount("MCC", "9999999999999999999999")
+			),
+			new SuffrageInflationItem(
+				TEST_GENESIS.ecdsa.address,
+				new Amount("PEN", "9999999999999999999999")
+			),
+		];
 
-			const fact = new SuffrageInflationFact(
-				new TimeStamp().UTC(),
-				items
-			);
-			const operation = new SuffrageInflationOperation(id, fact, "", []);
-			operation.sign(ecdsa.random().privateKey.toString());
+		const fact = new SuffrageInflationFact(
+			new TimeStamp("2022-11-16T06:55:02.135231Z").UTC(),
+			items
+		);
+		const operation = new SuffrageInflationOperation(TEST_ID, fact, "", []);
+		operation.sign(TEST_NODE.ecdsa);
 
-			axios
-				.post(`${url}${builder}`, operation.dict())
-				.then((res) => expect(res.status === 200))
-				.catch((_) => expect(false));
-		}
+		expect(
+			"FcP5ciHKkhogkskiYiaVCTP4JZ7zr4UH2cMRJqhhzEgV" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"C1LSS52mQJ1MJWq4GK3mpk6xpKMeLhST9kKjWYyKLrqK" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: schnorr; operation", () => {});
