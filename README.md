@@ -3,6 +3,7 @@
 __mitum-sdk__ is Javascript SDK that helps create operations for mitum models.
 
 * Mitum Currency
+* Mitum Currency Extension
 
 ## Installation
 
@@ -40,22 +41,24 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  key/key.test.js
- PASS  key/schnorr-keypair.test.js
- PASS  utils/time.test.js
  PASS  operations/currency/currency-policy-updater.test.js
- PASS  key/address.test.js
  PASS  operations/currency/currency-register.test.js
+ PASS  key/schnorr-keypair.test.js
  PASS  key/ecdsa-keypair.test.js
- PASS  operations/currency/transfers.test.js
- PASS  operations/currency/suffrage-inflation.test.js
+ PASS  key/key.test.js
+ PASS  utils/time.test.js
  PASS  operations/currency/key-updater.test.js
+ PASS  operations/currency/transfers.test.js
+ PASS  key/address.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
  PASS  operations/currency/create-accounts.test.js
+ PASS  operations/currency/withdraws.test.js
+ PASS  operations/currency/create-contract-accounts.test.js
 
-Test Suites: 11 passed, 11 total
-Tests:       33 passed, 33 total
+Test Suites: 13 passed, 13 total
+Tests:       37 passed, 37 total
 Snapshots:   0 total
-Time:        1.646 s, estimated 2 s
+Time:        1.864 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -75,6 +78,8 @@ Ran all test suites.
 |-|[currency-register](#currency-register)|
 |-|[currency-policy-updater](#currency-policy-updater)|
 |-|[suffrage-inflation](#suffrage-inflation)|
+|-|[create-contract-account](#create-contract-account)|
+|-|[withdraw](#withdraw)|
 |+|[Appendix](#appendix)|
 
 ## Generate KeyPairs
@@ -487,6 +492,66 @@ const itst = new Currency.SuffrageInflationItem(receiver5, tst);
 const fact = new Currency.SuffrageInflationFact(/* token; string */, [imcc, ipen, itxt, ibts, itst]);
 const operation = new Currency.SuffrageInflationOperation(networkId, fact, /* memo; string */, []);
 operation.sign(/* node private key */);
+```
+
+### create-contract-account
+
+__create-contract-account__ is an operation to create a new contract account provided by __Mitum Currency Extension__.
+
+The rules for contract account creation are as described in [2. Get address from public keys](#get-address-from-public-keys). (exactly the same as general account)
+
+First, suppose you create a contract account with the following settings:
+
+* 5 public keys
+* each weight: 20
+* threshold: 100
+* initial balance: 1000 MCC, 500 PEN
+
+Here, the weight and threshold are only used to generate the account address and do not affect the behavior of the account at all after the account is registered.
+
+```js
+import { KPGen, Amount, Currency } from "mitum-sdk";
+
+const networkId = "mitum"; // your network id
+
+// create 5 new public keys
+const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
+
+const mccAmount = new Amount("MCC", "1000");
+const penAmount = new Amount("PEN", "500");
+
+const item = new Currency.CreateContractAccountsItem(keys, [mccAmount, penAmount]);
+const fact = new Currency.CreateContractAccountsFact(new TimeStamp().UTC()/* token; string */, /* sender address; string */, [item]);
+
+const operation = new Currency.CreateContractAccountsOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* a private key of the sender; string */);
+```
+
+### withdraw
+
+__withdraw__ is an operation for withdrawing tokens from a contract account.
+
+Overall, it is similar to __transfer__.
+
+Suppose your contract account is __DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqdmca__ and you want to withdraw the token from this account as follows:
+
+* contract account: DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca
+* tokens to transfer: 1000 MCC, 100 PEN
+
+```js
+import { Amount, Currency } from "mitum-sdk";
+
+const networkId = "mitum"; // your network id
+
+const contractAccount = "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca";
+const mccAmount = new Amount("MCC", "1000");
+const penAmount = new Amount("PEN", "100");
+
+const item = new Currency.WithdrawsItem(contractAccount, [mccAmount, penAmount]);
+const fact = new Currency.WithdrawsFact(new TimeStamp().UTC()/* token; string */, /* sender address; string */, [item]);
+
+const operation = new Currency.WithdrawsOperation(networkId, fact, /* memo; string */, []);
+operation.sign(/* a private key of the sender; string */);
 ```
 
 ## Appendix

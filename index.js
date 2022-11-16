@@ -45,6 +45,18 @@ import {
 	SuffrageInflationOperation,
 } from "./operations/currency/suffrage-inflation.js";
 
+import {
+	CreateContractAccountsItem,
+	CreateContractAccountsFact,
+	CreateContractAccountsOperation,
+} from "./operations/currency/create-contract-accounts.js";
+
+import {
+	WithdrawsItem,
+	WithdrawsFact,
+	WithdrawsOperation,
+} from "./operations/currency/withdraws.js";
+
 const KPGen = {
 	schnorr: {
 		...schnorr,
@@ -77,6 +89,12 @@ const Currency = {
 	SuffrageInflationItem,
 	SuffrageInflationFact,
 	SuffrageInflationOperation,
+	CreateContractAccountsItem,
+	CreateContractAccountsFact,
+	CreateContractAccountsOperation,
+	WithdrawsItem,
+	WithdrawsFact,
+	WithdrawsOperation,
 };
 
 export { KPGen, PubKey, Keys, Amount, Currency };
