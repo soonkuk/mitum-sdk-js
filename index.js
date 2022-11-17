@@ -1,3 +1,5 @@
+import { TimeStamp } from "./utils/time.js";
+
 import { ecdsa } from "./key/ecdsa-keypair.js";
 import { schnorr } from "./key/schnorr-keypair.js";
 import { PublicKey, Keys } from "./key/key.js";
@@ -97,4 +99,4 @@ const Currency = {
 	WithdrawsOperation,
 };
 
-export { KPGen, PubKey, Keys, Amount, Currency };
+export { TimeStamp, KPGen, PubKey, Keys, Amount, Currency };
