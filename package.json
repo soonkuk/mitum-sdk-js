@@ -1,7 +1,7 @@
 {
 	"name": "mitum-sdk",
 	"version": "0.0.1",
-	"description": "Javascript SDK for MITUM2",
+	"description": "Javascript SDK for mitum",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
@@ -13,9 +13,11 @@
 	},
 	"keywords": [
 		"mitum",
+		"mitum-currency",
+		"mitum-currency-extension",
 		"protocon"
 	],
-	"author": "ProtoconNet",
+	"author": "protocon",
 	"license": "GPL-3.0-or-later",
 	"bugs": {
 		"url": "https://github.com/ProtoconNet/mitum-sdkjs/issues"
