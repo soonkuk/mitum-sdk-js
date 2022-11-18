@@ -30,8 +30,8 @@ export class CurrencyDesign extends IBytesDict {
 		assert(
 			amount instanceof Amount,
 			error.instance(
-				"not Amount instance",
 				EC_INVALID_AMOUNT,
+				"not Amount instance",
 				name(amount)
 			)
 		);
@@ -40,8 +40,8 @@ export class CurrencyDesign extends IBytesDict {
 		assert(
 			policy instanceof CurrencyPolicy,
 			error.instance(
-				"not CurrencyPolicy instance",
 				EC_INVALID_CURRENCY_POLICY,
+				"not CurrencyPolicy instance",
 				name(policy)
 			)
 		);
@@ -80,8 +80,8 @@ export class CurrencyPolicy extends IBytesDict {
 		assert(
 			feeer instanceof CurrencyFeeer,
 			error.instance(
-				"not CurrencyFeeer instance",
 				EC_INVALID_CURRENCY_FEEER,
+				"not CurrencyFeeer instance",
 				name(feeer)
 			)
 		);
@@ -151,7 +151,7 @@ export class RatioFeeer extends CurrencyFeeer {
 		this.ratio = new Float(ratio);
 		assert(
 			0 <= ratio && ratio <= 1,
-			error.range("ratio out of range", EC_INVALID_RATIO, ratio)
+			error.range(EC_INVALID_RATIO, "ratio out of range", ratio)
 		);
 
 		this.receiver = new Address(receiver);

@@ -25,18 +25,26 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(TEST_ID, fact, "", []);
+		const operation = new CurrencyPolicyUpdaterOperation(
+			TEST_ID,
+			fact,
+			"",
+			[]
+		);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("5Mhz2DfpQ51G3SyNLcLgmCbp8yx5o53ykwre7DidT3Rr" === bs58.encode(fact.hash));
-		expect("2wMkQpezYUCUjpMxkjvqBDnbnt8adHxdbhkKPBv3cbjq" === bs58.encode(operation.hash));
+		expect(
+			"5Mhz2DfpQ51G3SyNLcLgmCbp8yx5o53ykwre7DidT3Rr" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"2wMkQpezYUCUjpMxkjvqBDnbnt8adHxdbhkKPBv3cbjq" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: ecdsa; fixed feeer", () => {
-		const feeer = new FixedFeeer(
-			TEST_GENESIS.ecdsa.address,
-			"999"
-		);
+		const feeer = new FixedFeeer(TEST_GENESIS.ecdsa.address, "999");
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const fact = new CurrencyPolicyUpdaterFact(
@@ -44,11 +52,22 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(TEST_ID, fact, "", []);
+		const operation = new CurrencyPolicyUpdaterOperation(
+			TEST_ID,
+			fact,
+			"",
+			[]
+		);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("4n6AxV17j2oMmQhk1qMqTWzd3dUuEW45v88aLmisoCgy" === bs58.encode(fact.hash));
-		expect("FrkAgdYuYrnBMFXJqvNUKsJym1w5AbwuM5Gajy7E16Ec" === bs58.encode(operation.hash));
+		expect(
+			"4n6AxV17j2oMmQhk1qMqTWzd3dUuEW45v88aLmisoCgy" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"FrkAgdYuYrnBMFXJqvNUKsJym1w5AbwuM5Gajy7E16Ec" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: ecdsa; ratio feeer", () => {
@@ -65,11 +84,22 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(TEST_ID, fact, "", []);
+		const operation = new CurrencyPolicyUpdaterOperation(
+			TEST_ID,
+			fact,
+			"",
+			[]
+		);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("4h8RXMBj9qpEiWe3JrdnazhasuwVcBnyvVVNj8G3usrp" === bs58.encode(fact.hash));
-		expect("3YtRVksiyr4bCWeYXP4dFjAm8YzTj2HYf1PEpqdWZvu8" === bs58.encode(operation.hash));
+		expect(
+			"4h8RXMBj9qpEiWe3JrdnazhasuwVcBnyvVVNj8G3usrp" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"3YtRVksiyr4bCWeYXP4dFjAm8YzTj2HYf1PEpqdWZvu8" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: schnorr; nil feeer", () => {});

@@ -65,17 +65,13 @@ const random = () => {
 const fromPrivateKey = (privateKey) => {
 	assert(
 		typeof privateKey === "string",
-		error.type(
-			"not string",
-			EC_INVALID_PRIVATE_KEY,
-			typeof privateKey
-		)
+		error.type(EC_INVALID_PRIVATE_KEY, "not string", typeof privateKey)
 	);
 	assert(
 		isSchnorrPrivateKey(privateKey),
 		error.format(
-			"invalid length or key suffix",
 			EC_INVALID_PRIVATE_KEY,
+			"invalid length or key suffix",
 			jsonStringify({
 				length: privateKey.length,
 				suffix:
@@ -94,15 +90,11 @@ const fromPrivateKey = (privateKey) => {
 const fromSeed = (seed) => {
 	assert(
 		typeof seed === "string",
-		error.type("not string", EC_INVALID_SEED, typeof seed)
+		error.type(EC_INVALID_SEED, "not string", typeof seed)
 	);
 	assert(
 		seed.length >= MIN_SEED_LENGTH,
-		error.range(
-			"seed length out of range",
-			EC_INVALID_SEED,
-			seed.length
-		)
+		error.range(EC_INVALID_SEED, "seed length out of range", seed.length)
 	);
 
 	seed = Buffer.from(bs58.encode(sum256(Buffer.from(seed))));

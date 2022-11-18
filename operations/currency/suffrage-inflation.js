@@ -30,8 +30,8 @@ export class SuffrageInflationItem extends IBytesDict {
 		assert(
 			amount instanceof Amount,
 			error.instance(
-				"not Amount instance",
 				EC_INVALID_AMOUNT,
+				"not Amount instance",
 				name(amount)
 			)
 		);
@@ -58,8 +58,8 @@ export class SuffrageInflationFact extends Fact {
 		assert(
 			Array.isArray(items),
 			error.type(
-				"not Array",
 				EC_INVALID_ITEM,
+				"not Array",
 				jsonStringify({
 					type: typeof items,
 					name: name(items),
@@ -70,8 +70,8 @@ export class SuffrageInflationFact extends Fact {
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
 			error.range(
-				"array size out of range",
 				EC_INVALID_ITEMS,
+				"array size out of range",
 				items.length
 			)
 		);
@@ -80,8 +80,8 @@ export class SuffrageInflationFact extends Fact {
 			assert(
 				item instanceof SuffrageInflationItem,
 				error.instance(
-					"not SuffrageInflationItem instance",
 					EC_INVALID_ITEM,
+					"not SuffrageInflationItem instance",
 					`idx ${idx} - ${name(item)}`
 				)
 			)

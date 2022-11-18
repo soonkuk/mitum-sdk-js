@@ -60,8 +60,8 @@ export class WithdrawsFact extends Fact {
 		assert(
 			Array.isArray(items),
 			error.type(
-				"not Array",
 				EC_INVALID_ITEM,
+				"not Array",
 				jsonStringify({
 					type: typeof items,
 					name: name(items),
@@ -72,8 +72,8 @@ export class WithdrawsFact extends Fact {
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
 			error.range(
-				"array size out of range",
 				EC_INVALID_ITEMS,
+				"array size out of range",
 				items.length
 			)
 		);
@@ -82,8 +82,8 @@ export class WithdrawsFact extends Fact {
 			assert(
 				item instanceof WithdrawsItem,
 				error.instance(
-					"not WithdrawsItem instance",
 					EC_INVALID_ITEM,
+					"not WithdrawsItem instance",
 					`idx ${idx} - ${name(item)}`
 				)
 			)

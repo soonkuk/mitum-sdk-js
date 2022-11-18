@@ -6,13 +6,13 @@ import { sum256 } from "../utils/hash.js";
 
 export class Fact extends IBytesDict {
 	constructor(hint, token) {
-        super();
+		super();
 		this.hint = new Hint(hint);
 		this.token = new Token(token);
-        this.hash = null;
+		this.hash = null;
 	}
 
-    hashing() {
-        return sum256(this.bytes());
-    }
+	hashing() {
+		return sum256(this.bytes());
+	}
 }

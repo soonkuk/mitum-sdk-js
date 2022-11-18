@@ -33,11 +33,7 @@ export class Big extends IBytes {
 			try {
 				this.big = toBig(n);
 			} catch (e) {
-				throw error.type(
-					"not Array object",
-					EC_INVALID_BIG_INTEGER,
-					n
-				);
+				throw error.type(EC_INVALID_BIG_INTEGER, "not Array", n);
 			}
 		}
 	}
@@ -48,8 +44,8 @@ export class Big extends IBytes {
 		assert(
 			size <= 8,
 			error.range(
-				"big out of range",
 				EC_INVALID_BIG_INTEGER,
+				"big out of range",
 				jsonStringify({
 					size,
 					big: this.big.toString(),
@@ -98,7 +94,7 @@ export class Float extends IBytes {
 		super();
 		assert(
 			typeof n === "number",
-			error.type("not number", EC_INVALID_FLOAT, typeof n)
+			error.type(EC_INVALID_FLOAT, "not number", typeof n)
 		);
 		this.n = n;
 	}

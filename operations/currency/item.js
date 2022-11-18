@@ -21,8 +21,8 @@ export class CurrencyItem extends Item {
 		assert(
 			Array.isArray(amounts),
 			error.type(
-				"not Array",
 				EC_INVALID_ITEM,
+				"not Array",
 				jsonStringify({
 					type: typeof amounts,
 					name: name(amounts),
@@ -32,8 +32,8 @@ export class CurrencyItem extends Item {
 		assert(
 			amounts.length > 0 && amounts.length <= MAX_AMOUNTS_IN_ITEM,
 			error.range(
-				"array size out of range",
 				EC_INVALID_AMOUNTS,
+				"array size out of range",
 				amounts.length
 			)
 		);
@@ -41,8 +41,8 @@ export class CurrencyItem extends Item {
 			assert(
 				amount instanceof Amount,
 				error.instance(
-					"not Amount instance",
 					EC_INVALID_AMOUNT,
+					"not Amount instance",
 					name(amount)
 				)
 			);

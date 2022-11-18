@@ -10,11 +10,7 @@ export class TimeStamp extends IBytes {
 			try {
 				this.t = new Date(s);
 			} catch (e) {
-				throw error.format(
-					"invalid date",
-					EC_INVALID_TOKEN,
-					s
-				);
+				throw error.format(EC_INVALID_TOKEN, "invalid date", s);
 			}
 		}
 	}
@@ -41,10 +37,7 @@ export class TimeStamp extends IBytes {
 			z = iso.indexOf("+");
 		}
 
-		assert(
-			z >= 0,
-			error.format("no 'Z in iso", EC_INVALID_TOKEN, iso)
-		);
+		assert(z >= 0, error.format(EC_INVALID_TOKEN, "no 'Z' in iso", iso));
 
 		let _time = iso.substring(t + 1, z);
 		if (_time.length > 12) {

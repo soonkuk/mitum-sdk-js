@@ -16,10 +16,6 @@ export const exportJson = (fp, json) => {
 	}
 
 	fs.writeFile(fp, json, (_) => {
-		throw error.runtime(
-			"write-file failed",
-			EC_FILE_CREATION_FAILED,
-			fp
-		);
+		throw error.runtime(EC_FILE_CREATION_FAILED, "write-file failed", fp);
 	});
 };

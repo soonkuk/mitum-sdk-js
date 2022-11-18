@@ -49,15 +49,11 @@ export class PublicKey extends Key {
 		super(s);
 		assert(
 			typeof weight === "number",
-			error.type("not number", EC_INVALID_WEIGHT, typeof weight)
+			error.type(EC_INVALID_WEIGHT, "not number", typeof weight)
 		);
 		assert(
 			weight >= MIN_WEIGHT && weight <= MAX_WEIGHT,
-			error.range(
-				"weight out of range",
-				EC_INVALID_WEIGHT,
-				weight
-			)
+			error.range(EC_INVALID_WEIGHT, "weight out of range", weight)
 		);
 		this.hint = new Hint(HINT_KEY);
 		this.weight = new Big(weight);
@@ -81,25 +77,21 @@ export class Keys extends IBytesDict {
 		super();
 		assert(
 			typeof threshold === "number",
-			error.type(
-				"not number",
-				EC_INVALID_THRESHOLD,
-				typeof threshold
-			)
+			error.type(EC_INVALID_THRESHOLD, "not number", typeof threshold)
 		);
 		assert(
 			threshold >= MIN_THRESHOLD && threshold <= MAX_THRESHOLD,
 			error.range(
-				"threshold out of range",
 				EC_INVALID_THRESHOLD,
+				"threshold out of range",
 				threshold
 			)
 		);
 		assert(
 			Array.isArray(keys),
 			error.type(
-				"not Array object",
 				EC_INVALID_KEYS,
+				"not Array",
 				jsonStringify({
 					type: typeof keys,
 					name: name(keys),
@@ -108,19 +100,15 @@ export class Keys extends IBytesDict {
 		);
 		assert(
 			keys.length > 0 && keys.length <= MAX_KEYS_IN_ADDRESS,
-			error.range(
-				"array size out of range",
-				EC_INVALID_KEYS,
-				keys.length
-			)
+			error.range(EC_INVALID_KEYS, "array size out of range", keys.length)
 		);
 
 		keys.forEach((key, idx) => {
 			assert(
 				key instanceof PublicKey,
 				error.instance(
-					"not PublicKey instance",
 					EC_INVALID_KEYS,
+					"not PublicKey instance",
 					`idx ${idx} - ${name(key)}`
 				)
 			);
@@ -130,8 +118,8 @@ export class Keys extends IBytesDict {
 		assert(
 			sum >= threshold,
 			error.range(
-				"threshold < sum(weights)",
 				EC_INVALID_THRESHOLD,
+				"threshold < sum(weights)",
 				jsonStringify({
 					threshold,
 					sum: sum.toString(),

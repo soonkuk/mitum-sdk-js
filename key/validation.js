@@ -115,8 +115,8 @@ export const parseKey = (s) => {
 	assert(
 		isKey(s),
 		error.format(
-			"invalid type, length or key suffix",
 			EC_INVALID_KEY,
+			"invalid type, length or key suffix",
 			jsonStringify({
 				type: typeof s,
 				length: typeof s === "string" ? s.length : null,

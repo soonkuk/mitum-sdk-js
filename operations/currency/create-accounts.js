@@ -38,11 +38,7 @@ export class CreateAccountsItem extends CurrencyItem {
 
 		assert(
 			keys instanceof Keys,
-			error.instance(
-				"not Keys instance",
-				EC_INVALID_KEYS,
-				name(keys)
-			)
+			error.instance(EC_INVALID_KEYS, "not Keys instance", name(keys))
 		);
 
 		this.keys = keys;
@@ -51,9 +47,7 @@ export class CreateAccountsItem extends CurrencyItem {
 	bytes() {
 		return Buffer.concat([
 			this.keys.bytes(),
-			Buffer.concat(
-				this.amounts.sort(sortBuf).map((amt) => amt.bytes())
-			),
+			Buffer.concat(this.amounts.sort(sortBuf).map((amt) => amt.bytes())),
 		]);
 	}
 
@@ -74,8 +68,8 @@ export class CreateAccountsFact extends Fact {
 		assert(
 			Array.isArray(items),
 			error.type(
-				"not Array",
 				EC_INVALID_ITEM,
+				"not Array",
 				jsonStringify({
 					type: typeof items,
 					name: name(items),
@@ -86,8 +80,8 @@ export class CreateAccountsFact extends Fact {
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
 			error.range(
-				"array size out of range",
 				EC_INVALID_ITEMS,
+				"array size out of range",
 				items.length
 			)
 		);
@@ -96,8 +90,8 @@ export class CreateAccountsFact extends Fact {
 			assert(
 				item instanceof CreateAccountsItem,
 				error.instance(
-					"not CreateAccountsItem instance",
 					EC_INVALID_ITEM,
+					"not CreateAccountsItem instance",
 					`idx ${idx} - ${name(item)}`
 				)
 			)

@@ -10,11 +10,7 @@ import {
 	HINT_CURRENCY_REGISTER_OPERATION_FACT,
 } from "../../alias/currency.js";
 
-import {
-	assert,
-	error,
-	EC_INVALID_CURRENCY_DESIGN,
-} from "../../base/error.js";
+import { assert, error, EC_INVALID_CURRENCY_DESIGN } from "../../base/error.js";
 
 import { name } from "../../utils/string.js";
 
@@ -24,8 +20,8 @@ export class CurrencyRegisterFact extends Fact {
 		assert(
 			design instanceof CurrencyDesign,
 			error.instance(
-				"not CurrencyDesign instance",
 				EC_INVALID_CURRENCY_DESIGN,
+				"not CurrencyDesign instance",
 				name(design)
 			)
 		);

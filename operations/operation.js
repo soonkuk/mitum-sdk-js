@@ -36,17 +36,13 @@ export class Operation extends IBytesDict {
 
 		assert(
 			fact instanceof Fact,
-			error.instance(
-				"not Fact instance",
-				EC_INVALID_FACT,
-				name(fact)
-			)
+			error.instance(EC_INVALID_FACT, "not Fact instance", name(fact))
 		);
 		this.fact = fact;
 
 		assert(
 			typeof memo === "string",
-			error.type("not string", EC_INVALID_MEMO, typeof memo)
+			error.type(EC_INVALID_MEMO, "not string", typeof memo)
 		);
 		this.memo = memo;
 
@@ -55,8 +51,8 @@ export class Operation extends IBytesDict {
 			assert(
 				Array.isArray(factSigns),
 				error.type(
-					"not Array",
 					EC_INVALID_FACTSIGN,
+					"not Array",
 					jsonStringify({
 						type: typeof factSigns,
 						name: name(factSigns),
@@ -67,8 +63,8 @@ export class Operation extends IBytesDict {
 				assert(
 					fs instanceof FactSign,
 					error.instance(
-						"not FactSign instance",
 						EC_INVALID_FACTSIGN,
+						"not FactSign instance",
 						name(fs)
 					)
 				);
@@ -87,11 +83,7 @@ export class Operation extends IBytesDict {
 	_kp(privateKey) {
 		assert(
 			typeof privateKey === "string",
-			error.type(
-				"not string",
-				EC_INVALID_PRIVATE_KEY,
-				typeof privateKey
-			)
+			error.type(EC_INVALID_PRIVATE_KEY, "not string", typeof privateKey)
 		);
 
 		const keyType = isSchnorrPrivateKey(privateKey)
@@ -110,8 +102,8 @@ export class Operation extends IBytesDict {
 		assert(
 			kp !== null && keyType !== null,
 			error.format(
-				"wrong private key",
 				EC_INVALID_PRIVATE_KEY,
+				"wrong private key",
 				jsonStringify({
 					length: privateKey.length,
 					suffix:
@@ -157,8 +149,8 @@ export class Operation extends IBytesDict {
 			);
 		} catch (e) {
 			throw error.runtime(
-				"create-factsign failed",
 				EC_FACTSIGN_CREATION_FAILED,
+				"create-factsign failed",
 				signInfo
 			);
 		}
@@ -166,8 +158,8 @@ export class Operation extends IBytesDict {
 		assert(
 			factSign !== null,
 			error.runtime(
-				"null factsign",
 				EC_FACTSIGN_CREATION_FAILED,
+				"null factsign",
 				signInfo
 			)
 		);

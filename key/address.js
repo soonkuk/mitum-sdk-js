@@ -10,11 +10,7 @@ import {
 } from "../mitum.config.js";
 
 import { IBytes } from "../base/interface.js";
-import {
-	assert,
-	error,
-	EC_INVALID_ADDRESS,
-} from "../base/error.js";
+import { assert, error, EC_INVALID_ADDRESS } from "../base/error.js";
 
 import { jsonStringify } from "../utils/json.js";
 
@@ -23,13 +19,13 @@ export class Address extends IBytes {
 		super();
 		assert(
 			typeof s === "string",
-			error.type("not string", EC_INVALID_ADDRESS, typeof s)
+			error.type(EC_INVALID_ADDRESS, "not string", typeof s)
 		);
 		assert(
 			isAddress(s),
 			error.format(
-				"invalid length or address suffix",
 				EC_INVALID_ADDRESS,
+				"invalid length or address suffix",
 				jsonStringify({
 					length: s.length,
 					suffix:

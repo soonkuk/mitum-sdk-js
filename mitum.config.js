@@ -24,7 +24,7 @@ export const TEST_ID = "mitum";
 export const TEST_NODE = {
 	ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",
 	schnorr: "",
-}
+};
 
 export const TEST_GENESIS = {
 	ecdsa: {
@@ -34,10 +34,10 @@ export const TEST_GENESIS = {
 	schnorr: {
 		address: "",
 		private: "",
-	}
-}
+	},
+};
 
 export const TEST_ACCOUNT = {
 	public: "2122tJTiK183VbZFsecRgvaybcqM1wwGRLrsru9e5FaJMmpu",
 	address: "AN91jfkYtje64GPrKPkGMrrPnb7iq9TZq1fBHxwML9wmmca",
-}
+};

@@ -39,9 +39,7 @@ export class TransfersItem extends CurrencyItem {
 	bytes() {
 		return Buffer.concat([
 			this.receiver.bytes(),
-			Buffer.concat(
-				this.amounts.sort(sortBuf).map((amt) => amt.bytes())
-			),
+			Buffer.concat(this.amounts.sort(sortBuf).map((amt) => amt.bytes())),
 		]);
 	}
 
@@ -62,8 +60,8 @@ export class TransfersFact extends Fact {
 		assert(
 			Array.isArray(items),
 			error.type(
-				"not Array",
 				EC_INVALID_ITEM,
+				"not Array",
 				jsonStringify({
 					type: typeof items,
 					name: name(items),
@@ -74,8 +72,8 @@ export class TransfersFact extends Fact {
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
 			error.range(
-				"array size out of range",
 				EC_INVALID_ITEMS,
+				"array size out of range",
 				items.length
 			)
 		);
@@ -84,8 +82,8 @@ export class TransfersFact extends Fact {
 			assert(
 				item instanceof TransfersItem,
 				error.instance(
-					"not TransfersItem instance",
 					EC_INVALID_ITEM,
+					"not TransfersItem instance",
 					`idx ${idx} - ${name(item)}`
 				)
 			)

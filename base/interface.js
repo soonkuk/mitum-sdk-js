@@ -7,8 +7,8 @@ import {
 export class IBytes {
 	bytes() {
 		throw error.nimplement(
-			"unimplemented method bytes()",
 			EC_NOT_IMPLEMENTED_BYTES,
+			"unimplemented method bytes()",
 			"IBytes"
 		);
 	}
@@ -17,8 +17,8 @@ export class IBytes {
 export class IDict {
 	dict() {
 		throw error.nimplement(
-			"unimplemented method dict()",
 			EC_NOT_IMPLEMENTED_DICT,
+			"unimplemented method dict()",
 			"IDict"
 		);
 	}
@@ -27,16 +27,16 @@ export class IDict {
 export class IBytesDict {
 	bytes() {
 		throw error.nimplement(
-			"unimplemented method bytes()",
 			EC_NOT_IMPLEMENTED_BYTES,
+			"unimplemented method bytes()",
 			"IBytesDict"
 		);
 	}
 
 	dict() {
 		throw error.nimplement(
-			"unimplemented method dict()",
 			EC_NOT_IMPLEMENTED_DICT,
+			"unimplemented method dict()",
 			"IBytesDict"
 		);
 	}

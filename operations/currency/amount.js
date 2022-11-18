@@ -3,11 +3,7 @@ import { HINT_AMOUNT } from "../../alias/currency.js";
 import { Hint } from "../../base/hint.js";
 import { CurrencyID } from "../../base/ID.js";
 import { IBytesDict } from "../../base/interface.js";
-import {
-	assert,
-	error,
-	EC_INVALID_AMOUNT,
-} from "../../base/error.js";
+import { assert, error, EC_INVALID_AMOUNT } from "../../base/error.js";
 
 import { Big } from "../../utils/number.js";
 
@@ -19,11 +15,7 @@ export class Amount extends IBytesDict {
 		this.big = new Big(big);
 		assert(
 			this.big.big > 0,
-			error.range(
-				"zero amount",
-				EC_INVALID_AMOUNT,
-				this.big.toString()
-			)
+			error.range(EC_INVALID_AMOUNT, "zero amount", this.big.toString())
 		);
 	}
 

@@ -12,11 +12,7 @@ import { KeyPair } from "./keypair.js";
 import { MIN_SEED_LENGTH } from "../mitum.config.js";
 import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 
-import {
-	assert,
-	error,
-	EC_INVALID_SEED,
-} from "../base/error.js";
+import { assert, error, EC_INVALID_SEED } from "../base/error.js";
 
 import { Big } from "../utils/number.js";
 import { sha256, sum256 } from "../utils/hash.js";
@@ -37,7 +33,10 @@ class ECDSAKeyPair extends KeyPair {
 	}
 
 	_generatePublicKey() {
-		return bs58.encode(getPublicCompressed(this._PKDecoded())) + SUFFIX_KEY_PUBLIC;
+		return (
+			bs58.encode(getPublicCompressed(this._PKDecoded())) +
+			SUFFIX_KEY_PUBLIC
+		);
 	}
 
 	sign(msg) {
@@ -88,15 +87,11 @@ const fromPrivateKey = (privateKey) => {
 const fromSeed = (seed) => {
 	assert(
 		typeof seed === "string",
-		error.type("not string", EC_INVALID_SEED, typeof seed)
+		error.type(EC_INVALID_SEED, "not string", typeof seed)
 	);
 	assert(
 		seed.length >= MIN_SEED_LENGTH,
-		error.range(
-			"seed length out of range",
-			EC_INVALID_SEED,
-			seed.length
-		)
+		error.range(EC_INVALID_SEED, "seed length out of range", seed.length)
 	);
 
 	return new ECDSAKeyPair(

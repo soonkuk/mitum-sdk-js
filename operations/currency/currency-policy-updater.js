@@ -10,11 +10,7 @@ import {
 	HINT_CURRENCY_POLICY_UPDATER_OPERATION_FACT,
 } from "../../alias/currency.js";
 
-import {
-	assert,
-	error,
-	EC_INVALID_CURRENCY_POLICY,
-} from "../../base/error.js";
+import { assert, error, EC_INVALID_CURRENCY_POLICY } from "../../base/error.js";
 import { CurrencyID } from "../../base/ID.js";
 
 import { name } from "../../utils/string.js";
@@ -27,8 +23,8 @@ export class CurrencyPolicyUpdaterFact extends Fact {
 		assert(
 			policy instanceof CurrencyPolicy,
 			error.instance(
-				"not CurrencyPolicy",
 				EC_INVALID_CURRENCY_POLICY,
+				"not CurrencyPolicy",
 				name(policy)
 			)
 		);

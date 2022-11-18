@@ -8,11 +8,7 @@ import {
 	HINT_KEY_UPDATER_OPERATION_FACT,
 } from "../../alias/currency.js";
 
-import {
-	assert,
-	error,
-	EC_INVALID_KEYS,
-} from "../../base/error.js";
+import { assert, error, EC_INVALID_KEYS } from "../../base/error.js";
 import { CurrencyID } from "../../base/ID.js";
 
 import { Keys } from "../../key/key.js";
@@ -27,11 +23,7 @@ export class KeyUpdaterFact extends Fact {
 
 		assert(
 			keys instanceof Keys,
-			error.instance(
-				"not Keys instance",
-				EC_INVALID_KEYS,
-				name(keys)
-			)
+			error.instance(EC_INVALID_KEYS, "not Keys instance", name(keys))
 		);
 		this.keys = keys;
 		this.currency = new CurrencyID(currency);

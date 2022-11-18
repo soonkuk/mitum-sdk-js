@@ -29,19 +29,25 @@ describe("test: currency-register", () => {
 			policy
 		);
 
-		const fact = new CurrencyRegisterFact(new TimeStamp("2022-11-16T06:32:11.337619Z").UTC(), design);
+		const fact = new CurrencyRegisterFact(
+			new TimeStamp("2022-11-16T06:32:11.337619Z").UTC(),
+			design
+		);
 		const operation = new CurrencyRegisterOperation(TEST_ID, fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("CP2cAeN9wLj7BygR8KGt3FAH11vhRFVYc4togf5s9nYL" === bs58.encode(fact.hash));
-		expect("6U4p4RzLPWHQxd6DWTXA6LLZ4uBcFpjq6wPSdcMGwKuN" === bs58.encode(operation.hash));
+		expect(
+			"CP2cAeN9wLj7BygR8KGt3FAH11vhRFVYc4togf5s9nYL" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"6U4p4RzLPWHQxd6DWTXA6LLZ4uBcFpjq6wPSdcMGwKuN" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: ecdsa; fixed feeer", () => {
-		const feeer = new FixedFeeer(
-			TEST_GENESIS.ecdsa.address,
-			"999"
-		);
+		const feeer = new FixedFeeer(TEST_GENESIS.ecdsa.address, "999");
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const amount = new Amount("PEN", "99999999999999999999999");
@@ -51,12 +57,21 @@ describe("test: currency-register", () => {
 			policy
 		);
 
-		const fact = new CurrencyRegisterFact(new TimeStamp("2022-11-16T06:35:43.649604Z").UTC(), design);
+		const fact = new CurrencyRegisterFact(
+			new TimeStamp("2022-11-16T06:35:43.649604Z").UTC(),
+			design
+		);
 		const operation = new CurrencyRegisterOperation(TEST_ID, fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh" === bs58.encode(fact.hash));
-		expect("EqBuz16bhi9b9PsbgiSU7jX1ymo8HBypVoJqwS1V1ZPc" === bs58.encode(operation.hash));
+		expect(
+			"6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh" ===
+				bs58.encode(fact.hash)
+		);
+		expect(
+			"EqBuz16bhi9b9PsbgiSU7jX1ymo8HBypVoJqwS1V1ZPc" ===
+				bs58.encode(operation.hash)
+		);
 	});
 
 	it("case: ecdsa; ratio feeer", () => {
@@ -69,10 +84,7 @@ describe("test: currency-register", () => {
 			);
 			const policy = new CurrencyPolicy("33", feeer);
 
-			const amount = new Amount(
-				"PEN",
-				"99999999999999999999999"
-			);
+			const amount = new Amount("PEN", "99999999999999999999999");
 			const design = new CurrencyDesign(
 				amount,
 				TEST_GENESIS.ecdsa.address,
@@ -83,13 +95,18 @@ describe("test: currency-register", () => {
 				new TimeStamp(token).UTC(),
 				design
 			);
-			const operation = new CurrencyRegisterOperation(TEST_ID, fact, "", []);
+			const operation = new CurrencyRegisterOperation(
+				TEST_ID,
+				fact,
+				"",
+				[]
+			);
 			operation.sign(TEST_NODE.ecdsa);
 
 			return {
 				fact: bs58.encode(fact.hash),
 				operation: bs58.encode(operation.hash),
-			}
+			};
 		};
 
 		const r0 = ratio(0, "2022-11-16T06:42:44.505842Z");

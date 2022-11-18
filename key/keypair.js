@@ -14,8 +14,8 @@ export class KeyPair {
 		assert(
 			privateKey instanceof Key,
 			error.instance(
-				"not Key instance",
 				EC_INVALID_KEY_PAIR,
+				"not Key instance",
 				name(privateKey)
 			)
 		);
@@ -27,24 +27,24 @@ export class KeyPair {
 
 	_generatePublicKey() {
 		throw error.nimplement(
-			"unimplemented method _generatePublicKey()",
 			EC_NOT_IMPLEMENTED_METHOD,
+			"unimplemented method _generatePublicKey()",
 			"KeyPair"
 		);
 	}
 
 	_generateSigner() {
 		throw error.nimplement(
-			"unimplemented method _generateSigner()",
 			EC_NOT_IMPLEMENTED_METHOD,
+			"unimplemented method _generateSigner()",
 			"KeyPair"
 		);
 	}
 
 	sign(_) {
 		throw error.nimplement(
-			"unimplemented method sign()",
 			EC_NOT_IMPLEMENTED_METHOD,
+			"unimplemented method sign()",
 			"KeyPair"
 		);
 	}
