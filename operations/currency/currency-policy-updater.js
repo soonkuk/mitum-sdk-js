@@ -12,8 +12,8 @@ import {
 
 import {
 	assert,
+	error,
 	EC_INVALID_CURRENCY_POLICY,
-	InvalidInstanceError,
 } from "../../base/error.js";
 import { CurrencyID } from "../../base/ID.js";
 
@@ -26,7 +26,7 @@ export class CurrencyPolicyUpdaterFact extends Fact {
 
 		assert(
 			policy instanceof CurrencyPolicy,
-			new InvalidInstanceError(
+			error.instance(
 				"not CurrencyPolicy",
 				EC_INVALID_CURRENCY_POLICY,
 				name(policy)

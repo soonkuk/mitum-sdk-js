@@ -12,8 +12,8 @@ import {
 
 import {
 	assert,
+	error,
 	EC_INVALID_CURRENCY_DESIGN,
-	InvalidInstanceError,
 } from "../../base/error.js";
 
 import { name } from "../../utils/string.js";
@@ -23,7 +23,7 @@ export class CurrencyRegisterFact extends Fact {
 		super(HINT_CURRENCY_REGISTER_OPERATION_FACT, token);
 		assert(
 			design instanceof CurrencyDesign,
-			new InvalidInstanceError(
+			error.instance(
 				"not CurrencyDesign instance",
 				EC_INVALID_CURRENCY_DESIGN,
 				name(design)

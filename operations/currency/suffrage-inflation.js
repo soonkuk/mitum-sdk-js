@@ -13,12 +13,10 @@ import {
 
 import {
 	assert,
+	error,
 	EC_INVALID_AMOUNT,
 	EC_INVALID_ITEM,
 	EC_INVALID_ITEMS,
-	InvalidInstanceError,
-	InvalidRangeError,
-	InvalidTypeError,
 } from "../../base/error.js";
 import { IBytesDict } from "../../base/interface.js";
 
@@ -31,7 +29,7 @@ export class SuffrageInflationItem extends IBytesDict {
 		super();
 		assert(
 			amount instanceof Amount,
-			new InvalidInstanceError(
+			error.instance(
 				"not Amount instance",
 				EC_INVALID_AMOUNT,
 				name(amount)
@@ -59,7 +57,7 @@ export class SuffrageInflationFact extends Fact {
 
 		assert(
 			Array.isArray(items),
-			new InvalidTypeError(
+			error.type(
 				"not Array",
 				EC_INVALID_ITEM,
 				jsonStringify({
@@ -71,7 +69,7 @@ export class SuffrageInflationFact extends Fact {
 
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
-			new InvalidRangeError(
+			error.range(
 				"array size out of range",
 				EC_INVALID_ITEMS,
 				items.length
@@ -81,7 +79,7 @@ export class SuffrageInflationFact extends Fact {
 		items.forEach((item, idx) =>
 			assert(
 				item instanceof SuffrageInflationItem,
-				new InvalidInstanceError(
+				error.instance(
 					"not SuffrageInflationItem instance",
 					EC_INVALID_ITEM,
 					`idx ${idx} - ${name(item)}`

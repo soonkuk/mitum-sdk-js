@@ -12,11 +12,9 @@ import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 
 import {
 	assert,
+	error,
 	EC_INVALID_PRIVATE_KEY,
 	EC_INVALID_SEED,
-	InvalidFormatError,
-	InvalidRangeError,
-	InvalidTypeError,
 } from "../base/error.js";
 
 import { Big } from "../utils/number.js";
@@ -67,7 +65,7 @@ const random = () => {
 const fromPrivateKey = (privateKey) => {
 	assert(
 		typeof privateKey === "string",
-		new InvalidTypeError(
+		error.type(
 			"not string",
 			EC_INVALID_PRIVATE_KEY,
 			typeof privateKey
@@ -75,7 +73,7 @@ const fromPrivateKey = (privateKey) => {
 	);
 	assert(
 		isSchnorrPrivateKey(privateKey),
-		new InvalidFormatError(
+		error.format(
 			"invalid length or key suffix",
 			EC_INVALID_PRIVATE_KEY,
 			jsonStringify({
@@ -96,11 +94,11 @@ const fromPrivateKey = (privateKey) => {
 const fromSeed = (seed) => {
 	assert(
 		typeof seed === "string",
-		new InvalidTypeError("not string", EC_INVALID_SEED, typeof seed)
+		error.type("not string", EC_INVALID_SEED, typeof seed)
 	);
 	assert(
 		seed.length >= MIN_SEED_LENGTH,
-		new InvalidRangeError(
+		error.range(
 			"seed length out of range",
 			EC_INVALID_SEED,
 			seed.length

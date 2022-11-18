@@ -4,10 +4,9 @@ import bigInt from "big-integer";
 import { IBytes } from "../base/interface.js";
 import {
 	assert,
+	error,
 	EC_INVALID_BIG_INTEGER,
 	EC_INVALID_FLOAT,
-	InvalidRangeError,
-	InvalidTypeError,
 } from "../base/error.js";
 
 import { jsonStringify } from "./json.js";
@@ -34,7 +33,7 @@ export class Big extends IBytes {
 			try {
 				this.big = toBig(n);
 			} catch (e) {
-				throw new InvalidTypeError(
+				throw error.type(
 					"not Array object",
 					EC_INVALID_BIG_INTEGER,
 					n
@@ -48,7 +47,7 @@ export class Big extends IBytes {
 
 		assert(
 			size <= 8,
-			new InvalidRangeError(
+			error.range(
 				"big out of range",
 				EC_INVALID_BIG_INTEGER,
 				jsonStringify({
@@ -99,7 +98,7 @@ export class Float extends IBytes {
 		super();
 		assert(
 			typeof n === "number",
-			new InvalidTypeError("not number", EC_INVALID_FLOAT, typeof n)
+			error.type("not number", EC_INVALID_FLOAT, typeof n)
 		);
 		this.n = n;
 	}

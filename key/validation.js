@@ -5,7 +5,7 @@ import {
 	SUFFIX_KEY_PUBLIC,
 } from "../alias/key.js";
 
-import { assert, EC_INVALID_KEY, InvalidFormatError } from "../base/error.js";
+import { assert, error, EC_INVALID_KEY } from "../base/error.js";
 
 import { jsonStringify } from "../utils/json.js";
 
@@ -114,7 +114,7 @@ export const isAddress = (s) => {
 export const parseKey = (s) => {
 	assert(
 		isKey(s),
-		new InvalidFormatError(
+		error.format(
 			"invalid type, length or key suffix",
 			EC_INVALID_KEY,
 			jsonStringify({

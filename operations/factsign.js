@@ -7,8 +7,8 @@ import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 import {
 	assert,
+	error,
 	EC_INVALID_PUBLIC_KEY,
-	InvalidFormatError,
 } from "../base/error.js";
 
 import { Key } from "../key/key.js";
@@ -26,7 +26,7 @@ export class FactSign extends IBytesDict {
 
 		assert(
 			isPublicKey(signer),
-			new InvalidFormatError(
+			error.format(
 				"not public key",
 				EC_INVALID_PUBLIC_KEY,
 				jsonStringify({

@@ -12,9 +12,8 @@ import {
 import { IBytes } from "../base/interface.js";
 import {
 	assert,
+	error,
 	EC_INVALID_ADDRESS,
-	InvalidFormatError,
-	InvalidTypeError,
 } from "../base/error.js";
 
 import { jsonStringify } from "../utils/json.js";
@@ -24,11 +23,11 @@ export class Address extends IBytes {
 		super();
 		assert(
 			typeof s === "string",
-			new InvalidTypeError("not string", EC_INVALID_ADDRESS, typeof s)
+			error.type("not string", EC_INVALID_ADDRESS, typeof s)
 		);
 		assert(
 			isAddress(s),
-			new InvalidFormatError(
+			error.format(
 				"invalid length or address suffix",
 				EC_INVALID_ADDRESS,
 				jsonStringify({

@@ -54,47 +54,78 @@ class CustomError extends Error {
 	}
 }
 
-export class RuntimeError extends CustomError {
+class RuntimeError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const runtime = (code, msg, meta) => {
+	return new RuntimeError(msg, code, meta);
+};
 
-export class SuffixError extends CustomError {
+class SuffixError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const suffix = (code, msg, meta) => {
+	return new SuffixError(msg, code, meta);
+};
 
-export class InvalidFormatError extends CustomError {
+class InvalidFormatError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const format = (code, msg, meta) => {
+	return new InvalidFormatError(msg, code, meta);
+};
 
-export class InvalidRangeError extends CustomError {
+class InvalidRangeError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const range = (code, msg, meta) => {
+	return new InvalidRangeError(msg, code, meta);
+};
 
-export class InvalidTypeError extends CustomError {
+class InvalidTypeError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const type = (code, msg, meta) => {
+	return new InvalidTypeError(msg, code, meta);
+};
 
-export class InvalidInstanceError extends CustomError {
+class InvalidInstanceError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const instance = (code, msg, meta) => {
+	return new InvalidInstanceError(msg, code, meta);
+};
 
-export class NotImplementedError extends CustomError {
+class NotImplementedError extends CustomError {
 	constructor(msg, code, meta) {
 		super(msg, code, meta);
 	}
 }
+const nimplement = (code, msg, meta) => {
+	return new NotImplementedError(msg, code, meta);
+};
+
+export const error = {
+	runtime,
+	suffix,
+	format,
+	range,
+	type,
+	instance,
+	nimplement,
+};
 
 export const assert = (bool, error) => {
 	if (!bool) {

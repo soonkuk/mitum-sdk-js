@@ -8,15 +8,12 @@ import { SUFFIX_LENGTH } from "../mitum.config.js";
 
 import {
 	assert,
+	error,
 	EC_FACTSIGN_CREATION_FAILED,
 	EC_INVALID_FACT,
 	EC_INVALID_FACTSIGN,
 	EC_INVALID_MEMO,
 	EC_INVALID_PRIVATE_KEY,
-	InvalidFormatError,
-	InvalidInstanceError,
-	InvalidTypeError,
-	RuntimeError,
 } from "../base/error.js";
 import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
@@ -39,7 +36,7 @@ export class Operation extends IBytesDict {
 
 		assert(
 			fact instanceof Fact,
-			new InvalidInstanceError(
+			error.instance(
 				"not Fact instance",
 				EC_INVALID_FACT,
 				name(fact)
@@ -49,7 +46,7 @@ export class Operation extends IBytesDict {
 
 		assert(
 			typeof memo === "string",
-			new InvalidTypeError("not string", EC_INVALID_MEMO, typeof memo)
+			error.type("not string", EC_INVALID_MEMO, typeof memo)
 		);
 		this.memo = memo;
 
@@ -57,7 +54,7 @@ export class Operation extends IBytesDict {
 		if (factSigns) {
 			assert(
 				Array.isArray(factSigns),
-				new InvalidTypeError(
+				error.type(
 					"not Array",
 					EC_INVALID_FACTSIGN,
 					jsonStringify({
@@ -69,7 +66,7 @@ export class Operation extends IBytesDict {
 			factSigns.forEach((fs) => {
 				assert(
 					fs instanceof FactSign,
-					new InvalidInstanceError(
+					error.instance(
 						"not FactSign instance",
 						EC_INVALID_FACTSIGN,
 						name(fs)
@@ -90,7 +87,7 @@ export class Operation extends IBytesDict {
 	_kp(privateKey) {
 		assert(
 			typeof privateKey === "string",
-			new InvalidTypeError(
+			error.type(
 				"not string",
 				EC_INVALID_PRIVATE_KEY,
 				typeof privateKey
@@ -112,7 +109,7 @@ export class Operation extends IBytesDict {
 
 		assert(
 			kp !== null && keyType !== null,
-			new InvalidFormatError(
+			error.format(
 				"wrong private key",
 				EC_INVALID_PRIVATE_KEY,
 				jsonStringify({
@@ -159,7 +156,7 @@ export class Operation extends IBytesDict {
 				now.toString()
 			);
 		} catch (e) {
-			throw new RuntimeError(
+			throw error.runtime(
 				"create-factsign failed",
 				EC_FACTSIGN_CREATION_FAILED,
 				signInfo
@@ -168,7 +165,7 @@ export class Operation extends IBytesDict {
 
 		assert(
 			factSign !== null,
-			new RuntimeError(
+			error.runtime(
 				"null factsign",
 				EC_FACTSIGN_CREATION_FAILED,
 				signInfo

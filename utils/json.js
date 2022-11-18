@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { EC_FILE_CREATION_FAILED, RuntimeError } from "../base/error.js";
+import { EC_FILE_CREATION_FAILED } from "../base/error.js";
 
 export const jsonStringify = (json) => {
 	return JSON.stringify(json, null, 4);
@@ -16,7 +16,7 @@ export const exportJson = (fp, json) => {
 	}
 
 	fs.writeFile(fp, json, (_) => {
-		throw new RuntimeError(
+		throw error.runtime(
 			"write-file failed",
 			EC_FILE_CREATION_FAILED,
 			fp

@@ -1,5 +1,5 @@
 import { IBytes } from "../base/interface.js";
-import { assert, EC_INVALID_TOKEN, InvalidFormatError } from "../base/error.js";
+import { assert, error, EC_INVALID_TOKEN } from "../base/error.js";
 
 export class TimeStamp extends IBytes {
 	constructor(s) {
@@ -10,7 +10,7 @@ export class TimeStamp extends IBytes {
 			try {
 				this.t = new Date(s);
 			} catch (e) {
-				throw new InvalidFormatError(
+				throw error.format(
 					"invalid date",
 					EC_INVALID_TOKEN,
 					s
@@ -43,7 +43,7 @@ export class TimeStamp extends IBytes {
 
 		assert(
 			z >= 0,
-			new InvalidFormatError("no 'Z in iso", EC_INVALID_TOKEN, iso)
+			error.format("no 'Z in iso", EC_INVALID_TOKEN, iso)
 		);
 
 		let _time = iso.substring(t + 1, z);

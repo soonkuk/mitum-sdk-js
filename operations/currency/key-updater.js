@@ -10,8 +10,8 @@ import {
 
 import {
 	assert,
+	error,
 	EC_INVALID_KEYS,
-	InvalidInstanceError,
 } from "../../base/error.js";
 import { CurrencyID } from "../../base/ID.js";
 
@@ -27,7 +27,7 @@ export class KeyUpdaterFact extends Fact {
 
 		assert(
 			keys instanceof Keys,
-			new InvalidInstanceError(
+			error.instance(
 				"not Keys instance",
 				EC_INVALID_KEYS,
 				name(keys)

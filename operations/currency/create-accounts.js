@@ -15,12 +15,10 @@ import {
 
 import {
 	assert,
+	error,
 	EC_INVALID_ITEM,
 	EC_INVALID_ITEMS,
 	EC_INVALID_KEYS,
-	InvalidInstanceError,
-	InvalidRangeError,
-	InvalidTypeError,
 } from "../../base/error.js";
 
 import { Keys } from "../../key/key.js";
@@ -40,7 +38,7 @@ export class CreateAccountsItem extends CurrencyItem {
 
 		assert(
 			keys instanceof Keys,
-			new InvalidInstanceError(
+			error.instance(
 				"not Keys instance",
 				EC_INVALID_KEYS,
 				name(keys)
@@ -75,7 +73,7 @@ export class CreateAccountsFact extends Fact {
 
 		assert(
 			Array.isArray(items),
-			new InvalidTypeError(
+			error.type(
 				"not Array",
 				EC_INVALID_ITEM,
 				jsonStringify({
@@ -87,7 +85,7 @@ export class CreateAccountsFact extends Fact {
 
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
-			new InvalidRangeError(
+			error.range(
 				"array size out of range",
 				EC_INVALID_ITEMS,
 				items.length
@@ -97,7 +95,7 @@ export class CreateAccountsFact extends Fact {
 		items.forEach((item, idx) =>
 			assert(
 				item instanceof CreateAccountsItem,
-				new InvalidInstanceError(
+				error.instance(
 					"not CreateAccountsItem instance",
 					EC_INVALID_ITEM,
 					`idx ${idx} - ${name(item)}`

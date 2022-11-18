@@ -1,9 +1,8 @@
 import {
 	assert,
+	error,
 	EC_INVALID_CONTRACT_ID,
 	EC_INVALID_CURRENCY_ID,
-	InvalidRangeError,
-	InvalidTypeError,
 } from "./error.js";
 import { IBytes } from "./interface.js";
 
@@ -19,7 +18,7 @@ export class ID extends IBytes {
 		super();
 		assert(
 			typeof s === "string",
-			new InvalidTypeError("not string", ec, typeof s)
+			error.type("not string", ec, typeof s)
 		);
 		this.s = s;
 	}
@@ -39,7 +38,7 @@ export class CurrencyID extends ID {
 		assert(
 			s.length >= MIN_CURRENCY_ID_LENGTH &&
 				s.length <= MAX_CURRENCY_ID_LENGTH,
-			new InvalidRangeError(
+			error.range(
 				"currency id length out of range",
 				EC_INVALID_CURRENCY_ID,
 				s.length
@@ -54,7 +53,7 @@ export class ContractID extends ID {
 		assert(
 			s.length >= MIN_CONTRACT_ID_LENGTH &&
 				s.length <= MAX_CONTRACT_ID_LENGTH,
-			new InvalidRangeError(
+			error.range(
 				"contract id length out of range",
 				EC_INVALID_CONTRACT_ID,
 				s.length

@@ -10,12 +10,11 @@ import {
 
 import {
 	assert,
+	error,
 	EC_INVALID_AMOUNT,
 	EC_INVALID_CURRENCY_FEEER,
 	EC_INVALID_CURRENCY_POLICY,
 	EC_INVALID_RATIO,
-	InvalidInstanceError,
-	InvalidRangeError,
 } from "../../base/error.js";
 import { Hint } from "../../base/hint.js";
 import { IBytesDict } from "../../base/interface.js";
@@ -30,7 +29,7 @@ export class CurrencyDesign extends IBytesDict {
 		this.hint = new Hint(HINT_CURRENCY_DESIGN);
 		assert(
 			amount instanceof Amount,
-			new InvalidInstanceError(
+			error.instance(
 				"not Amount instance",
 				EC_INVALID_AMOUNT,
 				name(amount)
@@ -40,7 +39,7 @@ export class CurrencyDesign extends IBytesDict {
 
 		assert(
 			policy instanceof CurrencyPolicy,
-			new InvalidInstanceError(
+			error.instance(
 				"not CurrencyPolicy instance",
 				EC_INVALID_CURRENCY_POLICY,
 				name(policy)
@@ -80,7 +79,7 @@ export class CurrencyPolicy extends IBytesDict {
 
 		assert(
 			feeer instanceof CurrencyFeeer,
-			new InvalidInstanceError(
+			error.instance(
 				"not CurrencyFeeer instance",
 				EC_INVALID_CURRENCY_FEEER,
 				name(feeer)
@@ -152,7 +151,7 @@ export class RatioFeeer extends CurrencyFeeer {
 		this.ratio = new Float(ratio);
 		assert(
 			0 <= ratio && ratio <= 1,
-			new InvalidRangeError("ratio out of range", EC_INVALID_RATIO, ratio)
+			error.range("ratio out of range", EC_INVALID_RATIO, ratio)
 		);
 
 		this.receiver = new Address(receiver);

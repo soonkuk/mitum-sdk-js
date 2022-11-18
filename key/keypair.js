@@ -2,10 +2,9 @@ import { Key } from "./key.js";
 
 import {
 	assert,
+	error,
 	EC_INVALID_KEY_PAIR,
 	EC_NOT_IMPLEMENTED_METHOD,
-	InvalidInstanceError,
-	NotImplementedError,
 } from "../base/error.js";
 
 import { name } from "../utils/string.js";
@@ -14,7 +13,7 @@ export class KeyPair {
 	constructor(privateKey) {
 		assert(
 			privateKey instanceof Key,
-			new InvalidInstanceError(
+			error.instance(
 				"not Key instance",
 				EC_INVALID_KEY_PAIR,
 				name(privateKey)
@@ -27,7 +26,7 @@ export class KeyPair {
 	}
 
 	_generatePublicKey() {
-		throw new NotImplementedError(
+		throw error.nimplement(
 			"unimplemented method _generatePublicKey()",
 			EC_NOT_IMPLEMENTED_METHOD,
 			"KeyPair"
@@ -35,7 +34,7 @@ export class KeyPair {
 	}
 
 	_generateSigner() {
-		throw new NotImplementedError(
+		throw error.nimplement(
 			"unimplemented method _generateSigner()",
 			EC_NOT_IMPLEMENTED_METHOD,
 			"KeyPair"
@@ -43,7 +42,7 @@ export class KeyPair {
 	}
 
 	sign(_) {
-		throw new NotImplementedError(
+		throw error.nimplement(
 			"unimplemented method sign()",
 			EC_NOT_IMPLEMENTED_METHOD,
 			"KeyPair"
