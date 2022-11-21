@@ -113,7 +113,7 @@ export class TransfersFact extends Fact {
 }
 
 export class TransfersOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(id, HINT_TRANSFERS_OPERATION, fact, memo, factSigns);
+	constructor(fact, memo, factSigns) {
+		super(HINT_TRANSFERS_OPERATION, fact, memo, factSigns);
 	}
 }

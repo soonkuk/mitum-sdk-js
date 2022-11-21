@@ -17,7 +17,7 @@ describe("test: withdraw", () => {
 			TEST_GENESIS.ecdsa.address,
 			[item]
 		);
-		const operation = new WithdrawsOperation(TEST_ID, fact, "", []);
+		const operation = new WithdrawsOperation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(

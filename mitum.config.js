@@ -1,5 +1,3 @@
-export const v = "v0.0.1";
-
 export const SUFFIX_LENGTH = 3;
 
 export const MIN_CURRENCY_ID_LENGTH = 3;
@@ -18,8 +16,6 @@ export const MAX_WEIGHT = 100;
 export const MAX_KEYS_IN_ADDRESS = 10;
 export const MAX_AMOUNTS_IN_ITEM = 10;
 export const MAX_ITEMS_IN_FACT = 10;
-
-export const TEST_ID = "mitum";
 
 export const TEST_NODE = {
 	ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",

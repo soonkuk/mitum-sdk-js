@@ -11,7 +11,7 @@ import {
 	CurrencyPolicyUpdaterOperation,
 } from "./currency-policy-updater";
 
-import { TEST_GENESIS, TEST_ID, TEST_NODE } from "../../mitum.config";
+import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
 import { TimeStamp } from "../../utils/time";
 
@@ -25,12 +25,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(
-			TEST_ID,
-			fact,
-			"",
-			[]
-		);
+		const operation = new CurrencyPolicyUpdaterOperation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(
@@ -52,12 +47,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(
-			TEST_ID,
-			fact,
-			"",
-			[]
-		);
+		const operation = new CurrencyPolicyUpdaterOperation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(
@@ -84,12 +74,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(
-			TEST_ID,
-			fact,
-			"",
-			[]
-		);
+		const operation = new CurrencyPolicyUpdaterOperation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(

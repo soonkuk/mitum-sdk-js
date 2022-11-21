@@ -52,13 +52,7 @@ export class CurrencyPolicyUpdaterFact extends Fact {
 }
 
 export class CurrencyPolicyUpdaterOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(
-			id,
-			HINT_CURRENCY_POLICY_UPDATER_OPERATION,
-			fact,
-			memo,
-			factSigns
-		);
+	constructor(fact, memo, factSigns) {
+		super(HINT_CURRENCY_POLICY_UPDATER_OPERATION, fact, memo, factSigns);
 	}
 }

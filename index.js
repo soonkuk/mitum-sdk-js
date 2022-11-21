@@ -1,3 +1,4 @@
+import { useV, useId } from "./utils/config.js";
 import { TimeStamp } from "./utils/time.js";
 
 import { ecdsa } from "./key/ecdsa-keypair.js";
@@ -99,4 +100,4 @@ const Currency = {
 	WithdrawsOperation,
 };
 
-export { TimeStamp, KPGen, PubKey, Keys, Amount, Currency };
+export { useV, useId, TimeStamp, KPGen, PubKey, Keys, Amount, Currency };

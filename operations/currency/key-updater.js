@@ -53,7 +53,7 @@ export class KeyUpdaterFact extends Fact {
 }
 
 export class KeyUpdaterOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(id, HINT_KEY_UPDATER_OPERATION, fact, memo, factSigns);
+	constructor(fact, memo, factSigns) {
+		super(HINT_KEY_UPDATER_OPERATION, fact, memo, factSigns);
 	}
 }

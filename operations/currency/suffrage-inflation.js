@@ -110,7 +110,7 @@ export class SuffrageInflationFact extends Fact {
 }
 
 export class SuffrageInflationOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(id, HINT_SUFFRAGE_INFLATION_OPERATION, fact, memo, factSigns);
+	constructor(fact, memo, factSigns) {
+		super(HINT_SUFFRAGE_INFLATION_OPERATION, fact, memo, factSigns);
 	}
 }

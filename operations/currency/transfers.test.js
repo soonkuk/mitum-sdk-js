@@ -17,7 +17,7 @@ describe("test: transfers", () => {
 			[item]
 		);
 
-		const operation = new TransfersOperation(TEST_ID, fact, "", []);
+		const operation = new TransfersOperation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(

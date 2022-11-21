@@ -7,7 +7,7 @@ import {
 	CreateContractAccountsOperation,
 } from "./create-contract-accounts";
 
-import { TEST_ACCOUNT, TEST_GENESIS, TEST_ID } from "../../mitum.config";
+import { TEST_ACCOUNT, TEST_GENESIS } from "../../mitum.config";
 
 import { Keys, PublicKey } from "../../key/key";
 
@@ -23,12 +23,7 @@ describe("test: create-contract-account", () => {
 			TEST_GENESIS.ecdsa.address,
 			[item]
 		);
-		const operation = new CreateContractAccountsOperation(
-			TEST_ID,
-			fact,
-			"",
-			[]
-		);
+		const operation = new CreateContractAccountsOperation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(

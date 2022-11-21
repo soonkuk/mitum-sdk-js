@@ -1,5 +1,5 @@
 import { assert, error, EC_INVALID_HINT } from "./error.js";
-import { v } from "../mitum.config.js";
+import { v } from "../utils/config.js";
 
 export class Hint {
 	constructor(hint) {
@@ -11,6 +11,6 @@ export class Hint {
 	}
 
 	toString() {
-		return this.s + "-" + v;
+		return this.s + "-" + v();
 	}
 }

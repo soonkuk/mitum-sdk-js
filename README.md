@@ -41,24 +41,25 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  key/key.test.js
- PASS  key/schnorr-keypair.test.js
  PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/withdraws.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
  PASS  operations/currency/create-contract-accounts.test.js
  PASS  operations/currency/transfers.test.js
- PASS  utils/time.test.js
- PASS  operations/currency/currency-register.test.js
- PASS  operations/currency/currency-policy-updater.test.js
- PASS  operations/currency/suffrage-inflation.test.js
  PASS  operations/currency/key-updater.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  utils/time.test.js
+ PASS  utils/config.test.js
+ PASS  key/schnorr-keypair.test.js
+ PASS  key/key.test.js
  PASS  key/address.test.js
+ PASS  operations/currency/withdraws.test.js
  PASS  key/ecdsa-keypair.test.js
 
-Test Suites: 13 passed, 13 total
-Tests:       37 passed, 37 total
+Test Suites: 14 passed, 14 total
+Tests:       39 passed, 39 total
 Snapshots:   0 total
-Time:        1.397 s, estimated 2 s
+Time:        1.267 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -81,6 +82,8 @@ Ran all test suites.
 |-|[create-contract-account](#create-contract-account)|
 |-|[withdraw](#withdraw)|
 |+|[Appendix](#appendix)|
+
+To set the mitum version of all hints and the network id, refer to [Set version of hints](#set-version-of-hints) and .
 
 ## Generate KeyPairs
 
@@ -279,8 +282,6 @@ First, suppose you create an account with the following settings:
 ```js
 import { TimeStamp, KPGen, Amount, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // your network id
-
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
 
@@ -295,7 +296,7 @@ const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
 const fact = new Currency.CreateAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Currency.CreateAccountsOperation(networkId, fact, memo, []);
+const operation = new Currency.CreateAccountsOperation(fact, memo, []);
 operation.sign(senderPrivate);
 
 // see appendix
@@ -340,8 +341,6 @@ First, suppose you add a new key to your account as follows:
 ```js
 import { TimeStamp, PubKey, Keys, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // your network id
-
 const pub1 = "22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu"; // new pub1
 const pub2 = "yX3YBvu597eNgwuuJpsnZunZcDkABVeqfmiyveKuNregmpu"; // new pub2
 const keys = [new PubKey(pub1, 50), new PubKey(pub2, 50)];
@@ -353,7 +352,7 @@ const targetPrivate = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
 const fact = new Currency.KeyUpdaterFact(token, targetAddress, new Keys(keys, 100), "MCC");
 
 const memo = ""; // any string
-const operation = new Currency.KeyUpdaterOperation(networkId, fact, memo, []);
+const operation = new Currency.KeyUpdaterOperation(fact, memo, []);
 operation.sign(targetPrivate);
 ```
 
@@ -371,8 +370,6 @@ Suppose you transfer tokens to a general account as follows:
 ```js
 import { TimeStamp, Amount, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // your network id
-
 const receiver = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "100");
@@ -385,13 +382,13 @@ const item = new Currency.TransfersItem(receiver, [mccAmount, penAmount]);
 const fact = new Currency.TransfersFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Currency.TransfersOperation(networkId, fact, memo, []);
+const operation = new Currency.TransfersOperation(fact, memo, []);
 operation.sign(senderPrivate);
 ```
 
 ### currency-register
 
-__current-register__ is the operation to register the current id and policy of the new token.
+__current-register__ is the operation to register the currency id and policy of the new token.
 
 When registering a new token, you can choose one of the fee policies:
 
@@ -445,7 +442,7 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyRegisterFact(token, design);
 
 const memo = ""; // any string
-const operation = new Currency.CurrencyRegisterOperation(networkId, fact, memo, []);
+const operation = new Currency.CurrencyRegisterOperation(fact, memo, []);
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
 ```
 
@@ -458,7 +455,6 @@ Here, the way to create a feeer is the same as [currency-register](#currency-reg
 ```js
 import { TimeStamp, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // your network id
 const currency = "MCC"; // currency id to update `policy`
 
 // creating feeer
@@ -472,7 +468,7 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyPolicyUpdaterFact(token, currency, policy);
 
 const memo = ""; // any string
-const operation = new Currency.CurrencyPolicyUpdaterOperation(networkId, fact, memo, []);
+const operation = new Currency.CurrencyPolicyUpdaterOperation(fact, memo, []);
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
 ```
 
@@ -492,8 +488,6 @@ Assume that you supply tokens as follows:
 
 ```js
 import { TimeStamp, Amount, Currency } from "mitum-sdk";
-
-const networkId = "mitum";
 
 const receiver1 = "receiver1's account address";
 ...
@@ -516,7 +510,7 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.SuffrageInflationFact(token, [imcc, ipen, itxt, ibts, itst]);
 
 const memo = ""; // any string
-const operation = new Currency.SuffrageInflationOperation(networkId, fact, memo, []);
+const operation = new Currency.SuffrageInflationOperation(fact, memo, []);
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
 ```
 
@@ -538,8 +532,6 @@ Here, the weight and threshold are only used to generate the account address and
 ```js
 import { TimeStamp, KPGen, Amount, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // your network id
-
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
 
@@ -554,7 +546,7 @@ const item = new Currency.CreateContractAccountsItem(keys, [mccAmount, penAmount
 const fact = new Currency.CreateContractAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Currency.CreateContractAccountsOperation(networkId, fact, memo, []);
+const operation = new Currency.CreateContractAccountsOperation(fact, memo, []);
 operation.sign(senderPrivate);
 ```
 
@@ -572,8 +564,6 @@ Suppose your contract account is __DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqdmc
 ```js
 import { TimeStamp, Amount, Currency } from "mitum-sdk";
 
-const networkId = "mitum"; // your network id
-
 const contractAccount = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "100");
@@ -586,18 +576,42 @@ const item = new Currency.WithdrawsItem(contractAccount, [mccAmount, penAmount])
 const fact = new Currency.WithdrawsFact(token, senderAddress, [item]);
 
 const memo = "";
-const operation = new Currency.WithdrawsOperation(networkId, fact, memo, []);
+const operation = new Currency.WithdrawsOperation(fact, memo, []);
 operation.sign(senderPrivate);
 ```
 
 ## Appendix
+
+### Set version of hints
+
+To change the mitum version of every objects, add the following code to the part where the app is initialized.
+
+The default version is `v0.0.1`.
+
+```js
+import { useV } from "mitum-sdk";
+
+useV("v0.0.2");
+```
+
+### Set network id of operations
+
+To apply your network id to operations, add the following code to the part where the app is initialized.
+
+The default id is `mitum`.
+
+```js
+import { usedId } from "mitum-sdk";
+
+useId("mainnet");
+```
 
 ### Options and other methods for __Operation__
 
 * If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
 
 ```js
-const operation = new Currency.CreateAccountsOperation(/* id, fact, etc... */);
+const operation = new Currency.CreateAccountsOperation(/* fact, etc... */);
 operation.forceExtendedMessage = true
 operation.sign(/* sender's private key */)
 ```

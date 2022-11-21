@@ -19,6 +19,7 @@ import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
+import { id } from "../utils/config.js";
 import { name, sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
@@ -29,10 +30,10 @@ import { schnorr } from "../key/schnorr-keypair.js";
 import { isECDSAPrivateKey, isSchnorrPrivateKey } from "../key/validation.js";
 
 export class Operation extends IBytesDict {
-	constructor(id, hint, fact, memo, factSigns) {
+	constructor(hint, fact, memo, factSigns) {
 		super();
 		this.hint = new Hint(hint);
-		this.id = new ID(id);
+		this.id = new ID(id());
 
 		assert(
 			fact instanceof Fact,

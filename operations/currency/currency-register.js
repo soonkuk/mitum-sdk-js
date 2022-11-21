@@ -44,7 +44,7 @@ export class CurrencyRegisterFact extends Fact {
 }
 
 export class CurrencyRegisterOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(id, HINT_CURRENCY_REGISTER_OPERATION, fact, memo, factSigns);
+	constructor(fact, memo, factSigns) {
+		super(HINT_CURRENCY_REGISTER_OPERATION, fact, memo, factSigns);
 	}
 }

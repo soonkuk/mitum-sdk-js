@@ -121,13 +121,7 @@ export class CreateContractAccountsFact extends Fact {
 }
 
 export class CreateContractAccountsOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(
-			id,
-			HINT_CREATE_CONTRACT_ACCOUNTS_OPERATION,
-			fact,
-			memo,
-			factSigns
-		);
+	constructor(fact, memo, factSigns) {
+		super(HINT_CREATE_CONTRACT_ACCOUNTS_OPERATION, fact, memo, factSigns);
 	}
 }

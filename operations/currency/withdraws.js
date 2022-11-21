@@ -113,7 +113,7 @@ export class WithdrawsFact extends Fact {
 }
 
 export class WithdrawsOperation extends Operation {
-	constructor(id, fact, memo, factSigns) {
-		super(id, HINT_WITHDRAWS_OPERATION, fact, memo, factSigns);
+	constructor(fact, memo, factSigns) {
+		super(HINT_WITHDRAWS_OPERATION, fact, memo, factSigns);
 	}
 }
