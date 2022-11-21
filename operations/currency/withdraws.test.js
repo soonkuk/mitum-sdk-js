@@ -1,9 +1,10 @@
 import bs58 from "bs58";
 
 import { Amount } from "./amount";
-import { WithdrawsFact, WithdrawsItem, WithdrawsOperation } from "./withdraws";
+import { WithdrawsFact, WithdrawsItem } from "./withdraws";
+import { Operation } from "../operation";
 
-import { TEST_ACCOUNT, TEST_GENESIS, TEST_ID } from "../../mitum.config";
+import { TEST_ACCOUNT, TEST_GENESIS } from "../../mitum.config";
 
 import { TimeStamp } from "../../utils/time";
 
@@ -17,7 +18,7 @@ describe("test: withdraw", () => {
 			TEST_GENESIS.ecdsa.address,
 			[item]
 		);
-		const operation = new WithdrawsOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(

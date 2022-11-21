@@ -5,8 +5,8 @@ import { Amount } from "./amount";
 import {
 	SuffrageInflationFact,
 	SuffrageInflationItem,
-	SuffrageInflationOperation,
 } from "./suffrage-inflation";
+import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
@@ -29,7 +29,7 @@ describe("test: suffrage-inflation", () => {
 			new TimeStamp("2022-11-16T06:55:02.135231Z").UTC(),
 			items
 		);
-		const operation = new SuffrageInflationOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(

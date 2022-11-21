@@ -50,10 +50,8 @@ export class KeyUpdaterFact extends Fact {
 			currency: this.currency.toString(),
 		};
 	}
-}
 
-export class KeyUpdaterOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_KEY_UPDATER_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_KEY_UPDATER_OPERATION;
 	}
 }

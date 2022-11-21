@@ -8,10 +8,8 @@ import {
 	NilFeeer,
 	RatioFeeer,
 } from "./currency-design";
-import {
-	CurrencyRegisterFact,
-	CurrencyRegisterOperation,
-} from "./currency-register";
+import { CurrencyRegisterFact } from "./currency-register";
+import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
@@ -33,7 +31,7 @@ describe("test: currency-register", () => {
 			new TimeStamp("2022-11-16T06:32:11.337619Z").UTC(),
 			design
 		);
-		const operation = new CurrencyRegisterOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(
@@ -61,7 +59,7 @@ describe("test: currency-register", () => {
 			new TimeStamp("2022-11-16T06:35:43.649604Z").UTC(),
 			design
 		);
-		const operation = new CurrencyRegisterOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(
@@ -95,7 +93,7 @@ describe("test: currency-register", () => {
 				new TimeStamp(token).UTC(),
 				design
 			);
-			const operation = new CurrencyRegisterOperation(fact, "", []);
+			const operation = new Operation(fact, "", []);
 			operation.sign(TEST_NODE.ecdsa);
 
 			return {

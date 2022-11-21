@@ -110,10 +110,8 @@ export class WithdrawsFact extends Fact {
 			items: this.items.sort(sortBuf).map((item) => item.dict()),
 		};
 	}
-}
 
-export class WithdrawsOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_WITHDRAWS_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_WITHDRAWS_OPERATION;
 	}
 }

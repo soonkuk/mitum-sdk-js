@@ -46,10 +46,10 @@ $ npm test
  PASS  operations/currency/create-contract-accounts.test.js
  PASS  operations/currency/transfers.test.js
  PASS  operations/currency/key-updater.test.js
+ PASS  utils/config.test.js
+ PASS  utils/time.test.js
  PASS  operations/currency/currency-policy-updater.test.js
  PASS  operations/currency/currency-register.test.js
- PASS  utils/time.test.js
- PASS  utils/config.test.js
  PASS  key/schnorr-keypair.test.js
  PASS  key/key.test.js
  PASS  key/address.test.js
@@ -59,7 +59,7 @@ $ npm test
 Test Suites: 14 passed, 14 total
 Tests:       39 passed, 39 total
 Snapshots:   0 total
-Time:        1.267 s, estimated 2 s
+Time:        1.302 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -280,7 +280,7 @@ First, suppose you create an account with the following settings:
 * initial balance: 1000 MCC, 500 PEN
 
 ```js
-import { TimeStamp, KPGen, Amount, Currency } from "mitum-sdk";
+import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -296,7 +296,7 @@ const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
 const fact = new Currency.CreateAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Currency.CreateAccountsOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign(senderPrivate);
 
 // see appendix
@@ -339,7 +339,7 @@ First, suppose you add a new key to your account as follows:
 * currency to pay the fee: MCC
 
 ```js
-import { TimeStamp, PubKey, Keys, Currency } from "mitum-sdk";
+import { TimeStamp, PubKey, Keys, Currency, Operation } from "mitum-sdk";
 
 const pub1 = "22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu"; // new pub1
 const pub2 = "yX3YBvu597eNgwuuJpsnZunZcDkABVeqfmiyveKuNregmpu"; // new pub2
@@ -352,7 +352,7 @@ const targetPrivate = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
 const fact = new Currency.KeyUpdaterFact(token, targetAddress, new Keys(keys, 100), "MCC");
 
 const memo = ""; // any string
-const operation = new Currency.KeyUpdaterOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign(targetPrivate);
 ```
 
@@ -368,7 +368,7 @@ Suppose you transfer tokens to a general account as follows:
 * tokens to transfer: 1000 MCC, 100 PEN
 
 ```js
-import { TimeStamp, Amount, Currency } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
 
 const receiver = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
@@ -382,7 +382,7 @@ const item = new Currency.TransfersItem(receiver, [mccAmount, penAmount]);
 const fact = new Currency.TransfersFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Currency.TransfersOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign(senderPrivate);
 ```
 
@@ -423,7 +423,7 @@ __(2) Operation__
 Then, create an operation.
 
 ```js
-import { TimeStamp, Amount, Currency } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
 
 // creating feeer
 // ...
@@ -442,7 +442,7 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyRegisterFact(token, design);
 
 const memo = ""; // any string
-const operation = new Currency.CurrencyRegisterOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
 ```
 
@@ -453,7 +453,7 @@ __currency-policy-updater__ is an operation that allows you to update policies o
 Here, the way to create a feeer is the same as [currency-register](#currency-register).
 
 ```js
-import { TimeStamp, Currency } from "mitum-sdk";
+import { TimeStamp, Currency, Operation } from "mitum-sdk";
 
 const currency = "MCC"; // currency id to update `policy`
 
@@ -468,7 +468,7 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyPolicyUpdaterFact(token, currency, policy);
 
 const memo = ""; // any string
-const operation = new Currency.CurrencyPolicyUpdaterOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
 ```
 
@@ -487,7 +487,7 @@ Assume that you supply tokens as follows:
 * supply TST: receiver5, 999991888 tokens
 
 ```js
-import { TimeStamp, Amount, Currency } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
 
 const receiver1 = "receiver1's account address";
 ...
@@ -510,7 +510,7 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.SuffrageInflationFact(token, [imcc, ipen, itxt, ibts, itst]);
 
 const memo = ""; // any string
-const operation = new Currency.SuffrageInflationOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
 ```
 
@@ -530,7 +530,7 @@ First, suppose you create a contract account with the following settings:
 Here, the weight and threshold are only used to generate the account address and do not affect the behavior of the account at all after the account is registered.
 
 ```js
-import { TimeStamp, KPGen, Amount, Currency } from "mitum-sdk";
+import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -546,7 +546,7 @@ const item = new Currency.CreateContractAccountsItem(keys, [mccAmount, penAmount
 const fact = new Currency.CreateContractAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Currency.CreateContractAccountsOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign(senderPrivate);
 ```
 
@@ -562,7 +562,7 @@ Suppose your contract account is __DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqdmc
 * tokens to transfer: 1000 MCC, 100 PEN
 
 ```js
-import { TimeStamp, Amount, Currency } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
 
 const contractAccount = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
@@ -576,7 +576,7 @@ const item = new Currency.WithdrawsItem(contractAccount, [mccAmount, penAmount])
 const fact = new Currency.WithdrawsFact(token, senderAddress, [item]);
 
 const memo = "";
-const operation = new Currency.WithdrawsOperation(fact, memo, []);
+const operation = new Operation(fact, memo, []);
 operation.sign(senderPrivate);
 ```
 
@@ -611,7 +611,7 @@ useId("mainnet");
 * If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
 
 ```js
-const operation = new Currency.CreateAccountsOperation(/* fact, etc... */);
+const operation = new Operation(/* fact, etc... */);
 operation.forceExtendedMessage = true
 operation.sign(/* sender's private key */)
 ```

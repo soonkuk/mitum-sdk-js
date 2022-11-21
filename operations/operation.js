@@ -30,15 +30,15 @@ import { schnorr } from "../key/schnorr-keypair.js";
 import { isECDSAPrivateKey, isSchnorrPrivateKey } from "../key/validation.js";
 
 export class Operation extends IBytesDict {
-	constructor(hint, fact, memo, factSigns) {
+	constructor(fact, memo, factSigns) {
 		super();
-		this.hint = new Hint(hint);
 		this.id = new ID(id());
 
 		assert(
 			fact instanceof Fact,
 			error.instance(EC_INVALID_FACT, "not Fact instance", name(fact))
 		);
+		this.hint = new Hint(fact.opHint);
 		this.fact = fact;
 
 		assert(

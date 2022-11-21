@@ -110,10 +110,8 @@ export class TransfersFact extends Fact {
 			items: this.items.sort(sortBuf).map((item) => item.dict()),
 		};
 	}
-}
 
-export class TransfersOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_TRANSFERS_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_TRANSFERS_OPERATION;
 	}
 }

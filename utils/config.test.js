@@ -1,15 +1,17 @@
 import bs58 from "bs58";
 
-import { useId, useV } from "./config";
 import { TimeStamp } from "./time";
+import { useId, useV } from "./config";
+
 import { TEST_ACCOUNT, TEST_GENESIS } from "../mitum.config";
 import { Keys, PublicKey } from "../key/key";
+
 import { Amount } from "../operations/currency/amount";
 import {
 	CreateAccountsFact,
 	CreateAccountsItem,
-	CreateAccountsOperation,
 } from "../operations/currency/create-accounts";
+import { Operation } from "../operations/operation";
 
 describe("test: config", () => {
 	it("case: version", () => {
@@ -50,15 +52,15 @@ describe("test: config", () => {
 		);
 
 		useId(id1);
-		const operation1 = new CreateAccountsOperation(fact, "", []);
+		const operation1 = new Operation(fact, "", []);
 		operation1.sign(TEST_GENESIS.ecdsa.private);
 
 		useId(id2);
-		const operation2 = new CreateAccountsOperation(fact, "", []);
+		const operation2 = new Operation(fact, "", []);
 		operation2.sign(TEST_GENESIS.ecdsa.private);
 
 		useId(id1);
-		const operation3 = new CreateAccountsOperation(fact, "", []);
+		const operation3 = new Operation(fact, "", []);
 		operation3.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(operation1.id.toString() === id1);

@@ -4,8 +4,8 @@ import { Amount } from "./amount";
 import {
 	CreateAccountsFact,
 	CreateAccountsItem,
-	CreateAccountsOperation,
 } from "./create-accounts";
+import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_ACCOUNT } from "../../mitum.config";
 
@@ -21,7 +21,7 @@ describe("test: create-account", () => {
 			TEST_GENESIS.ecdsa.address,
 			[new CreateAccountsItem(keys, amounts)]
 		);
-		const operation = new CreateAccountsOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(

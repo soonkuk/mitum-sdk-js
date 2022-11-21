@@ -1,6 +1,7 @@
 import bs58 from "bs58";
 
-import { KeyUpdaterFact, KeyUpdaterOperation } from "./key-updater";
+import { KeyUpdaterFact } from "./key-updater";
+import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_ACCOUNT } from "../../mitum.config";
 
@@ -17,7 +18,7 @@ describe("test: key-updater", () => {
 			keys,
 			"MCC"
 		);
-		const operation = new KeyUpdaterOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(

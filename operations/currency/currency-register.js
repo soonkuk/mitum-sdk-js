@@ -41,10 +41,8 @@ export class CurrencyRegisterFact extends Fact {
 			currency: this.design.dict(),
 		};
 	}
-}
 
-export class CurrencyRegisterOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_CURRENCY_REGISTER_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_CURRENCY_REGISTER_OPERATION;
 	}
 }

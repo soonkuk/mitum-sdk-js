@@ -107,10 +107,8 @@ export class SuffrageInflationFact extends Fact {
 			items: this.items.sort(sortBuf).map((item) => item.dict()),
 		};
 	}
-}
 
-export class SuffrageInflationOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_SUFFRAGE_INFLATION_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_SUFFRAGE_INFLATION_OPERATION;
 	}
 }

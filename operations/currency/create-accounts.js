@@ -118,10 +118,8 @@ export class CreateAccountsFact extends Fact {
 			items: this.items.sort(sortBuf).map((item) => item.dict()),
 		};
 	}
-}
 
-export class CreateAccountsOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_CREATE_ACCOUNTS_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_CREATE_ACCOUNTS_OPERATION;
 	}
 }

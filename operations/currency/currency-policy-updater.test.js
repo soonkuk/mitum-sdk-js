@@ -6,10 +6,8 @@ import {
 	NilFeeer,
 	RatioFeeer,
 } from "./currency-design";
-import {
-	CurrencyPolicyUpdaterFact,
-	CurrencyPolicyUpdaterOperation,
-} from "./currency-policy-updater";
+import { CurrencyPolicyUpdaterFact } from "./currency-policy-updater";
+import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
@@ -25,7 +23,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(
@@ -47,7 +45,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(
@@ -74,7 +72,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new CurrencyPolicyUpdaterOperation(fact, "", []);
+		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(

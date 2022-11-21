@@ -49,10 +49,8 @@ export class CurrencyPolicyUpdaterFact extends Fact {
 			policy: this.policy.dict(),
 		};
 	}
-}
 
-export class CurrencyPolicyUpdaterOperation extends Operation {
-	constructor(fact, memo, factSigns) {
-		super(HINT_CURRENCY_POLICY_UPDATER_OPERATION, fact, memo, factSigns);
+	get opHint() {
+		return HINT_CURRENCY_POLICY_UPDATER_OPERATION;
 	}
 }
