@@ -136,7 +136,7 @@ export class Operation extends IBytesDict {
 
 		let msg = undefined;
 		if (this.forceExtendedMessage || kp.type === "schnorr") {
-			msg = Buffer.concat([this._msg, now.toString()]);
+			msg = Buffer.concat([this._msg, now.bytes()]);
 		} else {
 			msg = this._msg;
 		}
