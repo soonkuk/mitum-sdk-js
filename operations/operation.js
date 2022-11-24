@@ -19,7 +19,7 @@ import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
-import { id } from "../utils/config.js";
+import { id, isExtendedMessageForced } from "../utils/config.js";
 import { name, sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
@@ -74,7 +74,7 @@ export class Operation extends IBytesDict {
 		}
 
 		this.hash = this.hashing();
-		this.forceExtendedMessage = false;
+		this.forceExtendedMessage = isExtendedMessageForced();
 	}
 
 	hashing() {
@@ -123,6 +123,9 @@ export class Operation extends IBytesDict {
 	sign(privateKey) {
 		const now = new TimeStamp();
 		const kp = this._kp(privateKey);
+		if (kp.type === "schonorr") {
+			this.forceExtendedMessage = true;
+		}
 
 		const signInfo = jsonStringify({
 			id: this.id.toString(),
@@ -131,7 +134,7 @@ export class Operation extends IBytesDict {
 		});
 
 		let msg = undefined;
-		if (this.forceExtendedMessage || kp.type === "schnorr") {
+		if (this.forceExtendedMessage) {
 			msg = Buffer.concat([this.id.bytes(), this.fact.hash, now.bytes()]);
 		} else {
 			msg = Buffer.concat([this.fact.hash, this.id.bytes()]);
@@ -182,13 +185,22 @@ export class Operation extends IBytesDict {
 	}
 
 	dict() {
-		return {
-			memo: this.memo,
+		const op = {
 			_hint: this.hint.toString(),
+			memo: this.memo,
 			fact: this.fact.dict(),
 			hash: bs58.encode(this.hash),
-			fact_signs: this.factSigns.sort(sortBuf).map((fs) => fs.dict()),
 		};
+
+		const signs = this.factSigns.sort(sortBuf).map((fs) => fs.dict());
+
+		if (this.forceExtendedMessage) {
+			op.signs = signs;
+		} else {
+			op.fact_signs = signs;
+		}
+
+		return op;
 	}
 
 	export(fp) {

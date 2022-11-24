@@ -41,25 +41,26 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
+ PASS  operations/factsign.test.js
  PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  key/address.test.js
  PASS  operations/currency/create-contract-accounts.test.js
  PASS  operations/currency/transfers.test.js
- PASS  operations/currency/key-updater.test.js
- PASS  utils/config.test.js
  PASS  utils/time.test.js
- PASS  operations/currency/currency-policy-updater.test.js
+ PASS  utils/config.test.js
  PASS  operations/currency/currency-register.test.js
- PASS  key/schnorr-keypair.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
  PASS  key/key.test.js
- PASS  key/address.test.js
  PASS  operations/currency/withdraws.test.js
+ PASS  key/schnorr-keypair.test.js
  PASS  key/ecdsa-keypair.test.js
+ PASS  operations/currency/key-updater.test.js
 
-Test Suites: 14 passed, 14 total
-Tests:       39 passed, 39 total
+Test Suites: 15 passed, 15 total
+Tests:       42 passed, 42 total
 Snapshots:   0 total
-Time:        1.302 s, estimated 2 s
+Time:        1.348 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -83,7 +84,9 @@ Ran all test suites.
 |-|[withdraw](#withdraw)|
 |+|[Appendix](#appendix)|
 
-To set the mitum version of all hints and the network id, refer to [Set version of hints](#set-version-of-hints) and .
+To set the mitum version of all hints and the network id, refer to [Set version of hints](#set-version-of-hints) and [Set network id of operations](#set-network-id-of-operations).
+
+In addition, you can force the sdk to use extended msgs (which used in mitum2) to sign by set `forceExtendedMessage(true)`. See [Force to use extended messages](#force-to-use-extended-messages) 
 
 ## Generate KeyPairs
 
@@ -606,6 +609,16 @@ import { usedId } from "mitum-sdk";
 useId("mainnet");
 ```
 
+### Force to use extended messages
+
+You can force the sdk to use extended msgs (which used in mitum2) for each signature.
+
+```js
+import { forceExtendedMessage } from "mitum-sdk";
+
+forceExtendedMessage(true);
+```
+
 ### Options and other methods for __Operation__
 
 * If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
@@ -669,6 +682,10 @@ b. `2021-11-16T01:53:30.510Z` must be converted to `2021-11-16 01:53:30.51 +0000
 c. `2021-11-16T01:53:30.000Z` must be converted to `2021-11-16T01:53:30 +0000 UTC` when generating a hash.
 
 A timestamp with unnecessary zeros in the json file does not affect the processing of blocks, seals, or operations. Use caution when converting formats.
+
+In addition, no matter how precise the time is entered, all timestamps within the mitum code only support precision up to milliseconds when converting to buffer.
+
+For example, if you enter `2022-11-24T05:34:25.194332Z` in `signed_at`, the string `2022-11-24 05:34:25.194 +0000 UTC` is converted to a byte array to create a buffer of the fact signature.
 
 ## License
 
