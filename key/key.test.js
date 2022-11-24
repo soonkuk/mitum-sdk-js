@@ -53,9 +53,9 @@ describe("test: address generation", () => {
 		tcs.forEach((tc) => {
 			const key = new PublicKey(tc.key, tc.weight);
 
-			expect(key.hint === HINT_KEY);
-			expect(key.toString() === tc.key);
-			expect(key.weight.big == tc.weight);
+			expect(key.hint.s).toBe(HINT_KEY);
+			expect(key.toString()).toBe(tc.key);
+			expect(key.weight.v).toBe(tc.weight);
 		});
 	});
 
@@ -528,10 +528,10 @@ describe("test: address generation", () => {
 			const ks = tc.keys.map((k) => new PublicKey(k.key, k.weight));
 			const keys = new Keys(ks, tc.threshold);
 
-			expect(keys.hint === HINT_KEYS);
-			expect(keys.keys.length === 10);
-			expect(keys.threshold == tc.threshold);
-			expect(keys.address.toString() === tc.address);
+			expect(keys.hint.s).toBe(HINT_KEYS);
+			expect(keys.keys.length).toBe(10);
+			expect(keys.threshold.v).toBe(tc.threshold);
+			expect(keys.address.toString()).toBe(tc.address);
 		});
 	});
 });

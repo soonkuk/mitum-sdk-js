@@ -11,12 +11,12 @@ describe("test: keys and keypairs generation", () => {
 			);
 			const pkeys = new Keys(pks, keys.threshold.v);
 
-			expect(pkeys.address.toString() === keys.address.toString());
+			expect(pkeys.address.toString()).toBe(keys.address.toString());
 
 			const pubKeys = keys.keys.map((k) => k.toString());
 			const kpPubKeys = keypairs.map((kp) => kp.publicKey.toString());
 
-			pubKeys.forEach((k) => expect(kpPubKeys.includes(k)));
+			pubKeys.forEach((k) => expect(kpPubKeys.includes(k)).toBe(true));
 		}
 	});
 
@@ -29,12 +29,12 @@ describe("test: keys and keypairs generation", () => {
 			);
 			const pkeys = new Keys(pks, keys.threshold.v);
 
-			expect(pkeys.address.toString() === keys.address.toString());
+			expect(pkeys.address.toString()).toBe(keys.address.toString());
 
 			const pubKeys = keys.keys.map((k) => k.toString());
 			const kpPubKeys = keypairs.map((kp) => kp.publicKey.toString());
 
-			pubKeys.forEach((k) => expect(kpPubKeys.includes(k)));
+			pubKeys.forEach((k) => expect(kpPubKeys.includes(k)).toBe(true));
 		}
 	});
 });

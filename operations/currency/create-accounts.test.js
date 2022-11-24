@@ -1,39 +1,45 @@
 import bs58 from "bs58";
 
 import { Amount } from "./amount";
-import {
-	CreateAccountsFact,
-	CreateAccountsItem,
-} from "./create-accounts";
+import { CreateAccountsFact, CreateAccountsItem } from "./create-accounts";
 import { Operation } from "../operation";
 
-import { TEST_GENESIS, TEST_ACCOUNT } from "../../mitum.config";
+import { TEST_GENESIS, TEST_ACCOUNT, TEST_ACCOUNT_R } from "../../mitum.config";
 
 import { Keys, PublicKey } from "../../key/key";
-import { TimeStamp } from "../../utils/time";
 
 describe("test: create-account", () => {
 	it("case: ecdsa; operation", () => {
 		const amounts = [new Amount("MCC", "1000"), new Amount("PEN", "1000")];
 		const keys = new Keys([new PublicKey(TEST_ACCOUNT.public, 100)], 100);
 		const fact = new CreateAccountsFact(
-			new TimeStamp("2022-11-16T06:05:14.889691Z").UTC(),
+			"2022-11-16T06:05:14.889691Z",
 			TEST_GENESIS.ecdsa.address,
 			[new CreateAccountsItem(keys, amounts)]
 		);
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		expect(
-			"3YQ6tUgKBKq6HdjREeFTVBYrTDWiTQEYARv6HX8wyQZP" ===
-				bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"3YQ6tUgKBKq6HdjREeFTVBYrTDWiTQEYARv6HX8wyQZP"
 		);
-		expect(
-			"Gz3KHZ85jSWJ3yueMoHL4TU2f7TQV5N2Cz6FDMHRyvGJ" ===
-				bs58.encode(operation.hash)
-		);
-		expect(TEST_ACCOUNT.address === keys.address.toString());
+		expect(TEST_ACCOUNT.address).toBe(keys.address.toString());
 	});
 
-	it("case: schnorr; operation", () => {});
+	it("case: schnorr; operation", () => {
+		const amounts = [new Amount("MCC", "1000")];
+		const keys = new Keys([new PublicKey(TEST_ACCOUNT_R.public, 100)], 100);
+		const fact = new CreateAccountsFact(
+			"2022-10-25 03:52:32.461515 +0000 UTC",
+			TEST_GENESIS.schnorr.address,
+			[new CreateAccountsItem(keys, amounts)]
+		);
+		const operation = new Operation(fact, "", []);
+		operation.sign(TEST_GENESIS.schnorr.private);
+
+		expect("2NfVhz4yfRJ2ZexQgqcox67v6jzu2X5qYiDbYoeQaPgq").toBe(
+			bs58.encode(fact.hash)
+		);
+		expect(TEST_ACCOUNT_R.address).toBe(keys.address.toString());
+	});
 });

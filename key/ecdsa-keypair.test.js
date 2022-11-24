@@ -154,7 +154,7 @@ describe("test: ecdsa; sign", () => {
 			const kp = ecdsa.fromPrivateKey(tc.priv);
 			const sig = bs58.encode(kp.sign(tc.msg));
 
-			expect(sig === tc.sig);
+			expect(sig).toBe(tc.sig);
 		});
 	});
 });

@@ -13,8 +13,6 @@ import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
-import { TimeStamp } from "../../utils/time";
-
 describe("test: currency-register", () => {
 	it("case: ecdsa; nil feeer", () => {
 		const feeer = new NilFeeer();
@@ -28,19 +26,14 @@ describe("test: currency-register", () => {
 		);
 
 		const fact = new CurrencyRegisterFact(
-			new TimeStamp("2022-11-16T06:32:11.337619Z").UTC(),
+			"2022-11-24T02:17:37.256409Z",
 			design
 		);
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect(
-			"CP2cAeN9wLj7BygR8KGt3FAH11vhRFVYc4togf5s9nYL" ===
-				bs58.encode(fact.hash)
-		);
-		expect(
-			"6U4p4RzLPWHQxd6DWTXA6LLZ4uBcFpjq6wPSdcMGwKuN" ===
-				bs58.encode(operation.hash)
+		expect("3AtsTvXxZ3BYczqAYZAqbV7y76UW4mCEipvV4jWH7B4h").toBe(
+			bs58.encode(fact.hash)
 		);
 	});
 
@@ -56,19 +49,14 @@ describe("test: currency-register", () => {
 		);
 
 		const fact = new CurrencyRegisterFact(
-			new TimeStamp("2022-11-16T06:35:43.649604Z").UTC(),
+			"2022-11-16T06:35:43.649604Z",
 			design
 		);
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect(
-			"6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh" ===
-				bs58.encode(fact.hash)
-		);
-		expect(
-			"EqBuz16bhi9b9PsbgiSU7jX1ymo8HBypVoJqwS1V1ZPc" ===
-				bs58.encode(operation.hash)
+		expect("6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh").toBe(
+			bs58.encode(fact.hash)
 		);
 	});
 
@@ -90,28 +78,22 @@ describe("test: currency-register", () => {
 			);
 
 			const fact = new CurrencyRegisterFact(
-				new TimeStamp(token).UTC(),
+				token,
 				design
 			);
 			const operation = new Operation(fact, "", []);
 			operation.sign(TEST_NODE.ecdsa);
 
-			return {
-				fact: bs58.encode(fact.hash),
-				operation: bs58.encode(operation.hash),
-			};
+			return bs58.encode(fact.hash);
 		};
 
 		const r0 = ratio(0, "2022-11-16T06:42:44.505842Z");
 		const r1 = ratio(0.5, "2022-11-16T06:38:44.472Z");
 		const r2 = ratio(1, "2022-11-16T06:44:19.856767Z");
 
-		expect(r0.fact === "Dai6Wt9kqb8Mztt8uVspZZJYw3QsTmccxKQzqC5hPCCR");
-		expect(r0.operation === "8D1LHkXCcEvMEGxwYqh3GD35bk3sNfCK9Qrd54tB5BkL");
-		expect(r1.fact === "8RihHh7jYDcG8fMi1KHnVdm6YVHYiBKN3iVpvPoysPw2");
-		expect(r1.operation === "8Axsww9aup1rWwp6CYnXdHE8F2t883H4KyDD9KAcgRBD");
-		expect(r2.fact === "DLsvsfkRGpHXrMXSyxYMGGmT48Jhhuro4bVNSojHJ7DB");
-		expect(r2.operation === "CmFNhH1aoiMSG1X6ArDDgP6DkUBoM2ALVFWKpN8gyaCi");
+		expect(r0).toBe("Dai6Wt9kqb8Mztt8uVspZZJYw3QsTmccxKQzqC5hPCCR");
+		expect(r1).toBe("8RihHh7jYDcG8fMi1KHnVdm6YVHYiBKN3iVpvPoysPw2");
+		expect(r2).toBe("DLsvsfkRGpHXrMXSyxYMGGmT48Jhhuro4bVNSojHJ7DB");
 	});
 
 	it("case: schnorr; nil feeer", () => {});

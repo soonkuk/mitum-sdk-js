@@ -10,8 +10,6 @@ import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
-import { TimeStamp } from "../../utils/time";
-
 describe("test: suffrage-inflation", () => {
 	it("case: ecdsa; operation", () => {
 		const items = [
@@ -26,19 +24,14 @@ describe("test: suffrage-inflation", () => {
 		];
 
 		const fact = new SuffrageInflationFact(
-			new TimeStamp("2022-11-16T06:55:02.135231Z").UTC(),
+			"2022-11-16T06:55:02.135231Z",
 			items
 		);
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect(
-			"FcP5ciHKkhogkskiYiaVCTP4JZ7zr4UH2cMRJqhhzEgV" ===
-				bs58.encode(fact.hash)
-		);
-		expect(
-			"C1LSS52mQJ1MJWq4GK3mpk6xpKMeLhST9kKjWYyKLrqK" ===
-				bs58.encode(operation.hash)
+		expect("FcP5ciHKkhogkskiYiaVCTP4JZ7zr4UH2cMRJqhhzEgV").toBe(
+			bs58.encode(fact.hash)
 		);
 	});
 

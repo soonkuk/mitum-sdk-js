@@ -28,12 +28,17 @@ export const TEST_GENESIS = {
 		private: "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr",
 	},
 	schnorr: {
-		address: "",
-		private: "",
+		address: "2E5qNuz9HsXydeTTdG1a3SZtj1iBWNUyVyfHYNcs4gSgmca",
+		private: "D4QPRNSTgYmgRymYVS1mLgyGtCbzeAPYhd5r4jNQahwampr",
 	},
 };
 
 export const TEST_ACCOUNT = {
 	public: "2122tJTiK183VbZFsecRgvaybcqM1wwGRLrsru9e5FaJMmpu",
 	address: "AN91jfkYtje64GPrKPkGMrrPnb7iq9TZq1fBHxwML9wmmca",
+};
+
+export const TEST_ACCOUNT_R = {
+	public: "u8Ey4xJwzEgPTc2kMPZtiiXBTsg5AKwt4vuWpM4RpsQtmpu",
+	address: "5f2WQP8Ckn7mRHrv9mkqdvC7vEjB3w7kurbRWurgT62Wmca",
 };

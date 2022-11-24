@@ -30,7 +30,7 @@ export class CurrencyRegisterFact extends Fact {
 	}
 
 	bytes() {
-		return Buffer.from([this.token.bytes(), this.design.bytes()]);
+		return Buffer.concat([this.token.bytes(), this.design.bytes()]);
 	}
 
 	dict() {

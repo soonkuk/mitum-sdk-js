@@ -4,6 +4,7 @@ import { assert, error, EC_INVALID_TOKEN } from "../base/error.js";
 export class TimeStamp extends IBytes {
 	constructor(s) {
 		super();
+		this.dec = null;
 		if (s === "" || s === null || s === undefined) {
 			this.t = new Date();
 		} else {
@@ -12,11 +13,25 @@ export class TimeStamp extends IBytes {
 			} catch (e) {
 				throw error.format(EC_INVALID_TOKEN, "invalid date", s);
 			}
+
+			if (typeof s === "string") {
+				let idx = s.indexOf(".");
+				const dec = s.substring(idx + 1);
+				const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+				for (let i = 0; i < dec.length; i++) {
+					if (!nums.includes(dec[i])) {
+						idx = i;
+						break;
+					}
+				}
+				this.dec = dec.substring(0, idx);
+			}
 		}
 	}
 
 	bytes() {
-		return Buffer.from(this.ISO());
+		return Buffer.from(this.UTC());
 	}
 
 	toString() {
@@ -24,6 +39,9 @@ export class TimeStamp extends IBytes {
 	}
 
 	ISO() {
+		if (this.dec) {
+			return this.t.toISOString().split(".")[0] + "." + this.dec + "Z";
+		}
 		return this.t.toISOString();
 	}
 
@@ -40,9 +58,6 @@ export class TimeStamp extends IBytes {
 		assert(z >= 0, error.format(EC_INVALID_TOKEN, "no 'Z' in iso", iso));
 
 		let _time = iso.substring(t + 1, z);
-		if (_time.length > 12) {
-			_time = _time.substring(0, 12);
-		}
 
 		const dotIdx = _time.indexOf(".");
 		if (dotIdx < 0) {

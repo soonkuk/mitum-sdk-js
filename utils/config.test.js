@@ -23,18 +23,18 @@ describe("test: config", () => {
 		let key = new PublicKey(TEST_ACCOUNT.public, 100);
 		let keys = new Keys([key], 100).hint.toString();
 		key = key.hint.toString();
-		expect(amount.substring(amount.length - 6) === version2);
-		expect(key.substring(key.length - 6) === version2);
-		expect(keys.substring(keys.length - 6) === version2);
+		expect(amount.substring(amount.length - 6)).toBe(version2);
+		expect(key.substring(key.length - 6)).toBe(version2);
+		expect(keys.substring(keys.length - 6)).toBe(version2);
 
 		useV(version1);
 		amount = new Amount("MCC", "100").hint.toString();
 		key = new PublicKey(TEST_ACCOUNT.public, 100);
 		keys = new Keys([key], 100).hint.toString();
 		key = key.hint.toString();
-		expect(amount.substring(amount.length - 6) === version1);
-		expect(key.substring(key.length - 6) === version1);
-		expect(keys.substring(keys.length - 6) === version1);
+		expect(amount.substring(amount.length - 6)).toBe(version1);
+		expect(key.substring(key.length - 6)).toBe(version1);
+		expect(keys.substring(keys.length - 6)).toBe(version1);
 	});
 
 	it("case: id", () => {
@@ -63,17 +63,15 @@ describe("test: config", () => {
 		const operation3 = new Operation(fact, "", []);
 		operation3.sign(TEST_GENESIS.ecdsa.private);
 
-		expect(operation1.id.toString() === id1);
-		expect(operation2.id.toString() === id2);
-		expect(operation3.id.toString() === id1);
+		expect(operation1.id.toString()).toBe(id1);
+		expect(operation2.id.toString()).toBe(id2);
+		expect(operation3.id.toString()).toBe(id1);
 
-		expect(
-			bs58.encode(operation1.factSigns[0].sign) !==
-				bs58.encode(operation2.factSigns[0].sign)
+		expect(bs58.encode(operation1.factSigns[0].sign)).not.toBe(
+			bs58.encode(operation2.factSigns[0].sign)
 		);
-		expect(
-			bs58.encode(operation1.factSigns[0].sign) ===
-				bs58.encode(operation3.factSigns[0].sign)
+		expect(bs58.encode(operation1.factSigns[0].sign)).toBe(
+			bs58.encode(operation3.factSigns[0].sign)
 		);
 	});
 });
