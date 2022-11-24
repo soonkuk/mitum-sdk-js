@@ -120,10 +120,6 @@ export class Operation extends IBytesDict {
 		return { type: keyType, keypair: kp };
 	}
 
-	get _msg() {
-		return Buffer.concat([this.fact.hash, this.id.bytes()]);
-	}
-
 	sign(privateKey) {
 		const now = new TimeStamp();
 		const kp = this._kp(privateKey);
@@ -136,9 +132,9 @@ export class Operation extends IBytesDict {
 
 		let msg = undefined;
 		if (this.forceExtendedMessage || kp.type === "schnorr") {
-			msg = Buffer.concat([this._msg, now.bytes()]);
+			msg = Buffer.concat([this.id.bytes(), this.fact.hash, now.bytes()]);
 		} else {
-			msg = this._msg;
+			msg = Buffer.concat([this.fact.hash, this.id.bytes()]);
 		}
 
 		let factSign = null;
