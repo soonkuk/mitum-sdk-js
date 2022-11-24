@@ -30,8 +30,8 @@ describe("test: suffrage-inflation", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("FcP5ciHKkhogkskiYiaVCTP4JZ7zr4UH2cMRJqhhzEgV").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"FcP5ciHKkhogkskiYiaVCTP4JZ7zr4UH2cMRJqhhzEgV"
 		);
 	});
 

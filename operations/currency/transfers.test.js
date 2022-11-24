@@ -4,7 +4,7 @@ import { Amount } from "./amount";
 import { TransfersFact, TransfersItem } from "./transfers";
 import { Operation } from "../operation";
 
-import { TEST_ACCOUNT, TEST_GENESIS } from "../../mitum.config";
+import { TEST_ACCOUNT, TEST_ACCOUNT_R, TEST_GENESIS } from "../../mitum.config";
 
 describe("test: transfers", () => {
 	it("case: ecdsa; operation", () => {
@@ -19,10 +19,25 @@ describe("test: transfers", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		expect("GTXjBCvb183KaCtiprpjC4e4XDor6XeBfijZfqwMPsBx").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"GTXjBCvb183KaCtiprpjC4e4XDor6XeBfijZfqwMPsBx"
 		);
 	});
 
-	it("case: schnorr; operation", () => {});
+	it("case: schnorr; operation", () => {
+		const amounts = [new Amount("MCC", "1000")];
+		const item = new TransfersItem(TEST_ACCOUNT_R.address, amounts);
+		const fact = new TransfersFact(
+			"2022-11-19 23:44:30.883651 +0000 UTC",
+			TEST_GENESIS.schnorr.address,
+			[item]
+		);
+
+		const operation = new Operation(fact, "", []);
+		operation.sign(TEST_GENESIS.schnorr.private);
+
+		expect(bs58.encode(fact.hash)).toBe(
+			"k1vnR6xnWBPoehfZGcbnfXBD8yZRmT4jsGfquRUPzjx"
+		);
+	});
 });

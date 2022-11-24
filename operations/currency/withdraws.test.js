@@ -19,8 +19,8 @@ describe("test: withdraw", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		expect("ApAZLELnH8iYHtThDJk5dtr4Ni7TvDfJT4XHU4Z8gHM5").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"ApAZLELnH8iYHtThDJk5dtr4Ni7TvDfJT4XHU4Z8gHM5"
 		);
 	});
 

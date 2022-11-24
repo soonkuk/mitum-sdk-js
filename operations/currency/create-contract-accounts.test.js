@@ -24,10 +24,10 @@ describe("test: create-contract-account", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		expect("79MQkuRZW26k4YXT7xhADF2JwJW4geMfFCVmwNcLsp4Q").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"79MQkuRZW26k4YXT7xhADF2JwJW4geMfFCVmwNcLsp4Q"
 		);
-		expect(TEST_ACCOUNT.address).toBe(keys.address.toString());
+		expect(keys.address.toString()).toBe(TEST_ACCOUNT.address);
 	});
 
 	it("case: schnorr; operation", () => {});

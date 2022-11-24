@@ -20,10 +20,10 @@ describe("test: key-updater", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.ecdsa.private);
 
-		expect("8o6KNp9rvbmed783f38mnVPb3ss1Q2sZFYj9MpRy9Axa").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"8o6KNp9rvbmed783f38mnVPb3ss1Q2sZFYj9MpRy9Axa"
 		);
-		expect(TEST_ACCOUNT.address).toBe(keys.address.toString());
+		expect(keys.address.toString()).toBe(TEST_ACCOUNT.address);
 	});
 
 	it("case: schnorr; operation", () => {});

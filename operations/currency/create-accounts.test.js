@@ -23,7 +23,7 @@ describe("test: create-account", () => {
 		expect(bs58.encode(fact.hash)).toBe(
 			"3YQ6tUgKBKq6HdjREeFTVBYrTDWiTQEYARv6HX8wyQZP"
 		);
-		expect(TEST_ACCOUNT.address).toBe(keys.address.toString());
+		expect(keys.address.toString()).toBe(TEST_ACCOUNT.address);
 	});
 
 	it("case: schnorr; operation", () => {
@@ -37,9 +37,9 @@ describe("test: create-account", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_GENESIS.schnorr.private);
 
-		expect("2NfVhz4yfRJ2ZexQgqcox67v6jzu2X5qYiDbYoeQaPgq").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"2NfVhz4yfRJ2ZexQgqcox67v6jzu2X5qYiDbYoeQaPgq"
 		);
-		expect(TEST_ACCOUNT_R.address).toBe(keys.address.toString());
+		expect(keys.address.toString()).toBe(TEST_ACCOUNT_R.address);
 	});
 });

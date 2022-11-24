@@ -24,8 +24,8 @@ describe("test: currency-policy-updater", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("5Mhz2DfpQ51G3SyNLcLgmCbp8yx5o53ykwre7DidT3Rr").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"5Mhz2DfpQ51G3SyNLcLgmCbp8yx5o53ykwre7DidT3Rr"
 		);
 	});
 
@@ -41,8 +41,8 @@ describe("test: currency-policy-updater", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("4n6AxV17j2oMmQhk1qMqTWzd3dUuEW45v88aLmisoCgy").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"4n6AxV17j2oMmQhk1qMqTWzd3dUuEW45v88aLmisoCgy"
 		);
 	});
 
@@ -63,8 +63,8 @@ describe("test: currency-policy-updater", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("4h8RXMBj9qpEiWe3JrdnazhasuwVcBnyvVVNj8G3usrp").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"4h8RXMBj9qpEiWe3JrdnazhasuwVcBnyvVVNj8G3usrp"
 		);
 	});
 

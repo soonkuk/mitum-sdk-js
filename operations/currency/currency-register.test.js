@@ -32,8 +32,8 @@ describe("test: currency-register", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("3AtsTvXxZ3BYczqAYZAqbV7y76UW4mCEipvV4jWH7B4h").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"3AtsTvXxZ3BYczqAYZAqbV7y76UW4mCEipvV4jWH7B4h"
 		);
 	});
 
@@ -55,8 +55,8 @@ describe("test: currency-register", () => {
 		const operation = new Operation(fact, "", []);
 		operation.sign(TEST_NODE.ecdsa);
 
-		expect("6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh").toBe(
-			bs58.encode(fact.hash)
+		expect(bs58.encode(fact.hash)).toBe(
+			"6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh"
 		);
 	});
 
@@ -77,10 +77,7 @@ describe("test: currency-register", () => {
 				policy
 			);
 
-			const fact = new CurrencyRegisterFact(
-				token,
-				design
-			);
+			const fact = new CurrencyRegisterFact(token, design);
 			const operation = new Operation(fact, "", []);
 			operation.sign(TEST_NODE.ecdsa);
 
