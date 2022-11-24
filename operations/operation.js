@@ -195,7 +195,10 @@ export class Operation extends IBytesDict {
 		const signs = this.factSigns.sort(sortBuf).map((fs) => fs.dict());
 
 		if (this.forceExtendedMessage) {
-			op.signs = signs;
+			op.signs = signs.map(fs => {
+				delete fs["_hint"]
+				return fs;
+			});
 		} else {
 			op.fact_signs = signs;
 		}
