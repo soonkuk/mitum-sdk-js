@@ -1,4 +1,4 @@
-import { useV, useId } from "./utils/config.js";
+import { useV, useId, forceExtendedMessage } from "./utils/config.js";
 import { TimeStamp } from "./utils/time.js";
 
 import { ecdsa } from "./key/ecdsa-keypair.js";
@@ -78,12 +78,12 @@ const Currency = {
 	CreateContractAccountsFact,
 	WithdrawsItem,
 	WithdrawsFact,
-	Operation,
 };
 
 export {
 	useV,
 	useId,
+	forceExtendedMessage,
 	TimeStamp,
 	KPGen,
 	PubKey,
