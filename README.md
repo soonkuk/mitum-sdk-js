@@ -83,6 +83,7 @@ Ran all test suites.
 |-|[create-contract-account](#create-contract-account)|
 |-|[withdraw](#withdraw)|
 |+|[Appendix](#appendix)|
+|+|[License](#license)|
 
 To set the mitum version of all hints and the network id, refer to [Set version of hints](#set-version-of-hints) and [Set network id of operations](#set-network-id-of-operations).
 
