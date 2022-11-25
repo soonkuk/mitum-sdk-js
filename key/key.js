@@ -88,7 +88,7 @@ export class Keys extends IBytesDict {
 			error.range(EC_INVALID_KEYS, "array size out of range")
 		);
 
-		keys.forEach((key, idx) => {
+		keys.forEach((key) => {
 			assert(
 				key instanceof PublicKey,
 				error.instance(EC_INVALID_KEYS, "not PublicKey instance")

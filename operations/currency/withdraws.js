@@ -62,7 +62,7 @@ export class WithdrawsFact extends Fact {
 			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
-		items.forEach((item, idx) =>
+		items.forEach((item) =>
 			assert(
 				item instanceof WithdrawsItem,
 				error.instance(EC_INVALID_ITEM, "not WithdrawsItem instance")
