@@ -19,7 +19,7 @@ export const MAX_ITEMS_IN_FACT = 10;
 
 export const TEST_NODE = {
 	ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",
-	schnorr: "",
+	schnorr: "EYc4WdFjP9qkgfwJZfnsVXeh827rsNppm5HUSjSDeMFFmpr",
 };
 
 export const TEST_GENESIS = {
