@@ -20,8 +20,7 @@ export class Fact extends IBytesDict {
 	get opHint() {
 		throw error.nimplement(
 			EC_NOT_IMPLEMENTED_METHOD,
-			"unimplemented method opHint()",
-			"Fact"
+			"unimplemented method opHint()"
 		);
 	}
 }

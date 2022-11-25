@@ -6,7 +6,7 @@ export class Token extends IBytes {
 		super();
 		assert(
 			typeof s === "string",
-			error.type(EC_INVALID_TOKEN, "not string", typeof s)
+			error.type(EC_INVALID_TOKEN, "not string")
 		);
 		this.s = s;
 	}

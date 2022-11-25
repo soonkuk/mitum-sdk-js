@@ -5,7 +5,7 @@ export class Hint {
 	constructor(hint) {
 		assert(
 			typeof hint === "string",
-			error.type(EC_INVALID_HINT, "not string", typeof hint)
+			error.type(EC_INVALID_HINT, "not string")
 		);
 		this.s = hint;
 	}

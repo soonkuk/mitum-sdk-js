@@ -1,7 +1,6 @@
 import bs58 from "bs58";
 
 import { Fact } from "../fact.js";
-import { Operation } from "../operation.js";
 
 import {
 	HINT_KEY_UPDATER_OPERATION,
@@ -14,8 +13,6 @@ import { CurrencyID } from "../../base/ID.js";
 import { Keys } from "../../key/key.js";
 import { Address } from "../../key/address.js";
 
-import { name } from "../../utils/string.js";
-
 export class KeyUpdaterFact extends Fact {
 	constructor(token, target, keys, currency) {
 		super(HINT_KEY_UPDATER_OPERATION_FACT, token);
@@ -23,7 +20,7 @@ export class KeyUpdaterFact extends Fact {
 
 		assert(
 			keys instanceof Keys,
-			error.instance(EC_INVALID_KEYS, "not Keys instance", name(keys))
+			error.instance(EC_INVALID_KEYS, "not Keys instance")
 		);
 		this.keys = keys;
 		this.currency = new CurrencyID(currency);

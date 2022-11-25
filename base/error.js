@@ -48,75 +48,74 @@ export const EC_FILE_CREATION_FAILED = "EC_FILE_CREATION_FAILED";
 export const EC_FACTSIGN_CREATION_FAILED = "EC_FACTSIGN_CREATION_FAILED";
 
 class CustomError extends Error {
-	constructor(msg, code, meta) {
+	constructor(msg, code) {
 		super(msg);
 		this.code = code || "";
-		this.metadata = meta || "";
 		this.name = this.constructor.name;
 	}
 }
 
 class RuntimeError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const runtime = (code, msg, meta) => {
-	return new RuntimeError(msg, code, meta);
+const runtime = (code, msg) => {
+	return new RuntimeError(msg, code);
 };
 
 class SuffixError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const suffix = (code, msg, meta) => {
-	return new SuffixError(msg, code, meta);
+const suffix = (code, msg) => {
+	return new SuffixError(msg, code);
 };
 
 class InvalidFormatError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const format = (code, msg, meta) => {
-	return new InvalidFormatError(msg, code, meta);
+const format = (code, msg) => {
+	return new InvalidFormatError(msg, code);
 };
 
 class InvalidRangeError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const range = (code, msg, meta) => {
-	return new InvalidRangeError(msg, code, meta);
+const range = (code, msg) => {
+	return new InvalidRangeError(msg, code);
 };
 
 class InvalidTypeError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const type = (code, msg, meta) => {
-	return new InvalidTypeError(msg, code, meta);
+const type = (code, msg) => {
+	return new InvalidTypeError(msg, code);
 };
 
 class InvalidInstanceError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const instance = (code, msg, meta) => {
-	return new InvalidInstanceError(msg, code, meta);
+const instance = (code, msg) => {
+	return new InvalidInstanceError(msg, code);
 };
 
 class NotImplementedError extends CustomError {
-	constructor(msg, code, meta) {
-		super(msg, code, meta);
+	constructor(msg, code) {
+		super(msg, code);
 	}
 }
-const nimplement = (code, msg, meta) => {
-	return new NotImplementedError(msg, code, meta);
+const nimplement = (code, msg) => {
+	return new NotImplementedError(msg, code);
 };
 
 export const error = {

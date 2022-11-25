@@ -3,7 +3,6 @@ import bs58 from "bs58";
 import { CurrencyDesign } from "./currency-design.js";
 
 import { Fact } from "../fact.js";
-import { Operation } from "../operation.js";
 
 import {
 	HINT_CURRENCY_REGISTER_OPERATION,
@@ -12,8 +11,6 @@ import {
 
 import { assert, error, EC_INVALID_CURRENCY_DESIGN } from "../../base/error.js";
 
-import { name } from "../../utils/string.js";
-
 export class CurrencyRegisterFact extends Fact {
 	constructor(token, design) {
 		super(HINT_CURRENCY_REGISTER_OPERATION_FACT, token);
@@ -21,8 +18,7 @@ export class CurrencyRegisterFact extends Fact {
 			design instanceof CurrencyDesign,
 			error.instance(
 				EC_INVALID_CURRENCY_DESIGN,
-				"not CurrencyDesign instance",
-				name(design)
+				"not CurrencyDesign instance"
 			)
 		);
 		this.design = design;

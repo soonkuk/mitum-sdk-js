@@ -24,8 +24,7 @@ import {
 
 import { Big } from "../utils/number.js";
 import { sum256 } from "../utils/hash.js";
-import { jsonStringify } from "../utils/json.js";
-import { name, sortStringAsBuf } from "../utils/string.js";
+import { sortStringAsBuf } from "../utils/string.js";
 
 export class Key extends IBytes {
 	constructor(s) {
@@ -49,11 +48,11 @@ export class PublicKey extends Key {
 		super(s);
 		assert(
 			typeof weight === "number",
-			error.type(EC_INVALID_WEIGHT, "not number", typeof weight)
+			error.type(EC_INVALID_WEIGHT, "not number")
 		);
 		assert(
 			weight >= MIN_WEIGHT && weight <= MAX_WEIGHT,
-			error.range(EC_INVALID_WEIGHT, "weight out of range", weight)
+			error.range(EC_INVALID_WEIGHT, "weight out of range")
 		);
 		this.hint = new Hint(HINT_KEY);
 		this.weight = new Big(weight);
@@ -77,54 +76,29 @@ export class Keys extends IBytesDict {
 		super();
 		assert(
 			typeof threshold === "number",
-			error.type(EC_INVALID_THRESHOLD, "not number", typeof threshold)
+			error.type(EC_INVALID_THRESHOLD, "not number")
 		);
 		assert(
 			threshold >= MIN_THRESHOLD && threshold <= MAX_THRESHOLD,
-			error.range(
-				EC_INVALID_THRESHOLD,
-				"threshold out of range",
-				threshold
-			)
+			error.range(EC_INVALID_THRESHOLD, "threshold out of range")
 		);
-		assert(
-			Array.isArray(keys),
-			error.type(
-				EC_INVALID_KEYS,
-				"not Array",
-				jsonStringify({
-					type: typeof keys,
-					name: name(keys),
-				})
-			)
-		);
+		assert(Array.isArray(keys), error.type(EC_INVALID_KEYS, "not Array"));
 		assert(
 			keys.length > 0 && keys.length <= MAX_KEYS_IN_ADDRESS,
-			error.range(EC_INVALID_KEYS, "array size out of range", keys.length)
+			error.range(EC_INVALID_KEYS, "array size out of range")
 		);
 
 		keys.forEach((key, idx) => {
 			assert(
 				key instanceof PublicKey,
-				error.instance(
-					EC_INVALID_KEYS,
-					"not PublicKey instance",
-					`idx ${idx} - ${name(key)}`
-				)
+				error.instance(EC_INVALID_KEYS, "not PublicKey instance")
 			);
 		});
 
 		const sum = keys.reduce((s, k) => s + k.weight.big, BigInt(0));
 		assert(
 			sum >= threshold,
-			error.range(
-				EC_INVALID_THRESHOLD,
-				"threshold < sum(weights)",
-				jsonStringify({
-					threshold,
-					sum: sum.toString(),
-				})
-			)
+			error.range(EC_INVALID_THRESHOLD, "threshold < sum(weights)")
 		);
 
 		this.hint = new Hint(HINT_KEYS);

@@ -20,7 +20,6 @@ import { Hint } from "../../base/hint.js";
 import { IBytesDict } from "../../base/interface.js";
 
 import { Address } from "../../key/address.js";
-import { name } from "../../utils/string.js";
 import { Big, Float } from "../../utils/number.js";
 
 export class CurrencyDesign extends IBytesDict {
@@ -29,11 +28,7 @@ export class CurrencyDesign extends IBytesDict {
 		this.hint = new Hint(HINT_CURRENCY_DESIGN);
 		assert(
 			amount instanceof Amount,
-			error.instance(
-				EC_INVALID_AMOUNT,
-				"not Amount instance",
-				name(amount)
-			)
+			error.instance(EC_INVALID_AMOUNT, "not Amount instance")
 		);
 		this.amount = amount;
 
@@ -41,8 +36,7 @@ export class CurrencyDesign extends IBytesDict {
 			policy instanceof CurrencyPolicy,
 			error.instance(
 				EC_INVALID_CURRENCY_POLICY,
-				"not CurrencyPolicy instance",
-				name(policy)
+				"not CurrencyPolicy instance"
 			)
 		);
 		this.policy = policy;
@@ -81,8 +75,7 @@ export class CurrencyPolicy extends IBytesDict {
 			feeer instanceof CurrencyFeeer,
 			error.instance(
 				EC_INVALID_CURRENCY_FEEER,
-				"not CurrencyFeeer instance",
-				name(feeer)
+				"not CurrencyFeeer instance"
 			)
 		);
 		this.feeer = feeer;
@@ -151,7 +144,7 @@ export class RatioFeeer extends CurrencyFeeer {
 		this.ratio = new Float(ratio);
 		assert(
 			0 <= ratio && ratio <= 1,
-			error.range(EC_INVALID_RATIO, "ratio out of range", ratio)
+			error.range(EC_INVALID_RATIO, "ratio out of range")
 		);
 
 		this.receiver = new Address(receiver);

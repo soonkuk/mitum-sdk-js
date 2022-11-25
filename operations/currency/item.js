@@ -11,40 +11,22 @@ import {
 	EC_INVALID_ITEM,
 } from "../../base/error.js";
 
-import { name } from "../../utils/string.js";
-import { jsonStringify } from "../../utils/json.js";
-
 export class CurrencyItem extends Item {
 	constructor(hint, amounts) {
 		super(hint);
 
 		assert(
 			Array.isArray(amounts),
-			error.type(
-				EC_INVALID_ITEM,
-				"not Array",
-				jsonStringify({
-					type: typeof amounts,
-					name: name(amounts),
-				})
-			)
+			error.type(EC_INVALID_ITEM, "not Array")
 		);
 		assert(
 			amounts.length > 0 && amounts.length <= MAX_AMOUNTS_IN_ITEM,
-			error.range(
-				EC_INVALID_AMOUNTS,
-				"array size out of range",
-				amounts.length
-			)
+			error.range(EC_INVALID_AMOUNTS, "array size out of range")
 		);
 		amounts.forEach((amount) => {
 			assert(
 				amount instanceof Amount,
-				error.instance(
-					EC_INVALID_AMOUNT,
-					"not Amount instance",
-					name(amount)
-				)
+				error.instance(EC_INVALID_AMOUNT, "not Amount instance")
 			);
 		});
 

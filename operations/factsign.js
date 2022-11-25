@@ -1,6 +1,5 @@
 import bs58 from "bs58";
 
-import { SUFFIX_LENGTH } from "../mitum.config.js";
 import { HINT_FACT_SIGN } from "../alias/sign.js";
 
 import { Hint } from "../base/hint.js";
@@ -11,7 +10,6 @@ import { Key } from "../key/key.js";
 import { isPublicKey } from "../key/validation.js";
 
 import { TimeStamp } from "../utils/time.js";
-import { jsonStringify } from "../utils/json.js";
 
 export class FactSign extends IBytesDict {
 	constructor(signer, sign, signedAt) {
@@ -22,17 +20,7 @@ export class FactSign extends IBytesDict {
 
 		assert(
 			isPublicKey(signer),
-			error.format(
-				EC_INVALID_PUBLIC_KEY,
-				"not public key",
-				jsonStringify({
-					length: signer.length,
-					suffix:
-						signer.length >= SUFFIX_LENGTH
-							? signer.substring(signer.length - SUFFIX_LENGTH)
-							: null,
-				})
-			)
+			error.format(EC_INVALID_PUBLIC_KEY, "not public key")
 		);
 		this.signer = new Key(signer);
 	}

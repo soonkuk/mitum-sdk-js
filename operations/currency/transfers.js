@@ -3,7 +3,6 @@ import bs58 from "bs58";
 import { CurrencyItem } from "./item.js";
 
 import { Fact } from "../fact.js";
-import { Operation } from "../operation.js";
 
 import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js";
 import {
@@ -22,8 +21,7 @@ import {
 
 import { Address } from "../../key/address.js";
 
-import { jsonStringify } from "../../utils/json.js";
-import { name, sortBuf } from "../../utils/string.js";
+import { sortBuf } from "../../utils/string.js";
 
 export class TransfersItem extends CurrencyItem {
 	constructor(receiver, amounts) {
@@ -57,35 +55,17 @@ export class TransfersFact extends Fact {
 		super(HINT_TRANSFERS_OPERATION_FACT, token);
 		this.sender = new Address(sender);
 
-		assert(
-			Array.isArray(items),
-			error.type(
-				EC_INVALID_ITEM,
-				"not Array",
-				jsonStringify({
-					type: typeof items,
-					name: name(items),
-				})
-			)
-		);
+		assert(Array.isArray(items), error.type(EC_INVALID_ITEM, "not Array"));
 
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
-			error.range(
-				EC_INVALID_ITEMS,
-				"array size out of range",
-				items.length
-			)
+			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
 		items.forEach((item, idx) =>
 			assert(
 				item instanceof TransfersItem,
-				error.instance(
-					EC_INVALID_ITEM,
-					"not TransfersItem instance",
-					`idx ${idx} - ${name(item)}`
-				)
+				error.instance(EC_INVALID_ITEM, "not TransfersItem instance")
 			)
 		);
 

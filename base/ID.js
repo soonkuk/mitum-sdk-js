@@ -16,7 +16,7 @@ import {
 export class ID extends IBytes {
 	constructor(s, ec) {
 		super();
-		assert(typeof s === "string", error.type(ec, "not string", typeof s));
+		assert(typeof s === "string", error.type(ec, "not string"));
 		this.s = s;
 	}
 
@@ -37,8 +37,7 @@ export class CurrencyID extends ID {
 				s.length <= MAX_CURRENCY_ID_LENGTH,
 			error.range(
 				EC_INVALID_CURRENCY_ID,
-				"currency id length out of range",
-				s.length
+				"currency id length out of range"
 			)
 		);
 	}
@@ -52,8 +51,7 @@ export class ContractID extends ID {
 				s.length <= MAX_CONTRACT_ID_LENGTH,
 			error.range(
 				EC_INVALID_CONTRACT_ID,
-				"contract id length out of range",
-				s.length
+				"contract id length out of range"
 			)
 		);
 	}

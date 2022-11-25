@@ -11,10 +11,7 @@ export const v = () => {
 	return version;
 };
 export const useV = (s) => {
-	assert(
-		typeof s === "string",
-		error.type(EC_INVALID_VERSION, "not string", typeof s)
-	);
+	assert(typeof s === "string", error.type(EC_INVALID_VERSION, "not string"));
 	version = s;
 };
 
@@ -25,7 +22,7 @@ export const id = () => {
 export const useId = (s) => {
 	assert(
 		typeof s === "string",
-		error.type(EC_INVALID_NETWORK_ID, "not string", typeof s)
+		error.type(EC_INVALID_NETWORK_ID, "not string")
 	);
 	networkId = s;
 };
@@ -35,9 +32,6 @@ export const isExtendedMessageForced = () => {
 	return extMsg;
 };
 export const forceExtendedMessage = (b) => {
-	assert(
-		typeof b === "boolean",
-		error.type(EC_NOT_BOOLEAN, "not boolean", typeof b)
-	);
+	assert(typeof b === "boolean", error.type(EC_NOT_BOOLEAN, "not boolean"));
 	extMsg = b;
 };

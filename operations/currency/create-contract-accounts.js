@@ -3,7 +3,6 @@ import bs58 from "bs58";
 import { CurrencyItem } from "./item.js";
 
 import { Fact } from "../fact.js";
-import { Operation } from "../operation.js";
 
 import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js";
 import {
@@ -24,8 +23,7 @@ import {
 import { Keys } from "../../key/key.js";
 import { Address } from "../../key/address.js";
 
-import { jsonStringify } from "../../utils/json.js";
-import { name, sortBuf } from "../../utils/string.js";
+import { sortBuf } from "../../utils/string.js";
 
 export class CreateContractAccountsItem extends CurrencyItem {
 	constructor(keys, amounts) {
@@ -38,7 +36,7 @@ export class CreateContractAccountsItem extends CurrencyItem {
 
 		assert(
 			keys instanceof Keys,
-			error.instance(EC_INVALID_KEYS, "not Keys instance", name(keys))
+			error.instance(EC_INVALID_KEYS, "not Keys instance")
 		);
 
 		this.keys = keys;
@@ -65,25 +63,11 @@ export class CreateContractAccountsFact extends Fact {
 		super(HINT_CREATE_CONTRACT_ACCOUNTS_OPERATION_FACT, token);
 		this.sender = new Address(sender);
 
-		assert(
-			Array.isArray(items),
-			error.type(
-				EC_INVALID_ITEM,
-				"not Array",
-				jsonStringify({
-					type: typeof items,
-					name: name(items),
-				})
-			)
-		);
+		assert(Array.isArray(items), error.type(EC_INVALID_ITEM, "not Array"));
 
 		assert(
 			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
-			error.range(
-				EC_INVALID_ITEMS,
-				"array size out of range",
-				items.length
-			)
+			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
 		items.forEach((item, idx) =>
@@ -91,8 +75,7 @@ export class CreateContractAccountsFact extends Fact {
 				item instanceof CreateContractAccountsItem,
 				error.instance(
 					EC_INVALID_ITEM,
-					"not CreateContractAccountsItem instance",
-					`idx ${idx} - ${name(item)}`
+					"not CreateContractAccountsItem instance"
 				)
 			)
 		);

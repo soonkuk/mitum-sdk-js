@@ -3,7 +3,6 @@ import bs58 from "bs58";
 import { CurrencyPolicy } from "./currency-design.js";
 
 import { Fact } from "../fact.js";
-import { Operation } from "../operation.js";
 
 import {
 	HINT_CURRENCY_POLICY_UPDATER_OPERATION,
@@ -13,8 +12,6 @@ import {
 import { assert, error, EC_INVALID_CURRENCY_POLICY } from "../../base/error.js";
 import { CurrencyID } from "../../base/ID.js";
 
-import { name } from "../../utils/string.js";
-
 export class CurrencyPolicyUpdaterFact extends Fact {
 	constructor(token, currency, policy) {
 		super(HINT_CURRENCY_POLICY_UPDATER_OPERATION_FACT, token);
@@ -22,11 +19,7 @@ export class CurrencyPolicyUpdaterFact extends Fact {
 
 		assert(
 			policy instanceof CurrencyPolicy,
-			error.instance(
-				EC_INVALID_CURRENCY_POLICY,
-				"not CurrencyPolicy",
-				name(policy)
-			)
+			error.instance(EC_INVALID_CURRENCY_POLICY, "not CurrencyPolicy")
 		);
 		this.policy = policy;
 		this.hash = this.hashing();

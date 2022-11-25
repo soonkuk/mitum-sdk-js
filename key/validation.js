@@ -7,8 +7,6 @@ import {
 
 import { assert, error, EC_INVALID_KEY } from "../base/error.js";
 
-import { jsonStringify } from "../utils/json.js";
-
 export const isPrivateKeySuffix = (s) => {
 	return typeof s === "string" && s === SUFFIX_KEY_PRIVATE;
 };
@@ -114,18 +112,7 @@ export const isAddress = (s) => {
 export const parseKey = (s) => {
 	assert(
 		isKey(s),
-		error.format(
-			EC_INVALID_KEY,
-			"invalid type, length or key suffix",
-			jsonStringify({
-				type: typeof s,
-				length: typeof s === "string" ? s.length : null,
-				suffix:
-					typeof s === "string" && s.length >= SUFFIX_LENGTH
-						? s.substring(s.length - SUFFIX_LENGTH)
-						: null,
-			})
-		)
+		error.format(EC_INVALID_KEY, "invalid type, length or key suffix")
 	);
 
 	const key = s.substring(0, s.length - SUFFIX_LENGTH);

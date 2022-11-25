@@ -85,13 +85,10 @@ const fromPrivateKey = (privateKey) => {
 };
 
 const fromSeed = (seed) => {
-	assert(
-		typeof seed === "string",
-		error.type(EC_INVALID_SEED, "not string", typeof seed)
-	);
+	assert(typeof seed === "string", error.type(EC_INVALID_SEED, "not string"));
 	assert(
 		seed.length >= MIN_SEED_LENGTH,
-		error.range(EC_INVALID_SEED, "seed length out of range", seed.length)
+		error.range(EC_INVALID_SEED, "seed length out of range")
 	);
 
 	return new ECDSAKeyPair(

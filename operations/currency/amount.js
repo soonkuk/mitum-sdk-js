@@ -13,10 +13,7 @@ export class Amount extends IBytesDict {
 		this.hint = new Hint(HINT_AMOUNT);
 		this.currency = new CurrencyID(currency);
 		this.big = new Big(big);
-		assert(
-			this.big.big > 0,
-			error.range(EC_INVALID_AMOUNT, "zero amount", this.big.toString())
-		);
+		assert(this.big.big > 0, error.range(EC_INVALID_AMOUNT, "zero amount"));
 	}
 
 	bytes() {

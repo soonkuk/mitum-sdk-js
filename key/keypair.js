@@ -7,17 +7,11 @@ import {
 	EC_NOT_IMPLEMENTED_METHOD,
 } from "../base/error.js";
 
-import { name } from "../utils/string.js";
-
 export class KeyPair {
 	constructor(privateKey) {
 		assert(
 			privateKey instanceof Key,
-			error.instance(
-				EC_INVALID_KEY_PAIR,
-				"not Key instance",
-				name(privateKey)
-			)
+			error.instance(EC_INVALID_KEY_PAIR, "not Key instance")
 		);
 
 		this.privateKey = privateKey;
@@ -28,24 +22,21 @@ export class KeyPair {
 	_generatePublicKey() {
 		throw error.nimplement(
 			EC_NOT_IMPLEMENTED_METHOD,
-			"unimplemented method _generatePublicKey()",
-			"KeyPair"
+			"unimplemented method _generatePublicKey()"
 		);
 	}
 
 	_generateSigner() {
 		throw error.nimplement(
 			EC_NOT_IMPLEMENTED_METHOD,
-			"unimplemented method _generateSigner()",
-			"KeyPair"
+			"unimplemented method _generateSigner()"
 		);
 	}
 
 	sign(_) {
 		throw error.nimplement(
 			EC_NOT_IMPLEMENTED_METHOD,
-			"unimplemented method sign()",
-			"KeyPair"
+			"unimplemented method sign()"
 		);
 	}
 }

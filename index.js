@@ -1,9 +1,8 @@
 import { useV, useId, forceExtendedMessage } from "./utils/config.js";
 import { TimeStamp } from "./utils/time.js";
 import { sha256, sum256 } from "./utils/hash.js";
-import { jsonStringify, exportJson } from "./utils/json.js";
 import { Big, Float } from "./utils/number.js";
-import { name, sortStringAsBuf, sortBuf } from "./utils/string.js";
+import { sortStringAsBuf, sortBuf } from "./utils/string.js";
 
 import {
 	SUFFIX_KEY_PRIVATE,
@@ -120,9 +119,6 @@ const base = {
 const util = {
 	sha256,
 	sum256,
-	jsonStringify,
-	exportJson,
-	name,
 	sortStringAsBuf,
 	sortBuf,
 };

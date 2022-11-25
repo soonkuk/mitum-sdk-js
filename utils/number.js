@@ -9,8 +9,6 @@ import {
 	EC_INVALID_FLOAT,
 } from "../base/error.js";
 
-import { jsonStringify } from "./json.js";
-
 const toBig = (n) => {
 	const big = [];
 
@@ -33,7 +31,7 @@ export class Big extends IBytes {
 			try {
 				this.big = toBig(n);
 			} catch (e) {
-				throw error.type(EC_INVALID_BIG_INTEGER, "not Array", n);
+				throw error.type(EC_INVALID_BIG_INTEGER, "not Array");
 			}
 		}
 	}
@@ -43,14 +41,7 @@ export class Big extends IBytes {
 
 		assert(
 			size <= 8,
-			error.range(
-				EC_INVALID_BIG_INTEGER,
-				"big out of range",
-				jsonStringify({
-					size,
-					big: this.big.toString(),
-				})
-			)
+			error.range(EC_INVALID_BIG_INTEGER, "big out of range")
 		);
 
 		return Buffer.from(new Int64.Uint64LE(Number(this.big)).toBuffer());
@@ -94,7 +85,7 @@ export class Float extends IBytes {
 		super();
 		assert(
 			typeof n === "number",
-			error.type(EC_INVALID_FLOAT, "not number", typeof n)
+			error.type(EC_INVALID_FLOAT, "not number")
 		);
 		this.n = n;
 	}

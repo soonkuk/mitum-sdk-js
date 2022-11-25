@@ -7,7 +7,7 @@ import * as secp256k1 from "@noble/secp256k1";
 import secureRandom from "secure-random";
 import { getPublicCompressed } from "eccrypto-js";
 
-import { MIN_SEED_LENGTH, SUFFIX_LENGTH } from "../mitum.config.js";
+import { MIN_SEED_LENGTH } from "../mitum.config.js";
 import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 
 import {
@@ -19,7 +19,6 @@ import {
 
 import { Big } from "../utils/number.js";
 import { sum256 } from "../utils/hash.js";
-import { jsonStringify } from "../utils/json.js";
 
 import { Key } from "./key.js";
 import { KeyPair } from "./keypair.js";
@@ -65,36 +64,21 @@ const random = () => {
 const fromPrivateKey = (privateKey) => {
 	assert(
 		typeof privateKey === "string",
-		error.type(EC_INVALID_PRIVATE_KEY, "not string", typeof privateKey)
+		error.type(EC_INVALID_PRIVATE_KEY, "not string")
 	);
 	assert(
 		isSchnorrPrivateKey(privateKey),
-		error.format(
-			EC_INVALID_PRIVATE_KEY,
-			"invalid length or key suffix",
-			jsonStringify({
-				length: privateKey.length,
-				suffix:
-					privateKey.length >= SUFFIX_LENGTH
-						? privateKey.substring(
-								privateKey.length - SUFFIX_LENGTH
-						  )
-						: null,
-			})
-		)
+		error.format(EC_INVALID_PRIVATE_KEY, "invalid length or key suffix")
 	);
 
 	return new SchnorrKeyPair(new Key(privateKey));
 };
 
 const fromSeed = (seed) => {
-	assert(
-		typeof seed === "string",
-		error.type(EC_INVALID_SEED, "not string", typeof seed)
-	);
+	assert(typeof seed === "string", error.type(EC_INVALID_SEED, "not string"));
 	assert(
 		seed.length >= MIN_SEED_LENGTH,
-		error.range(EC_INVALID_SEED, "seed length out of range", seed.length)
+		error.range(EC_INVALID_SEED, "seed length out of range")
 	);
 
 	seed = Buffer.from(bs58.encode(sum256(Buffer.from(seed))));

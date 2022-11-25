@@ -3,37 +3,21 @@ import { schnorr } from "./schnorr-keypair.js";
 import { isAddress } from "./validation.js";
 import { Keys, PublicKey } from "./key.js";
 
-import {
-	MAX_KEYS_IN_ADDRESS,
-	MAX_THRESHOLD,
-	SUFFIX_LENGTH,
-} from "../mitum.config.js";
+import { MAX_KEYS_IN_ADDRESS, MAX_THRESHOLD } from "../mitum.config.js";
 
 import { IBytes } from "../base/interface.js";
 import { assert, error, EC_INVALID_ADDRESS } from "../base/error.js";
-
-import { jsonStringify } from "../utils/json.js";
 
 export class Address extends IBytes {
 	constructor(s) {
 		super();
 		assert(
 			typeof s === "string",
-			error.type(EC_INVALID_ADDRESS, "not string", typeof s)
+			error.type(EC_INVALID_ADDRESS, "not string")
 		);
 		assert(
 			isAddress(s),
-			error.format(
-				EC_INVALID_ADDRESS,
-				"invalid length or address suffix",
-				jsonStringify({
-					length: s.length,
-					suffix:
-						s.length >= SUFFIX_LENGTH
-							? s.substring(s.length - SUFFIX_LENGTH)
-							: null,
-				})
-			)
+			error.format(EC_INVALID_ADDRESS, "invalid length or address suffix")
 		);
 
 		this.s = s;

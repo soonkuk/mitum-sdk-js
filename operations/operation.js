@@ -1,10 +1,9 @@
+import fs from "fs";
 import bs58 from "bs58";
 import axios from "axios";
 
 import { Fact } from "./fact.js";
 import { FactSign } from "./factsign.js";
-
-import { SUFFIX_LENGTH } from "../mitum.config.js";
 
 import {
 	assert,
@@ -14,16 +13,16 @@ import {
 	EC_INVALID_FACTSIGN,
 	EC_INVALID_MEMO,
 	EC_INVALID_PRIVATE_KEY,
+	EC_FILE_CREATION_FAILED,
 } from "../base/error.js";
 import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
 import { id, isExtendedMessageForced } from "../utils/config.js";
-import { name, sortBuf } from "../utils/string.js";
+import { sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
-import { exportJson, jsonStringify } from "../utils/json.js";
 
 import { ecdsa } from "../key/ecdsa-keypair.js";
 import { schnorr } from "../key/schnorr-keypair.js";
@@ -36,14 +35,14 @@ export class Operation extends IBytesDict {
 
 		assert(
 			fact instanceof Fact,
-			error.instance(EC_INVALID_FACT, "not Fact instance", name(fact))
+			error.instance(EC_INVALID_FACT, "not Fact instance")
 		);
 		this.hint = new Hint(fact.opHint);
 		this.fact = fact;
 
 		assert(
 			typeof memo === "string",
-			error.type(EC_INVALID_MEMO, "not string", typeof memo)
+			error.type(EC_INVALID_MEMO, "not string")
 		);
 		this.memo = memo;
 
@@ -51,23 +50,12 @@ export class Operation extends IBytesDict {
 		if (factSigns) {
 			assert(
 				Array.isArray(factSigns),
-				error.type(
-					EC_INVALID_FACTSIGN,
-					"not Array",
-					jsonStringify({
-						type: typeof factSigns,
-						name: name(factSigns),
-					})
-				)
+				error.type(EC_INVALID_FACTSIGN, "not Array")
 			);
 			factSigns.forEach((fs) => {
 				assert(
 					fs instanceof FactSign,
-					error.instance(
-						EC_INVALID_FACTSIGN,
-						"not FactSign instance",
-						name(fs)
-					)
+					error.instance(EC_INVALID_FACTSIGN, "not FactSign instance")
 				);
 			});
 			this.factSigns = factSigns;
@@ -84,7 +72,7 @@ export class Operation extends IBytesDict {
 	_kp(privateKey) {
 		assert(
 			typeof privateKey === "string",
-			error.type(EC_INVALID_PRIVATE_KEY, "not string", typeof privateKey)
+			error.type(EC_INVALID_PRIVATE_KEY, "not string")
 		);
 
 		const keyType = isSchnorrPrivateKey(privateKey)
@@ -102,19 +90,7 @@ export class Operation extends IBytesDict {
 
 		assert(
 			kp !== null && keyType !== null,
-			error.format(
-				EC_INVALID_PRIVATE_KEY,
-				"wrong private key",
-				jsonStringify({
-					length: privateKey.length,
-					suffix:
-						privateKey.length >= SUFFIX_LENGTH
-							? privateKey.substring(
-									privateKey.length - SUFFIX_LENGTH
-							  )
-							: null,
-				})
-			)
+			error.format(EC_INVALID_PRIVATE_KEY, "wrong private key")
 		);
 
 		return { type: keyType, keypair: kp };
@@ -126,12 +102,6 @@ export class Operation extends IBytesDict {
 		if (kp.type === "schonorr") {
 			this.forceExtendedMessage = true;
 		}
-
-		const signInfo = jsonStringify({
-			id: this.id.toString(),
-			fact: bs58.encode(this.fact.hash),
-			signer: kp.keypair.publicKey.toString(),
-		});
 
 		let msg = undefined;
 		if (this.forceExtendedMessage) {
@@ -150,18 +120,13 @@ export class Operation extends IBytesDict {
 		} catch (e) {
 			throw error.runtime(
 				EC_FACTSIGN_CREATION_FAILED,
-				"create-factsign failed",
-				signInfo
+				"create-factsign failed"
 			);
 		}
 
 		assert(
 			factSign !== null,
-			error.runtime(
-				EC_FACTSIGN_CREATION_FAILED,
-				"null factsign",
-				signInfo
-			)
+			error.runtime(EC_FACTSIGN_CREATION_FAILED, "null factsign")
 		);
 
 		const idx = this.factSigns
@@ -195,8 +160,8 @@ export class Operation extends IBytesDict {
 		const signs = this.factSigns.sort(sortBuf).map((fs) => fs.dict());
 
 		if (this.forceExtendedMessage) {
-			op.signs = signs.map(fs => {
-				delete fs["_hint"]
+			op.signs = signs.map((fs) => {
+				delete fs["_hint"];
 				return fs;
 			});
 		} else {
@@ -207,7 +172,9 @@ export class Operation extends IBytesDict {
 	}
 
 	export(fp) {
-		exportJson(fp, this.dict());
+		fs.writeFile(fp, JSON.stringify(this.dict(), null, 4), (_) => {
+			throw error.runtime(EC_FILE_CREATION_FAILED, "write-file failed");
+		});
 	}
 
 	request(url, headers) {
