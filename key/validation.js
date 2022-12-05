@@ -102,7 +102,7 @@ export const isAddress = (s) => {
 		return false;
 	}
 
-	if (s.length < 46 || s.length > 47) {
+	if (s.length < 45 || s.length > 47) {
 		return false;
 	}
 

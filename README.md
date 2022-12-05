@@ -623,6 +623,8 @@ forceExtendedMessage(true);
 ### Options and other methods for __Operation__
 
 * If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
+* This setting applies only to that operation. However, if you have already run `forceExtendedMessage(true)` to apply the settings across the sdk, the extended message is applied to all operations without running `operation.forceExtendedMessage = true`.
+* In addition, if you use the mitum schnorr key for signing, extended messages are enforced regardless of the user's force-extended-message setting.
 
 ```js
 const operation = new Operation(/* fact, etc... */);
