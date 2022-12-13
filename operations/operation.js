@@ -66,7 +66,10 @@ export class Operation extends IBytesDict {
 	}
 
 	hashing() {
-		return sum256(this.hashBytes());
+		if (this.forceExtendedMessage) {
+			return sum256(this.hashBytes());
+		}
+		return sum256(this.bytes());
 	}
 
 	_kp(privateKey) {
