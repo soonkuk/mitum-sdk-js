@@ -4,7 +4,7 @@ import { schnorr } from "../key/schnorr-keypair";
 import { TimeStamp } from "../utils/time";
 
 describe("test: factsign", () => {
-	it("case: ecdsa & not extended", () => {});
+	it("case: ecdsa", () => {});
 
 	it("case: schnorr", () => {
 		const tcs = [

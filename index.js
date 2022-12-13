@@ -1,4 +1,4 @@
-import { useV, useId, forceExtendedMessage } from "./utils/config.js";
+import { useV, useId } from "./utils/config.js";
 import { TimeStamp, FullTimeStamp } from "./utils/time.js";
 import { sha256, sum256 } from "./utils/hash.js";
 import { Big, Float } from "./utils/number.js";
@@ -23,7 +23,7 @@ import { Address, schnorrRandomN, ecdsaRandomN } from "./key/address.js";
 
 import { Fact } from "./operations/fact.js";
 import { Item } from "./operations/item.js";
-import { Operation } from "./operations/operation.js";
+import { SIG_TYPE, Operation } from "./operations/operation.js";
 
 import { Amount } from "./operations/currency/amount.js";
 import {
@@ -126,7 +126,6 @@ const util = {
 export {
 	useV,
 	useId,
-	forceExtendedMessage,
 	alias,
 	err,
 	base,
@@ -147,6 +146,7 @@ export {
 	Float,
 	CurrencyID,
 	ContractID,
+	SIG_TYPE,
 	Operation,
 	Currency,
 };

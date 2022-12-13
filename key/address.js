@@ -1,6 +1,6 @@
 import { ecdsa } from "./ecdsa-keypair.js";
 import { schnorr } from "./schnorr-keypair.js";
-import { isAddress } from "./validation.js";
+import { isAddress, isNodeAddress } from "./validation.js";
 import { Keys, PublicKey } from "./key.js";
 
 import { MAX_KEYS_IN_ADDRESS, MAX_THRESHOLD } from "../mitum.config.js";
@@ -16,7 +16,7 @@ export class Address extends IBytes {
 			error.type(EC_INVALID_ADDRESS, "not string")
 		);
 		assert(
-			isAddress(s),
+			isAddress(s) || isNodeAddress(s),
 			error.format(EC_INVALID_ADDRESS, "invalid length or address suffix")
 		);
 

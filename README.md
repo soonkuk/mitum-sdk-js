@@ -31,7 +31,7 @@ $ npm i mitum-sdk
 
 ## Test
 
-Before testing, check `TEST_ID`, `TEST_NODE`, `TEST_GENESIS`, and `TEST_ACCOUNT` in [mitum.config.js](mitum.config.js).
+Before testing, check `TEST_ID`, `TEST_NODE`, `TEST_GENESIS`, `TEST_ACCOUNT`, and etc in [mitum.config.js](mitum.config.js).
 
 You can test __mitum-sdk__ using this command:
 
@@ -41,26 +41,27 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  operations/factsign.test.js
- PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/currency-policy-updater.test.js
- PASS  key/address.test.js
+ PASS  operations/operation.test.js
  PASS  operations/currency/create-contract-accounts.test.js
+ PASS  operations/currency/withdraws.test.js
  PASS  operations/currency/transfers.test.js
- PASS  utils/time.test.js
+ PASS  operations/currency/create-accounts.test.js
+ PASS  operations/currency/key-updater.test.js
  PASS  utils/config.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  utils/time.test.js
  PASS  operations/currency/currency-register.test.js
  PASS  operations/currency/suffrage-inflation.test.js
  PASS  key/key.test.js
- PASS  operations/currency/withdraws.test.js
+ PASS  operations/factsign.test.js
+ PASS  key/address.test.js
  PASS  key/schnorr-keypair.test.js
  PASS  key/ecdsa-keypair.test.js
- PASS  operations/currency/key-updater.test.js
 
-Test Suites: 15 passed, 15 total
+Test Suites: 16 passed, 16 total
 Tests:       42 passed, 42 total
 Snapshots:   0 total
-Time:        1.348 s, estimated 2 s
+Time:        1.69 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -87,7 +88,7 @@ Ran all test suites.
 
 To set the mitum version of all hints and the network id, refer to [Set version of hints](#set-version-of-hints) and [Set network id of operations](#set-network-id-of-operations).
 
-In addition, you can force the sdk to use extended msgs (which used in mitum2) to sign by set `forceExtendedMessage(true)`. See [Force to use extended messages](#force-to-use-extended-messages) 
+To force certain signature types to be used for each operation, refer to [Force certain signature types](#force-certain-signature-types).
 
 ## Generate KeyPairs
 
@@ -284,7 +285,7 @@ First, suppose you create an account with the following settings:
 * initial balance: 1000 MCC, 500 PEN
 
 ```js
-import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, KPGen, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -300,7 +301,7 @@ const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
 const fact = new Currency.CreateAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
+const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
 operation.sign(senderPrivate);
 
 // see appendix
@@ -343,7 +344,7 @@ First, suppose you add a new key to your account as follows:
 * currency to pay the fee: MCC
 
 ```js
-import { TimeStamp, PubKey, Keys, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, PubKey, Keys, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 const pub1 = "22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu"; // new pub1
 const pub2 = "yX3YBvu597eNgwuuJpsnZunZcDkABVeqfmiyveKuNregmpu"; // new pub2
@@ -356,7 +357,7 @@ const targetPrivate = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
 const fact = new Currency.KeyUpdaterFact(token, targetAddress, new Keys(keys, 100), "MCC");
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
+const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
 operation.sign(targetPrivate);
 ```
 
@@ -372,7 +373,7 @@ Suppose you transfer tokens to a general account as follows:
 * tokens to transfer: 1000 MCC, 100 PEN
 
 ```js
-import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 const receiver = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
@@ -386,7 +387,7 @@ const item = new Currency.TransfersItem(receiver, [mccAmount, penAmount]);
 const fact = new Currency.TransfersFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
+const operation = new Operation(SIG_TYPE.DEFAULT, act, memo);
 operation.sign(senderPrivate);
 ```
 
@@ -427,7 +428,7 @@ __(2) Operation__
 Then, create an operation.
 
 ```js
-import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 // creating feeer
 // ...
@@ -446,8 +447,8 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyRegisterFact(token, design);
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
-operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
+const operation = new Operation(SIG_TYPE.M2_NODE, fact, memo);
+operation.nodeSign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", "node0sas"); // node private, node address
 ```
 
 ### currency-policy-updater
@@ -457,7 +458,7 @@ __currency-policy-updater__ is an operation that allows you to update policies o
 Here, the way to create a feeer is the same as [currency-register](#currency-register).
 
 ```js
-import { TimeStamp, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 const currency = "MCC"; // currency id to update `policy`
 
@@ -472,8 +473,8 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyPolicyUpdaterFact(token, currency, policy);
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
-operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
+const operation = new Operation(SIG_TYPE.M2_NODE, fact, memo);
+operation.nodeSign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", "node0sas"); // node private, node address
 ```
 
 ### suffrage-inflation
@@ -491,7 +492,7 @@ Assume that you supply tokens as follows:
 * supply TST: receiver5, 999991888 tokens
 
 ```js
-import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 const receiver1 = "receiver1's account address";
 ...
@@ -514,8 +515,8 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.SuffrageInflationFact(token, [imcc, ipen, itxt, ibts, itst]);
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
-operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr"); // node private
+const operation = new Operation(SIG_TYPE.M2_NODE, fact, memo);
+operation.nodeSign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", "node0sas"); // node private, node address
 ```
 
 ### create-contract-account
@@ -534,7 +535,7 @@ First, suppose you create a contract account with the following settings:
 Here, the weight and threshold are only used to generate the account address and do not affect the behavior of the account at all after the account is registered.
 
 ```js
-import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, KPGen, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -550,7 +551,7 @@ const item = new Currency.CreateContractAccountsItem(keys, [mccAmount, penAmount
 const fact = new Currency.CreateContractAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Operation(fact, memo, []);
+const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
 operation.sign(senderPrivate);
 ```
 
@@ -566,7 +567,7 @@ Suppose your contract account is __DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqdmc
 * tokens to transfer: 1000 MCC, 100 PEN
 
 ```js
-import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
 
 const contractAccount = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
@@ -580,7 +581,7 @@ const item = new Currency.WithdrawsItem(contractAccount, [mccAmount, penAmount])
 const fact = new Currency.WithdrawsFact(token, senderAddress, [item]);
 
 const memo = "";
-const operation = new Operation(fact, memo, []);
+const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
 operation.sign(senderPrivate);
 ```
 
@@ -610,14 +611,16 @@ import { usedId } from "mitum-sdk";
 useId("mainnet");
 ```
 
-### Force to use extended messages
+### Force certain signature types
 
-You can force the sdk to use extended msgs (which used in mitum2) for each signature.
+You can force certain signature types to be used for each operation.
 
 ```js
-import { forceExtendedMessage } from "mitum-sdk";
+import { SIG_TYPE } from "mitum-sdk";
 
-forceExtendedMessage(true);
+const op = new Operation(SIG_TYPE.DEFAULT, fact, memo);
+const op = new Operation(SIG_TYPE.M2, fact, memo); // signature used in mitum2
+const op = new Operation(SIG_TYPE.M2_NODE, fact, memo); // node signature used in mitum2; must use op.nodeSign(priv, node), not op.sign(priv)
 ```
 
 ### Options and other methods for __Operation__

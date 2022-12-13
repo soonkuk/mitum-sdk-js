@@ -1,7 +1,7 @@
 import bs58 from "bs58";
 
 import { TimeStamp } from "./time";
-import { forceExtendedMessage, useId, useV } from "./config";
+import { useId, useV } from "./config";
 
 import { TEST_ACCOUNT, TEST_GENESIS } from "../mitum.config";
 import { Keys, PublicKey } from "../key/key";
@@ -52,15 +52,15 @@ describe("test: config", () => {
 		);
 
 		useId(id1);
-		const operation1 = new Operation(fact, "", []);
+		const operation1 = new Operation(null, fact, "");
 		operation1.sign(TEST_GENESIS.ecdsa.private);
 
 		useId(id2);
-		const operation2 = new Operation(fact, "", []);
+		const operation2 = new Operation(null, fact, "");
 		operation2.sign(TEST_GENESIS.ecdsa.private);
 
 		useId(id1);
-		const operation3 = new Operation(fact, "", []);
+		const operation3 = new Operation(null, fact, "");
 		operation3.sign(TEST_GENESIS.ecdsa.private);
 
 		expect(operation1.id.toString()).toBe(id1);
@@ -72,27 +72,6 @@ describe("test: config", () => {
 		);
 		expect(bs58.encode(operation1.factSigns[0].sign)).toBe(
 			bs58.encode(operation3.factSigns[0].sign)
-		);
-	});
-
-	it("case: extended msg", () => {
-		forceExtendedMessage(false);
-		const amounts = [new Amount("MCC", "1000"), new Amount("PEN", "1000")];
-		const keys = new Keys([new PublicKey(TEST_ACCOUNT.public, 100)], 100);
-		const fact = new CreateAccountsFact(
-			new TimeStamp().UTC(),
-			TEST_GENESIS.ecdsa.address,
-			[new CreateAccountsItem(keys, amounts)]
-		);
-		const operation1 = new Operation(fact, "", []);
-		operation1.sign(TEST_GENESIS.ecdsa.private);
-
-		forceExtendedMessage(true);
-		const operation2 = new Operation(fact, "", []);
-		operation2.sign(TEST_GENESIS.ecdsa.private);
-
-		expect(bs58.encode(operation2.factSigns[0].sign)).not.toBe(
-			bs58.encode(operation1.factSigns[0].sign)
 		);
 	});
 });

@@ -29,7 +29,7 @@ describe("test: currency-register", () => {
 			"2022-11-24T02:17:37.256409Z",
 			design
 		);
-		const operation = new Operation(fact, "", []);
+		const operation = new Operation(null, fact, "");
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(bs58.encode(fact.hash)).toBe(
@@ -52,7 +52,7 @@ describe("test: currency-register", () => {
 			"2022-11-16T06:35:43.649604Z",
 			design
 		);
-		const operation = new Operation(fact, "", []);
+		const operation = new Operation(null, fact, "");
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(bs58.encode(fact.hash)).toBe(
@@ -78,7 +78,7 @@ describe("test: currency-register", () => {
 			);
 
 			const fact = new CurrencyRegisterFact(token, design);
-			const operation = new Operation(fact, "", []);
+			const operation = new Operation(null, fact, "");
 			operation.sign(TEST_NODE.ecdsa);
 
 			return bs58.encode(fact.hash);

@@ -27,7 +27,7 @@ describe("test: suffrage-inflation", () => {
 			"2022-11-16T06:55:02.135231Z",
 			items
 		);
-		const operation = new Operation(fact, "", []);
+		const operation = new Operation(null, fact, "");
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(bs58.encode(fact.hash)).toBe(

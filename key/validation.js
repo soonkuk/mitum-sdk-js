@@ -3,6 +3,7 @@ import {
 	SUFFIX_ACCOUNT_ADDRESS,
 	SUFFIX_KEY_PRIVATE,
 	SUFFIX_KEY_PUBLIC,
+	SUFFIX_NODE_ADDRESS,
 } from "../alias/key.js";
 
 import { assert, error, EC_INVALID_KEY } from "../base/error.js";
@@ -23,6 +24,10 @@ export const isKeySuffix = (s) => {
 
 export const isAddressSuffix = (s) => {
 	return typeof s === "string" && s === SUFFIX_ACCOUNT_ADDRESS;
+};
+
+export const isNodeAddressSuffix = (s) => {
+	return s === SUFFIX_NODE_ADDRESS;
 };
 
 export const isSchnorrPrivateKey = (s) => {
@@ -108,6 +113,14 @@ export const isAddress = (s) => {
 
 	return isAddressSuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
+
+export const isNodeAddress = (s) => {
+	if (typeof s !== "string" || s.length < 3) {
+		return false;
+	}
+
+	return isNodeAddressSuffix(s.substring(s.length - SUFFIX_LENGTH));
+}
 
 export const parseKey = (s) => {
 	assert(

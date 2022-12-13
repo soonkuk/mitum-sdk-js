@@ -21,7 +21,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new Operation(fact, "", []);
+		const operation = new Operation(null, fact, "");
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(bs58.encode(fact.hash)).toBe(
@@ -38,7 +38,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new Operation(fact, "", []);
+		const operation = new Operation(null, fact, "");
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(bs58.encode(fact.hash)).toBe(
@@ -60,7 +60,7 @@ describe("test: currency-policy-updater", () => {
 			"PEN",
 			policy
 		);
-		const operation = new Operation(fact, "", []);
+		const operation = new Operation(null, fact, "");
 		operation.sign(TEST_NODE.ecdsa);
 
 		expect(bs58.encode(fact.hash)).toBe(

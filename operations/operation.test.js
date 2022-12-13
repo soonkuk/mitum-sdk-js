@@ -3,13 +3,13 @@ import bs58 from "bs58";
 import { TEST_ACCOUNT, TEST_GENESIS } from "../mitum.config";
 
 import { FactSign } from "./factsign";
-import { Operation } from "./operation";
+import { Operation, SIG_TYPE } from "./operation";
 
 import { Amount } from "./currency/amount";
 import { TransfersFact, TransfersItem } from "./currency/transfers";
 
 describe("test: operation", () => {
-	it("case: memo", () => {
+	it("case: memo; schnorr", () => {
 		const item = new TransfersItem(TEST_ACCOUNT.address, [
 			new Amount("MCC", "10000000"),
 		]);
@@ -19,6 +19,7 @@ describe("test: operation", () => {
 			[item]
 		);
 		const fs = new FactSign(
+			null,
 			"kYJADZP1XKNvUNn7XHY39yisp9QCfU1LtyxGw2HRjQwXmpu",
 			Buffer.from(
 				bs58.decode(
@@ -27,8 +28,8 @@ describe("test: operation", () => {
 			),
 			"2022-12-13T03:24:26.768075Z"
 		);
-		const op = new Operation(fact, "transfers test", [fs]);
-		op.forceExtendedMessage = true;
+		const op = new Operation(SIG_TYPE.M2, fact, "transfers test");
+		op.setFactSigns(null, [fs]);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"Dct6c9pDynFzfc5N4Lcot3LJXwkjuDgQt2okzgnPpT2H"
