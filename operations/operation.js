@@ -172,8 +172,10 @@ export class Operation extends IBytesDict {
 	}
 
 	export(fp) {
-		fs.writeFile(fp, JSON.stringify(this.dict(), null, 4), (_) => {
-			throw error.runtime(EC_FILE_CREATION_FAILED, "write-file failed");
+		fs.writeFile(fp, JSON.stringify(this.dict(), null, 4), (e) => {
+			if (e) {
+				throw error.runtime(EC_FILE_CREATION_FAILED, "write-file failed");
+			} 
 		});
 	}
 
