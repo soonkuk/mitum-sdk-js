@@ -66,7 +66,7 @@ export class Operation extends IBytesDict {
 	}
 
 	hashing() {
-		return sum256(this.bytes());
+		return sum256(this.hashBytes());
 	}
 
 	_kp(privateKey) {
@@ -149,6 +149,13 @@ export class Operation extends IBytesDict {
 		]);
 	}
 
+	hashBytes() {
+		return Buffer.concat([
+			this.fact.hash,
+			Buffer.concat(this.factSigns.sort(sortBuf).map((fs) => fs.bytes())),
+		]);
+	}
+
 	dict() {
 		const op = {
 			_hint: this.hint.toString(),
@@ -174,8 +181,11 @@ export class Operation extends IBytesDict {
 	export(fp) {
 		fs.writeFile(fp, JSON.stringify(this.dict(), null, 4), (e) => {
 			if (e) {
-				throw error.runtime(EC_FILE_CREATION_FAILED, "write-file failed");
-			} 
+				throw error.runtime(
+					EC_FILE_CREATION_FAILED,
+					"write-file failed"
+				);
+			}
 		});
 	}
 

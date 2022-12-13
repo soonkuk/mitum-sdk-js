@@ -1,5 +1,5 @@
 import { useV, useId, forceExtendedMessage } from "./utils/config.js";
-import { TimeStamp } from "./utils/time.js";
+import { TimeStamp, FullTimeStamp } from "./utils/time.js";
 import { sha256, sum256 } from "./utils/hash.js";
 import { Big, Float } from "./utils/number.js";
 import { sortStringAsBuf, sortBuf } from "./utils/string.js";
@@ -132,6 +132,7 @@ export {
 	base,
 	util,
 	TimeStamp,
+	FullTimeStamp,
 	KPGen,
 	PubKey,
 	Keys,

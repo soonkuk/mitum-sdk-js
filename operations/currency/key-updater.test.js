@@ -26,5 +26,21 @@ describe("test: key-updater", () => {
 		expect(keys.address.toString()).toBe(TEST_ACCOUNT.address);
 	});
 
-	it("case: schnorr; operation", () => {});
+	it("case: schnorr; operation", () => {
+		const keys = new Keys([new PublicKey(TEST_ACCOUNT.public, 100)], 100);
+
+		const fact = new KeyUpdaterFact(
+			"2022-12-13 02:40:48.520067 +0000 UTC",
+			TEST_GENESIS.schnorr.address,
+			keys,
+			"MCC"
+		);
+		const operation = new Operation(fact, "", []);
+		operation.sign(TEST_GENESIS.schnorr.private);
+
+		expect(bs58.encode(fact.hash)).toBe(
+			"6U99URNut8rLxBU5d9taQwP6Dd9LaDUpxq83zffdNAWX"
+		);
+		expect(keys.address.toString()).toBe(TEST_ACCOUNT.address);
+	});
 });

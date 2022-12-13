@@ -28,7 +28,7 @@ export class TimeStamp extends IBytes {
 	}
 
 	UTC() {
-		const iso = this.ISO();
+		const iso = this.t.toISOString();
 		const t = iso.indexOf("T");
 		let z = iso.indexOf("Z");
 		let rtime;
@@ -71,5 +71,41 @@ export class TimeStamp extends IBytes {
 		}
 
 		return iso.substring(0, t) + " " + rtime + " +0000 UTC";
+	}
+}
+
+export class FullTimeStamp extends TimeStamp {
+	constructor(s) {
+		super(s);
+
+		const dot = s.indexOf(".");
+		if (dot < 0) {
+			this.r = "";
+		} else {
+			this.r = s.substring(dot);
+		}
+	}
+
+	hashBytes() {
+		return Buffer.from(super.UTC());
+	}
+
+	ISO() {
+		const iso = super.ISO();
+		if (this.r) {
+			const idx = iso.indexOf(".");
+			return iso.substring(0, idx) + this.r;
+		}
+		return iso;
+	}
+
+	UTC() {
+		const utc = super.UTC();
+		if (this.r) {
+			const idx0 = utc.indexOf(".");
+			const idx1 = utc.indexOf("+");
+			return utc.substring(0, idx0) + this.r + " " + utc.substring(idx1);
+		}
+		return utc;
 	}
 }

@@ -9,14 +9,14 @@ import { assert, error, EC_INVALID_PUBLIC_KEY } from "../base/error.js";
 import { Key } from "../key/key.js";
 import { isPublicKey } from "../key/validation.js";
 
-import { TimeStamp } from "../utils/time.js";
+import { FullTimeStamp } from "../utils/time.js";
 
 export class FactSign extends IBytesDict {
 	constructor(signer, sign, signedAt) {
 		super();
 		this.hint = new Hint(HINT_FACT_SIGN);
 		this.sign = sign;
-		this.signedAt = new TimeStamp(signedAt);
+		this.signedAt = new FullTimeStamp(signedAt);
 
 		assert(
 			isPublicKey(signer),
@@ -29,7 +29,7 @@ export class FactSign extends IBytesDict {
 		return Buffer.concat([
 			this.signer.bytes(),
 			this.sign,
-			Buffer.from(this.signedAt.UTC()),
+			this.signedAt.hashBytes(),
 		]);
 	}
 
