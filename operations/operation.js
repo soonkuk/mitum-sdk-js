@@ -99,7 +99,7 @@ export class Operation extends IBytesDict {
 	sign(privateKey) {
 		const now = new TimeStamp();
 		const kp = this._kp(privateKey);
-		if (kp.type === "schonorr") {
+		if (kp.type === "schnorr") {
 			this.forceExtendedMessage = true;
 		}
 
