@@ -601,7 +601,7 @@ import { Seal } from "mitum-sdk";
 
 const signerPrivateKey = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
 
-const seal = new Seal(operations); // Operation instance or json object
+const seal = new Seal([operation0, operation1, operation2, ...]); // Operation instances or json objects
 seal.sign(signerPrivateKey);
 
 // seal.dict(); seal object
