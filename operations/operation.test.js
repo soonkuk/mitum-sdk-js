@@ -31,7 +31,7 @@ describe("test: operation", () => {
 		);
 		const op = new Operation(fact, "transfers test");
 		op.sigType = SIG_TYPE.M2;
-		op.setFactSigns(null, [fs]);
+		op.setFactSigns([fs]);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"Dct6c9pDynFzfc5N4Lcot3LJXwkjuDgQt2okzgnPpT2H"

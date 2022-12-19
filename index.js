@@ -23,7 +23,9 @@ import { Address, schnorrRandomN, ecdsaRandomN } from "./key/address.js";
 
 import { Fact } from "./operations/fact.js";
 import { Item } from "./operations/item.js";
+import { FactSign } from "./operations/factsign.js";
 import { Operation } from "./operations/operation.js";
+import { Seal } from "./operations/seal.js";
 
 import { Amount } from "./operations/currency/amount.js";
 import {
@@ -142,6 +144,7 @@ export {
 	Address,
 	Hint,
 	Fact,
+	FactSign,
 	Item,
 	ID,
 	Big,
@@ -149,5 +152,6 @@ export {
 	CurrencyID,
 	ContractID,
 	Operation,
+	Seal,
 	Currency,
 };

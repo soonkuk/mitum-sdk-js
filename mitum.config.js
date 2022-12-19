@@ -17,6 +17,8 @@ export const MAX_KEYS_IN_ADDRESS = 10;
 export const MAX_AMOUNTS_IN_ITEM = 10;
 export const MAX_ITEMS_IN_FACT = 10;
 
+export const MAX_OPERATIONS_IN_SEAL = 10;
+
 export const TEST_NODE = {
 	ecdsa: "KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr",
 	schnorr: "EYc4WdFjP9qkgfwJZfnsVXeh827rsNppm5HUSjSDeMFFmpr",

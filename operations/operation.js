@@ -54,11 +54,7 @@ export class Operation extends IBytesDict {
 		this.sigType = sigType();
 	}
 
-	setFactSigns(sigType, factSigns) {
-		if (sigType) {
-			this.sigType = new SigType(sigType);
-		}
-
+	setFactSigns(factSigns) {
 		if (factSigns) {
 			assert(
 				Array.isArray(factSigns),
@@ -208,7 +204,7 @@ export class Operation extends IBytesDict {
 			if (e) {
 				throw error.runtime(
 					EC_FILE_CREATION_FAILED,
-					"write-file failed"
+					"write-file failed; operation"
 				);
 			}
 		});

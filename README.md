@@ -41,27 +41,28 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  operations/operation.test.js
+ PASS  operations/currency/withdraws.test.js
+ PASS  operations/currency/create-accounts.test.js
  PASS  operations/currency/transfers.test.js
  PASS  operations/currency/key-updater.test.js
- PASS  operations/currency/suffrage-inflation.test.js
- PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/withdraws.test.js
  PASS  operations/currency/currency-policy-updater.test.js
- PASS  utils/time.test.js
+ PASS  operations/seal.test.js
  PASS  operations/currency/currency-register.test.js
- PASS  operations/currency/create-contract-accounts.test.js
- PASS  key/address.test.js
  PASS  key/schnorr-keypair.test.js
- PASS  key/key.test.js
  PASS  operations/factsign.test.js
  PASS  utils/config.test.js
+ PASS  operations/currency/create-contract-accounts.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
+ PASS  utils/time.test.js
  PASS  key/ecdsa-keypair.test.js
+ PASS  key/address.test.js
+ PASS  operations/operation.test.js
+ PASS  key/key.test.js
 
-Test Suites: 16 passed, 16 total
-Tests:       43 passed, 43 total
+Test Suites: 17 passed, 17 total
+Tests:       48 passed, 48 total
 Snapshots:   0 total
-Time:        1.537 s, estimated 2 s
+Time:        1.342 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -74,7 +75,7 @@ Ran all test suites.
 |-|[From private key](#from-private-key)|
 |-|[From seed](#from-seed)|
 |2|[Get address from public keys](#get-address-from-public-keys)|
-|3|[Generate Currency Operations](#generate-currency-operations)|
+|3|[Generate currency operations](#generate-currency-operations)|
 |-|[create-account](#create-account)|
 |-|[key-updater](#key-updater)|
 |-|[transfer](#transfer)|
@@ -83,6 +84,7 @@ Ran all test suites.
 |-|[suffrage-inflation](#suffrage-inflation)|
 |-|[create-contract-account](#create-contract-account)|
 |-|[withdraw](#withdraw)|
+|4|[Generate seal](#generate-seal)|
 |+|[Appendix](#appendix)|
 |+|[License](#license)|
 
@@ -588,6 +590,23 @@ const operation = new Operation(fact, memo);
 operation.sign(senderPrivate, null);
 ```
 
+## Generate Seal
+
+__seal__ is not used in mitum2. Therefore, only operations with __sig-type: DEFAULT or M1__ can be added to seal.
+
+Here's how to create a seal:
+
+```js
+import { Seal } from "mitum-sdk";
+
+const signerPrivateKey = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
+
+const seal = new Seal(operations); // Operation instance or json object
+seal.sign(signerPrivateKey);
+
+// seal.dict(); seal object
+```
+
 ## Appendix
 
 ### Set version of hints
@@ -641,16 +660,33 @@ op.sigType = SIG_TYPE.M2_NODE;// node signature used in mitum2
 
 ### Options and other methods for __Operation__
 
-If `sig-type` is one of [DEFAULT, M1, M2], you don't need to include the option for the code `sign(priv, option)`.
+If __sig-type__ is one of __[DEFAULT, M1, M2]__, you don't need to include the option for the code `sign(priv, option)`.
 Just leave it `null`.
 
-However, if `sig-type` is M2_NODE, you must include the option `{ node: "node address; string" }`.
+However, if __sig-type__ is __M2_NODE__, you must include the option `{ node: "node address; string" }`.
 
 ```js
 const operation = new Operation(/* fact, etc... */);
 
 operation.sign(/* sender's private key */, /* sig option */); // DEFAULT, M1, M2
 operation.sign(/* sender's private key */, { node: "node addres" }); // M2_NODE
+```
+
+* Set fact-signs without signing
+
+Make sure to set `sig-type` before setting the fact-signs.
+
+```js
+operaiton.sigType = SIG_TYPE.DEFAULT; // [ DEFAULT | M1 | M2 | M2_NODE ]
+operation.setFactSigns(/* FactSign instances */);
+```
+
+`FactSign` can be created by...
+
+```js
+import { FactSign } from "mitum-sdk";
+
+const factSign = new FactSign(/* node address */, /* signer */, /* signature; buffer */, /* signed_at */);
 ```
 
 * Send the operation directly to the network via Digest API.
@@ -664,6 +700,8 @@ operation.request(/* digest api address */, /* headers */); // `headers` can be 
 ```js
 operation.export(/* file path */);
 ```
+
+The `request` and `export` methods are also available in __Seal__ instance.
 
 ## License
 
