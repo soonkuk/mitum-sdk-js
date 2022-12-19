@@ -42,26 +42,26 @@ $ npm test
 > jest
 
  PASS  operations/operation.test.js
- PASS  operations/currency/create-contract-accounts.test.js
- PASS  operations/currency/withdraws.test.js
  PASS  operations/currency/transfers.test.js
- PASS  operations/currency/create-accounts.test.js
  PASS  operations/currency/key-updater.test.js
- PASS  utils/config.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/create-accounts.test.js
+ PASS  operations/currency/withdraws.test.js
  PASS  operations/currency/currency-policy-updater.test.js
  PASS  utils/time.test.js
  PASS  operations/currency/currency-register.test.js
- PASS  operations/currency/suffrage-inflation.test.js
- PASS  key/key.test.js
- PASS  operations/factsign.test.js
+ PASS  operations/currency/create-contract-accounts.test.js
  PASS  key/address.test.js
  PASS  key/schnorr-keypair.test.js
+ PASS  key/key.test.js
+ PASS  operations/factsign.test.js
+ PASS  utils/config.test.js
  PASS  key/ecdsa-keypair.test.js
 
 Test Suites: 16 passed, 16 total
-Tests:       42 passed, 42 total
+Tests:       43 passed, 43 total
 Snapshots:   0 total
-Time:        1.69 s, estimated 2 s
+Time:        1.537 s, estimated 2 s
 Ran all test suites.
 ```
 
@@ -301,8 +301,8 @@ const item = new Currency.CreateAccountsItem(keys, [mccAmount, penAmount]);
 const fact = new Currency.CreateAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
-operation.sign(senderPrivate);
+const operation = new Operation(fact, memo);
+operation.sign(senderPrivate, null);
 
 // see appendix
 // operation.export(/* file path; string */);
@@ -357,8 +357,8 @@ const targetPrivate = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
 const fact = new Currency.KeyUpdaterFact(token, targetAddress, new Keys(keys, 100), "MCC");
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
-operation.sign(targetPrivate);
+const operation = new Operation(fact, memo);
+operation.sign(targetPrivate, null);
 ```
 
 ### transfer
@@ -387,8 +387,8 @@ const item = new Currency.TransfersItem(receiver, [mccAmount, penAmount]);
 const fact = new Currency.TransfersFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.DEFAULT, act, memo);
-operation.sign(senderPrivate);
+const operation = new Operation(fact, memo);
+operation.sign(senderPrivate, null);
 ```
 
 ### currency-register
@@ -447,8 +447,9 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyRegisterFact(token, design);
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.M2_NODE, fact, memo);
-operation.nodeSign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", "node0sas"); // node private, node address
+const operation = new Operation(fact, memo);
+operation.sigType = SIG_TYPE.M2_NODE;
+operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", { node: "node0sas" }); // node private, node address
 ```
 
 ### currency-policy-updater
@@ -473,8 +474,9 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.CurrencyPolicyUpdaterFact(token, currency, policy);
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.M2_NODE, fact, memo);
-operation.nodeSign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", "node0sas"); // node private, node address
+const operation = new Operation(fact, memo);
+operation.sigType = SIG_TYPE.M2_NODE;
+operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", { node: "node0sas" }); // node private, node address
 ```
 
 ### suffrage-inflation
@@ -515,8 +517,9 @@ const token = new TimeStamp().UTC(); // any unique string
 const fact = new Currency.SuffrageInflationFact(token, [imcc, ipen, itxt, ibts, itst]);
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.M2_NODE, fact, memo);
-operation.nodeSign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", "node0sas"); // node private, node address
+const operation = new Operation(fact, memo);
+operation.sigType = SIG_TYPE.M2_NODE;
+operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", { node: "node0sas" }); // node private, node address
 ```
 
 ### create-contract-account
@@ -551,8 +554,8 @@ const item = new Currency.CreateContractAccountsItem(keys, [mccAmount, penAmount
 const fact = new Currency.CreateContractAccountsFact(token, senderAddress, [item]);
 
 const memo = ""; // any string
-const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
-operation.sign(senderPrivate);
+const operation = new Operation(fact, memo);
+operation.sign(senderPrivate, null);
 ```
 
 ### withdraw
@@ -581,15 +584,15 @@ const item = new Currency.WithdrawsItem(contractAccount, [mccAmount, penAmount])
 const fact = new Currency.WithdrawsFact(token, senderAddress, [item]);
 
 const memo = "";
-const operation = new Operation(SIG_TYPE.DEFAULT, fact, memo);
-operation.sign(senderPrivate);
+const operation = new Operation(fact, memo);
+operation.sign(senderPrivate, null);
 ```
 
 ## Appendix
 
 ### Set version of hints
 
-To change the mitum version of every objects, add the following code to the part where the app is initialized.
+To change the mitum version of every objects, add the following code to the part where the app is initialized or required.
 
 The default version is `v0.0.1`.
 
@@ -601,7 +604,7 @@ useV("v0.0.2");
 
 ### Set network id of operations
 
-To apply your network id to operations, add the following code to the part where the app is initialized.
+To apply your network id to operations, add the following code to the part where the app is initialized or required.
 
 The default id is `mitum`.
 
@@ -613,26 +616,41 @@ useId("mainnet");
 
 ### Force certain signature types
 
-You can force certain signature types to be used for each operation.
+To force certain signature types to be used, add the following code to the part where the app is initialized or required.
+
+```js
+import { SIG_TYPE, useSigType } from "mitum-sdk";
+
+useSigType(SIG_TYPE.DEFAULT);
+useSigType(SIG_TYPE.M1); // equal to SIG_TYPE.DEFAULT
+useSigType(SIG_TYPE.M2); // signature used in mitum2
+useSigType(SIG_TYPE.M2_NODE);
+```
+
+In addition, you can force certain signature types to be used for each operation.
 
 ```js
 import { SIG_TYPE } from "mitum-sdk";
 
-const op = new Operation(SIG_TYPE.DEFAULT, fact, memo);
-const op = new Operation(SIG_TYPE.M2, fact, memo); // signature used in mitum2
-const op = new Operation(SIG_TYPE.M2_NODE, fact, memo); // node signature used in mitum2; must use op.nodeSign(priv, node), not op.sign(priv)
+const op = new Operation(fact, memo);
+
+op.sigType = SIG_TYPE.DEFAULT // or SIG_TYPE.M1
+op.sigType = SIG_TYPE.M2;
+op.sigType = SIG_TYPE.M2_NODE;// node signature used in mitum2
 ```
 
 ### Options and other methods for __Operation__
 
-* If you want to include the `signed_at` of the new `factsign` in the message to be signed, set it as follows before signing.
-* This setting applies only to that operation. However, if you have already run `forceExtendedMessage(true)` to apply the settings across the sdk, the extended message is applied to all operations without running `operation.forceExtendedMessage = true`.
-* In addition, if you use the mitum schnorr key for signing, extended messages are enforced regardless of the user's force-extended-message setting.
+If `sig-type` is one of [DEFAULT, M1, M2], you don't need to include the option for the code `sign(priv, option)`.
+Just leave it `null`.
+
+However, if `sig-type` is M2_NODE, you must include the option `{ node: "node address; string" }`.
 
 ```js
 const operation = new Operation(/* fact, etc... */);
-operation.forceExtendedMessage = true
-operation.sign(/* sender's private key */)
+
+operation.sign(/* sender's private key */, /* sig option */); // DEFAULT, M1, M2
+operation.sign(/* sender's private key */, { node: "node addres" }); // M2_NODE
 ```
 
 * Send the operation directly to the network via Digest API.
@@ -646,52 +664,6 @@ operation.request(/* digest api address */, /* headers */); // `headers` can be 
 ```js
 operation.export(/* file path */);
 ```
-
-### About timestamp
-
-__(1) Expression of timestamp__
-
-For blocks, seals, signatures, etc., mitum uses expressions `yyyy-MM-dd HH:mm:ss.* +0000 UTC` and `yyyy-MM-ddTHH:mm:ss.*Z` as the default.
-
-All other timezones are not allowed! Only +0000 timezone must be used for mitum.
-
-For example,
-
-a. When converting timestamps to byte format to generate block/seal/fact_sign hash
-    - convert string `2021-11-16 01:53:30.518 +0000 UTC` to byte format
-
-b. When are placed in block, seal, fact_sign of json files
-    - convert the timestamp to `2021-11-16T01:53:30.518Z` and put it in json
-
-To generate an operation hash, mitum concatenates byte arrays of network id, fact hash and each byte array of fact_sign.
-
-And to generate each byte array of fact_sign, mitum concatenates byte arrays of signer, signature digest and signed_at.
-
-Note that when converted to bytes, the format of `signed_at` is the same as `yyyy-MM-dd HH:mm:ss.* +0000 UTC`, but when put into json, it is displayed as `yyyy-MM-ddTHH:mm:ss.*Z`.
-
-__(2) How many decimal places to be expressed?__
-
-There is one more thing to note.
-
-First, there is no need to pay attention to the decimal places in the 'ss.*' part of the timestamp.
-
-Moreover, the timestamp can also be written without `.` or without decimal values below `.`.
-
-However, when converting timestamps to byte format, you should not add unnecessary zero(0) to floating point representations in seconds(ss.*).
-
-For example,
-
-a. `2021-11-16T01:53:30.518Z` is converted to `2021-11-16 01:53:30.518 +0000 UTC` without any change of the time itself.
-
-b. `2021-11-16T01:53:30.510Z` must be converted to `2021-11-16 01:53:30.51 +0000 UTC` when generating a hash.
-
-c. `2021-11-16T01:53:30.000Z` must be converted to `2021-11-16T01:53:30 +0000 UTC` when generating a hash.
-
-A timestamp with unnecessary zeros in the json file does not affect the processing of blocks, seals, or operations. Use caution when converting formats.
-
-In addition, no matter how precise the time is entered, all timestamps within the mitum code only support precision up to milliseconds when converting to buffer.
-
-For example, if you enter `2022-11-24T05:34:25.194332Z` in `signed_at`, the string `2022-11-24 05:34:25.194 +0000 UTC` is converted to a byte array to create a buffer of the fact signature.
 
 ## License
 

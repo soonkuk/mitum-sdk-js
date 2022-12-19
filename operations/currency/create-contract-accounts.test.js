@@ -21,8 +21,8 @@ describe("test: create-contract-account", () => {
 			TEST_GENESIS.ecdsa.address,
 			[item]
 		);
-		const operation = new Operation(null, fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private);
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.ecdsa.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"79MQkuRZW26k4YXT7xhADF2JwJW4geMfFCVmwNcLsp4Q"

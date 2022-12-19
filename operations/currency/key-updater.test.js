@@ -17,8 +17,8 @@ describe("test: key-updater", () => {
 			keys,
 			"MCC"
 		);
-		const operation = new Operation(null, fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private);
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.ecdsa.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"8o6KNp9rvbmed783f38mnVPb3ss1Q2sZFYj9MpRy9Axa"
@@ -35,8 +35,8 @@ describe("test: key-updater", () => {
 			keys,
 			"MCC"
 		);
-		const operation = new Operation(null, fact, "");
-		operation.sign(TEST_GENESIS.schnorr.private);
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.schnorr.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"6U99URNut8rLxBU5d9taQwP6Dd9LaDUpxq83zffdNAWX"

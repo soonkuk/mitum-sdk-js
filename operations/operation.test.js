@@ -1,9 +1,10 @@
 import bs58 from "bs58";
 
 import { TEST_ACCOUNT, TEST_GENESIS } from "../mitum.config";
+import { SIG_TYPE } from "../utils/config";
 
 import { FactSign } from "./factsign";
-import { Operation, SIG_TYPE } from "./operation";
+import { Operation } from "./operation";
 
 import { Amount } from "./currency/amount";
 import { TransfersFact, TransfersItem } from "./currency/transfers";
@@ -28,7 +29,8 @@ describe("test: operation", () => {
 			),
 			"2022-12-13T03:24:26.768075Z"
 		);
-		const op = new Operation(SIG_TYPE.M2, fact, "transfers test");
+		const op = new Operation(fact, "transfers test");
+		op.sigType = SIG_TYPE.M2;
 		op.setFactSigns(null, [fs]);
 
 		expect(bs58.encode(fact.hash)).toBe(

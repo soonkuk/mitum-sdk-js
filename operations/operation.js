@@ -20,40 +20,18 @@ import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
-import { id } from "../utils/config.js";
+import { id, sigType, SIG_TYPE } from "../utils/config.js";
 import { sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
 
+import { Address } from "../key/address.js";
 import { ecdsa } from "../key/ecdsa-keypair.js";
 import { schnorr } from "../key/schnorr-keypair.js";
 import { isECDSAPrivateKey, isSchnorrPrivateKey } from "../key/validation.js";
 
-export const SIG_TYPE = {
-	DEFAULT: "sig-type/mitum1",
-	M2: "sig-type/mitum2",
-	M2_NODE: "sig-type/mitum2/node",
-};
-
-class SigType {
-	constructor(st) {
-		assert(
-			typeof st === "string",
-			error.type(EC_INVALID_SIG_TYPE, "not string; sig-type")
-		);
-
-		const { DEFAULT, M2, M2_NODE } = SIG_TYPE;
-		assert(
-			[DEFAULT, M2, M2_NODE].includes(st),
-			error.format(EC_INVALID_SIG_TYPE, "invalid sig-type")
-		);
-
-		this.s = st;
-	}
-}
-
 export class Operation extends IBytesDict {
-	constructor(sigType, fact, memo) {
+	constructor(fact, memo) {
 		super();
 		this.id = new ID(id());
 
@@ -73,7 +51,7 @@ export class Operation extends IBytesDict {
 		this.factSigns = [];
 		this.hash = null;
 
-		this.sigType = new SigType(sigType || SIG_TYPE.DEFAULT);
+		this.sigType = sigType();
 	}
 
 	setFactSigns(sigType, factSigns) {
@@ -99,29 +77,52 @@ export class Operation extends IBytesDict {
 	}
 
 	hashing() {
-		switch (this.sigType.s) {
+		switch (this.sigType) {
 			case SIG_TYPE.DEFAULT:
 				return sum256(this.bytes());
 			case SIG_TYPE.M2:
-				return sum256(this.m2Bytes());
 			case SIG_TYPE.M2_NODE:
-				return sum256(this.m2NodeBytes());
+				return sum256(this.m2Bytes());
 			default:
 				throw error.runtime(EC_INVALID_SIG_TYPE, "invalid sig-type");
 		}
 	}
 
-	sign(privateKey) {
+	sign(privateKey, option) {
 		const now = new TimeStamp();
 		const kp = findKp(privateKey);
 
+		let node = null;
+		if (this.sigType === SIG_TYPE.M2_NODE) {
+			assert(
+				option && Object.prototype.hasOwnProperty.call(option, "node"),
+				error.runtime(
+					EC_INVALID_FACTSIGN,
+					"no node address in sig option"
+				)
+			);
+			node = new Address(option.node);
+		}
+
 		let msg = undefined;
-		switch(this.sigType.s) {
+		switch (this.sigType) {
 			case SIG_TYPE.DEFAULT:
 				msg = Buffer.concat([this.fact.hash, this.id.bytes()]);
 				break;
 			case SIG_TYPE.M2:
-				msg = Buffer.concat([this.id.bytes(), this.fact.hash, now.bytes()]);
+				msg = Buffer.concat([
+					this.id.bytes(),
+					this.fact.hash,
+					now.bytes(),
+				]);
+				break;
+			case SIG_TYPE.M2_NODE:
+				msg = Buffer.concat([
+					this.id.bytes(),
+					node.bytes(),
+					this.fact.hash,
+					now.bytes(),
+				]);
 				break;
 			default:
 				throw error.runtime(EC_INVALID_SIG_TYPE, "invalid sig-type");
@@ -130,47 +131,7 @@ export class Operation extends IBytesDict {
 		let factSign = null;
 		try {
 			factSign = new FactSign(
-				null,
-				kp.keypair.publicKey.toString(),
-				kp.keypair.sign(msg),
-				now.toString()
-			);
-		} catch (e) {
-			throw error.runtime(
-				EC_FACTSIGN_CREATION_FAILED,
-				"create-factsign failed"
-			);
-		}
-
-		assert(
-			factSign !== null,
-			error.runtime(EC_FACTSIGN_CREATION_FAILED, "null factsign")
-		);
-
-		const idx = this.factSigns
-			.map((fs) => fs.signer.toString())
-			.indexOf(kp.keypair.publicKey.toString());
-
-		if (idx < 0) {
-			this.factSigns.push(factSign);
-		} else {
-			this.factSigns[idx] = factSign;
-		}
-		this.hash = this.hashing();
-	}
-
-	nodeSign(privateKey, node) {
-		assert(this.sigType.s === SIG_TYPE.M2_NODE, error.format(EC_INVALID_SIG_TYPE, "not m2-node sig-type"));
-		
-		const now = new TimeStamp();
-		const kp = findKp(privateKey);
-
-		const msg = Buffer.from([]);
-
-		let factSign = null;
-		try {
-			factSign = new FactSign(
-				node,
+				node ? node.toString() : null,
 				kp.keypair.publicKey.toString(),
 				kp.keypair.sign(msg),
 				now.toString()
@@ -214,10 +175,6 @@ export class Operation extends IBytesDict {
 		]);
 	}
 
-	m2NodeBytes() {
-		return Buffer.from([]);
-	}
-
 	dict() {
 		const op = {
 			_hint: this.hint.toString(),
@@ -228,7 +185,7 @@ export class Operation extends IBytesDict {
 
 		const signs = this.factSigns.sort(sortBuf).map((fs) => fs.dict());
 
-		switch(this.sigType.s) {
+		switch (this.sigType) {
 			case SIG_TYPE.DEFAULT:
 				op.fact_signs = signs;
 				break;
@@ -290,4 +247,4 @@ const findKp = (privateKey) => {
 	);
 
 	return { type: keyType, keypair: kp };
-}
+};

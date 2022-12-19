@@ -2,8 +2,9 @@ import bs58 from "bs58";
 
 import { Amount } from "./amount";
 import { CreateAccountsFact, CreateAccountsItem } from "./create-accounts";
-import { Operation, SIG_TYPE } from "../operation";
+import { Operation } from "../operation";
 
+import { SIG_TYPE } from "../../utils/config";
 import { TEST_GENESIS, TEST_ACCOUNT, TEST_ACCOUNT_R } from "../../mitum.config";
 
 import { Keys, PublicKey } from "../../key/key";
@@ -17,8 +18,8 @@ describe("test: create-account", () => {
 			TEST_GENESIS.ecdsa.address,
 			[new CreateAccountsItem(keys, amounts)]
 		);
-		const operation = new Operation(null, fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private);
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.ecdsa.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"3YQ6tUgKBKq6HdjREeFTVBYrTDWiTQEYARv6HX8wyQZP"
@@ -34,8 +35,9 @@ describe("test: create-account", () => {
 			TEST_GENESIS.schnorr.address,
 			[new CreateAccountsItem(keys, amounts)]
 		);
-		const operation = new Operation(SIG_TYPE.M2, fact, "");
-		operation.sign(TEST_GENESIS.schnorr.private);
+		const operation = new Operation(fact, "");
+		operation.sigType = SIG_TYPE.M2;
+		operation.sign(TEST_GENESIS.schnorr.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"2NfVhz4yfRJ2ZexQgqcox67v6jzu2X5qYiDbYoeQaPgq"

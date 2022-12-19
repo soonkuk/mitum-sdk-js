@@ -2,8 +2,9 @@ import bs58 from "bs58";
 
 import { Amount } from "./amount";
 import { TransfersFact, TransfersItem } from "./transfers";
-import { Operation, SIG_TYPE } from "../operation";
+import { Operation } from "../operation";
 
+import { SIG_TYPE } from "../../utils/config";
 import { TEST_ACCOUNT, TEST_ACCOUNT_R, TEST_GENESIS } from "../../mitum.config";
 
 describe("test: transfers", () => {
@@ -16,8 +17,8 @@ describe("test: transfers", () => {
 			[item]
 		);
 
-		const operation = new Operation(null, fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private);
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.ecdsa.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"GTXjBCvb183KaCtiprpjC4e4XDor6XeBfijZfqwMPsBx"
@@ -33,8 +34,9 @@ describe("test: transfers", () => {
 			[item]
 		);
 
-		const operation = new Operation(SIG_TYPE.M2, fact, "");
-		operation.sign(TEST_GENESIS.schnorr.private);
+		const operation = new Operation(fact, "");
+		operation.sigType = SIG_TYPE.M2;
+		operation.sign(TEST_GENESIS.schnorr.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"k1vnR6xnWBPoehfZGcbnfXBD8yZRmT4jsGfquRUPzjx"

@@ -16,8 +16,8 @@ describe("test: withdraw", () => {
 			TEST_GENESIS.ecdsa.address,
 			[item]
 		);
-		const operation = new Operation(null, fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private);
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.ecdsa.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"ApAZLELnH8iYHtThDJk5dtr4Ni7TvDfJT4XHU4Z8gHM5"
