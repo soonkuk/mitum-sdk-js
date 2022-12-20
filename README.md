@@ -241,8 +241,14 @@ You can use this package to create the following operations:
 For general accounts:
 
 * create-account
+* key-updater
+* transfer
+  
+For node accounts:
 
-coming soon...
+* currency-register
+* currency-policy-updater
+* suffrage-inflation
 
 See [Appendix](#appendix) for other instructions on how to use `Operation`.
 
