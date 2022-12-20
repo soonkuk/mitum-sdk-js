@@ -37,33 +37,6 @@ You can test __mitum-sdk__ using this command:
 
 ```sh
 $ npm test
-
-> mitum-sdk@0.0.1 test
-> jest
-
- PASS  operations/currency/withdraws.test.js
- PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/transfers.test.js
- PASS  operations/currency/key-updater.test.js
- PASS  operations/currency/currency-policy-updater.test.js
- PASS  operations/seal.test.js
- PASS  operations/currency/currency-register.test.js
- PASS  key/schnorr-keypair.test.js
- PASS  operations/factsign.test.js
- PASS  utils/config.test.js
- PASS  operations/currency/create-contract-accounts.test.js
- PASS  operations/currency/suffrage-inflation.test.js
- PASS  utils/time.test.js
- PASS  key/ecdsa-keypair.test.js
- PASS  key/address.test.js
- PASS  operations/operation.test.js
- PASS  key/key.test.js
-
-Test Suites: 17 passed, 17 total
-Tests:       48 passed, 48 total
-Snapshots:   0 total
-Time:        1.342 s, estimated 2 s
-Ran all test suites.
 ```
 
 ## Index
@@ -287,7 +260,7 @@ First, suppose you create an account with the following settings:
 * initial balance: 1000 MCC, 500 PEN
 
 ```js
-import { TimeStamp, KPGen, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
+import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -346,7 +319,7 @@ First, suppose you add a new key to your account as follows:
 * currency to pay the fee: MCC
 
 ```js
-import { TimeStamp, PubKey, Keys, Currency, Operation, SIG_TYPE } from "mitum-sdk";
+import { TimeStamp, PubKey, Keys, Currency, Operation } from "mitum-sdk";
 
 const pub1 = "22PVZv7Cizt7T2VUkL4QuR7pmfrprMqnFDEXFkDuJdWhSmpu"; // new pub1
 const pub2 = "yX3YBvu597eNgwuuJpsnZunZcDkABVeqfmiyveKuNregmpu"; // new pub2
@@ -375,7 +348,7 @@ Suppose you transfer tokens to a general account as follows:
 * tokens to transfer: 1000 MCC, 100 PEN
 
 ```js
-import { TimeStamp, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
 
 const receiver = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
@@ -416,7 +389,8 @@ const feeReceiver = "DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqddmca"; // receiv
 const nilFeeer = new Currency.NilFeeer();
 
 /* fixed */
-const fixedFeeer = new Currency.FixedFeeer(feeReceiver, "10");
+const fee = "10";
+const fixedFeeer = new Currency.FixedFeeer(feeReceiver, fee);
 
 /* ration */
 const feeRatio = 0.5; // 0 <= fee ratio <= 1; float
@@ -540,7 +514,7 @@ First, suppose you create a contract account with the following settings:
 Here, the weight and threshold are only used to generate the account address and do not affect the behavior of the account at all after the account is registered.
 
 ```js
-import { TimeStamp, KPGen, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
+import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
 
 // create 5 new public keys
 const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
@@ -572,7 +546,7 @@ Suppose your contract account is __DBa8N5of7LZkx8ngH4mVbQmQ2NHDd6gL2mScGfhAEqdmc
 * tokens to transfer: 1000 MCC, 100 PEN
 
 ```js
-import { TimeStamp, Amount, Currency, Operation, SIG_TYPE } from "mitum-sdk";
+import { TimeStamp, Amount, Currency, Operation } from "mitum-sdk";
 
 const contractAccount = "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca";
 const mccAmount = new Amount("MCC", "1000");
@@ -653,7 +627,7 @@ import { SIG_TYPE } from "mitum-sdk";
 
 const op = new Operation(fact, memo);
 
-op.sigType = SIG_TYPE.DEFAULT // or SIG_TYPE.M1
+op.sigType = SIG_TYPE.DEFAULT; // or SIG_TYPE.M1
 op.sigType = SIG_TYPE.M2;
 op.sigType = SIG_TYPE.M2_NODE;// node signature used in mitum2
 ```
@@ -668,7 +642,7 @@ However, if __sig-type__ is __M2_NODE__, you must include the option `{ node: "n
 ```js
 const operation = new Operation(/* fact, etc... */);
 
-operation.sign(/* sender's private key */, /* sig option */); // DEFAULT, M1, M2
+operation.sign(/* sender's private key */, null); // DEFAULT, M1, M2
 operation.sign(/* sender's private key */, { node: "node addres" }); // M2_NODE
 ```
 
