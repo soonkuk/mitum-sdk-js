@@ -37,6 +37,33 @@ You can test __mitum-sdk__ using this command:
 
 ```sh
 $ npm test
+
+> mitum-sdk@0.0.1 test
+> jest
+
+ PASS  key/schnorr-keypair.test.js
+ PASS  operations/factsign.test.js
+ PASS  key/key.test.js
+ PASS  operations/currency/create-accounts.test.js
+ PASS  key/address.test.js
+ PASS  operations/currency/key-updater.test.js
+ PASS  operations/currency/transfers.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  operations/seal.test.js
+ PASS  key/ecdsa-keypair.test.js
+ PASS  utils/time.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  operations/operation.test.js
+ PASS  utils/config.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/create-contract-accounts.test.js
+ PASS  operations/currency/withdraws.test.js
+
+Test Suites: 17 passed, 17 total
+Tests:       49 passed, 49 total
+Snapshots:   0 total
+Time:        1.507 s, estimated 2 s
+Ran all test suites.
 ```
 
 ## Index
@@ -579,10 +606,10 @@ Here's how to create a seal:
 ```js
 import { Seal } from "mitum-sdk";
 
-const signerPrivateKey = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
+const nodePrivateKey = "KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr";
 
 const seal = new Seal([operation0, operation1, operation2, ...]); // Operation instances or json objects
-seal.sign(signerPrivateKey);
+seal.sign(nodePrivateKey);
 
 // seal.dict(); seal object
 ```

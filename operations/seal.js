@@ -14,6 +14,7 @@ import {
 	EC_INVALID_SIG_TYPE,
 	EC_INVALID_OPERATION,
 	EC_INVALID_OPERATIONS,
+	EC_INVALID_SEAL,
 } from "../base/error.js";
 
 import { Key } from "../key/key.js";
@@ -107,7 +108,7 @@ export class Seal extends IBytesDict {
 			)
 		);
 
-		const signer = new Key(privateKey);
+		const signer = kp.publicKey;
 		const signedAt = new TimeStamp();
 
 		const bodyHash = sum256(
@@ -130,6 +131,11 @@ export class Seal extends IBytesDict {
 	}
 
 	dict() {
+		assert(
+			this.hash && this.bodyHash && this.signature,
+			error.runtime(EC_INVALID_SEAL, "not yet signed")
+		);
+
 		return {
 			_hint: this.hint.toString(),
 			hash: bs58.encode(this.hash),

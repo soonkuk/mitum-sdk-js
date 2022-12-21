@@ -176,10 +176,12 @@ export class Operation extends IBytesDict {
 			_hint: this.hint.toString(),
 			memo: this.memo,
 			fact: this.fact.dict(),
-			hash: bs58.encode(this.hash),
+			hash: this.hash ? bs58.encode(this.hash) : "",
 		};
 
-		const signs = this.factSigns.sort(sortBuf).map((fs) => fs.dict());
+		const signs = this.factSigns
+			? this.factSigns.sort(sortBuf).map((fs) => fs.dict())
+			: [];
 
 		switch (this.sigType) {
 			case SIG_TYPE.DEFAULT:
@@ -187,10 +189,12 @@ export class Operation extends IBytesDict {
 				break;
 			case SIG_TYPE.M2:
 			case SIG_TYPE.M2_NODE:
-				op.signs = signs.map((fs) => {
-					delete fs["_hint"];
-					return fs;
-				});
+				op.signs = signs
+					? signs.map((fs) => {
+							delete fs["_hint"];
+							return fs;
+					  })
+					: [];
 				break;
 			default:
 				throw error.runtime(EC_INVALID_SIG_TYPE, "invalid sig-type");

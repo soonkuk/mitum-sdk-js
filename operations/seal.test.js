@@ -56,4 +56,12 @@ describe("test: seal", () => {
 
 		expect(() => new Seal([operation.dict()])).toThrow(Error);
 	});
+
+	it("case: ecdsa; not-signed", () => {
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.ecdsa.private, null);
+
+		const seal = new Seal([operation]);
+		expect(() => seal.dict()).toThrow(Error);
+	});
 });
