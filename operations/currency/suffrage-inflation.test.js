@@ -11,14 +11,14 @@ import { Operation } from "../operation";
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
 describe("test: suffrage-inflation", () => {
-	it("case: ecdsa; operation", () => {
+	it("case: m1; operation", () => {
 		const items = [
 			new SuffrageInflationItem(
-				TEST_GENESIS.ecdsa.address,
+				TEST_GENESIS.m1.address,
 				new Amount("MCC", "9999999999999999999999")
 			),
 			new SuffrageInflationItem(
-				TEST_GENESIS.ecdsa.address,
+				TEST_GENESIS.m1.address,
 				new Amount("PEN", "9999999999999999999999")
 			),
 		];
@@ -28,12 +28,12 @@ describe("test: suffrage-inflation", () => {
 			items
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_NODE.ecdsa, null);
+		operation.sign(TEST_NODE.m1, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"FcP5ciHKkhogkskiYiaVCTP4JZ7zr4UH2cMRJqhhzEgV"
 		);
 	});
 
-	it("case: schnorr; operation", () => {});
+	it("case: m2; operation", () => {});
 });

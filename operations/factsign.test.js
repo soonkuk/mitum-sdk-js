@@ -1,12 +1,12 @@
 import bs58 from "bs58";
 
-import { schnorr } from "../key/schnorr-keypair";
+import { m2 } from "../key/m2-keypair";
 import { TimeStamp } from "../utils/time";
 
 describe("test: factsign", () => {
-	it("case: ecdsa", () => {});
+	it("case: m1", () => {});
 
-	it("case: schnorr", () => {
+	it("case: m2", () => {
 		const tcs = [
 			{
 				now: "2022-11-24 03:43:57.251403 +0000 UTC",
@@ -67,7 +67,7 @@ describe("test: factsign", () => {
 
 		tcs.forEach((tc) => {
             const time = new TimeStamp(tc.now);
-			const kp = schnorr.fromPrivateKey(tc.key);
+			const kp = m2.fromPrivateKey(tc.key);
 			const msg = Buffer.concat([
 				Buffer.from("mitum"),
 				Buffer.from(tc.msg),

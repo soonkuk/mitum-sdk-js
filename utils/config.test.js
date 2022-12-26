@@ -47,21 +47,21 @@ describe("test: config", () => {
 		const item = new CreateAccountsItem(keys, [amount]);
 		const fact = new CreateAccountsFact(
 			new TimeStamp().UTC(),
-			TEST_GENESIS.ecdsa.address,
+			TEST_GENESIS.m1.address,
 			[item]
 		);
 
 		useId(id1);
 		const operation1 = new Operation(fact, "");
-		operation1.sign(TEST_GENESIS.ecdsa.private, null);
+		operation1.sign(TEST_GENESIS.m1.private, null);
 
 		useId(id2);
 		const operation2 = new Operation(fact, "");
-		operation2.sign(TEST_GENESIS.ecdsa.private, null);
+		operation2.sign(TEST_GENESIS.m1.private, null);
 
 		useId(id1);
 		const operation3 = new Operation(fact, "");
-		operation3.sign(TEST_GENESIS.ecdsa.private, null);
+		operation3.sign(TEST_GENESIS.m1.private, null);
 
 		expect(operation1.id.toString()).toBe(id1);
 		expect(operation2.id.toString()).toBe(id2);
@@ -82,25 +82,25 @@ describe("test: config", () => {
 		const item = new CreateAccountsItem(keys, [amount]);
 		const fact = new CreateAccountsFact(
 			new TimeStamp().UTC(),
-			TEST_GENESIS.ecdsa.address,
+			TEST_GENESIS.m1.address,
 			[item]
 		);
 
 		useSigType(SIG_TYPE.DEFAULT);
 		const operation1 = new Operation(fact, "");
-		operation1.sign(TEST_GENESIS.ecdsa.private, null);
+		operation1.sign(TEST_GENESIS.m1.private, null);
 
 		useSigType(SIG_TYPE.M1);
 		const operation2 = new Operation(fact, "");
-		operation2.sign(TEST_GENESIS.ecdsa.private, null);
+		operation2.sign(TEST_GENESIS.m1.private, null);
 
 		useSigType(SIG_TYPE.M2);
 		const operation3 = new Operation(fact, "");
-		operation3.sign(TEST_GENESIS.ecdsa.private, null);
+		operation3.sign(TEST_GENESIS.m1.private, null);
 
 		useSigType(SIG_TYPE.M2_NODE);
 		const operation4 = new Operation(fact, "");
-		operation4.sign(TEST_GENESIS.schnorr.private, { node: "node0sas" });
+		operation4.sign(TEST_GENESIS.m2.private, { node: "node0sas" });
 
 		expect(bs58.encode(operation1.factSigns[0].sign)).toBe(
 			bs58.encode(operation2.factSigns[0].sign)

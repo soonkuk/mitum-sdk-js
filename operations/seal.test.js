@@ -13,53 +13,53 @@ describe("test: seal", () => {
 	const item = new TransfersItem(TEST_ACCOUNT.address, amounts);
 	const fact = new TransfersFact(
 		new TimeStamp().UTC(),
-		TEST_GENESIS.ecdsa.address,
+		TEST_GENESIS.m1.address,
 		[item]
 	);
 
-	it("case: ecdsa; M1", () => {
+	it("case: m1; M1", () => {
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private, null);
+		operation.sign(TEST_GENESIS.m1.private, null);
 
 		const seal = new Seal([operation]);
-		expect(() => seal.sign(TEST_NODE.ecdsa)).not.toThrow(Error);
+		expect(() => seal.sign(TEST_NODE.m1)).not.toThrow(Error);
 	});
 
-	it("case: ecdsa; M2", () => {
+	it("case: m1; M2", () => {
 		const operation = new Operation(fact, "");
 		operation.sigType = SIG_TYPE.M2;
-		operation.sign(TEST_GENESIS.ecdsa.private, null);
+		operation.sign(TEST_GENESIS.m1.private, null);
 
 		expect(() => new Seal([operation])).toThrow(Error);
 	});
 
-	it("case: schnorr; M1", () => {
+	it("case: m2; M1", () => {
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_GENESIS.schnorr.private, null);
+		operation.sign(TEST_GENESIS.m2.private, null);
 
 		const seal = new Seal([operation]);
-		expect(() => seal.sign(TEST_NODE.schnorr)).toThrow(Error);
+		expect(() => seal.sign(TEST_NODE.m2)).toThrow(Error);
 	});
 
-	it("case: schnorr; M2", () => {
+	it("case: m2; M2", () => {
 		const operation = new Operation(fact, "");
 		operation.sigType = SIG_TYPE.M2;
-		operation.sign(TEST_GENESIS.schnorr.private, null);
+		operation.sign(TEST_GENESIS.m2.private, null);
 
 		expect(() => new Seal([operation])).toThrow(Error);
 	});
 
-	it("case: schnorr; M2_NODE", () => {
+	it("case: m2; M2_NODE", () => {
 		const operation = new Operation(fact, "");
 		operation.sigType = SIG_TYPE.M2_NODE;
-		operation.sign(TEST_NODE.schnorr, { node: "node0sas" });
+		operation.sign(TEST_NODE.m2, { node: "node0sas" });
 
 		expect(() => new Seal([operation.dict()])).toThrow(Error);
 	});
 
-	it("case: ecdsa; not-signed", () => {
+	it("case: m1; not-signed", () => {
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private, null);
+		operation.sign(TEST_GENESIS.m1.private, null);
 
 		const seal = new Seal([operation]);
 		expect(() => seal.dict()).toThrow(Error);

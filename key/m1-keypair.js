@@ -12,12 +12,18 @@ import { KeyPair } from "./keypair.js";
 import { MIN_SEED_LENGTH } from "../mitum.config.js";
 import { SUFFIX_KEY_PRIVATE, SUFFIX_KEY_PUBLIC } from "../alias/key.js";
 
-import { assert, error, EC_INVALID_SEED } from "../base/error.js";
+import {
+	assert,
+	error,
+	EC_INVALID_SEED,
+	EC_INVALID_PRIVATE_KEY,
+} from "../base/error.js";
 
 import { Big } from "../utils/number.js";
 import { sha256, sum256 } from "../utils/hash.js";
+import { isM1PrivateKey } from "./validation.js";
 
-class ECDSAKeyPair extends KeyPair {
+class M1KeyPair extends KeyPair {
 	constructor(privateKey) {
 		super(privateKey);
 	}
@@ -81,7 +87,15 @@ const random = () => {
 };
 
 const fromPrivateKey = (privateKey) => {
-	return new ECDSAKeyPair(new Key(privateKey));
+	assert(
+		typeof privateKey === "string",
+		error.type(EC_INVALID_PRIVATE_KEY, "not string")
+	);
+	assert(
+		isM1PrivateKey(privateKey),
+		error.format(EC_INVALID_PRIVATE_KEY, "invalid length or key suffix")
+	);
+	return new M1KeyPair(new Key(privateKey));
 };
 
 const fromSeed = (seed) => {
@@ -91,12 +105,12 @@ const fromSeed = (seed) => {
 		error.range(EC_INVALID_SEED, "seed length out of range")
 	);
 
-	return new ECDSAKeyPair(
+	return new M1KeyPair(
 		new Key(privateKeyfromBuffer(Buffer.from(seed)) + SUFFIX_KEY_PRIVATE)
 	);
 };
 
-export const ecdsa = {
+export const m1 = {
 	random,
 	fromPrivateKey,
 	fromSeed,

@@ -26,9 +26,9 @@ import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
 
 import { Address } from "../key/address.js";
-import { ecdsa } from "../key/ecdsa-keypair.js";
-import { schnorr } from "../key/schnorr-keypair.js";
-import { isECDSAPrivateKey, isSchnorrPrivateKey } from "../key/validation.js";
+import { m1 } from "../key/m1-keypair.js";
+import { m2 } from "../key/m2-keypair.js";
+import { isM1PrivateKey, isM2PrivateKey } from "../key/validation.js";
 
 export class Operation extends IBytesDict {
 	constructor(fact, memo) {
@@ -228,17 +228,17 @@ const findKp = (privateKey) => {
 		error.type(EC_INVALID_PRIVATE_KEY, "not string")
 	);
 
-	const keyType = isSchnorrPrivateKey(privateKey)
-		? "schnorr"
-		: isECDSAPrivateKey(privateKey)
-		? "ecdsa"
+	const keyType = isM2PrivateKey(privateKey)
+		? "m2"
+		: isM1PrivateKey(privateKey)
+		? "m1"
 		: null;
 
 	const kp =
-		keyType === "schnorr"
-			? schnorr.fromPrivateKey(privateKey)
-			: keyType === "ecdsa"
-			? ecdsa.fromPrivateKey(privateKey)
+		keyType === "m2"
+			? m2.fromPrivateKey(privateKey)
+			: keyType === "m1"
+			? m1.fromPrivateKey(privateKey)
 			: null;
 
 	assert(

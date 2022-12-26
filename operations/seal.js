@@ -17,9 +17,8 @@ import {
 	EC_INVALID_SEAL,
 } from "../base/error.js";
 
-import { Key } from "../key/key.js";
-import { ecdsa } from "../key/ecdsa-keypair.js";
-import { isECDSAPrivateKey } from "../key/validation.js";
+import { m1 } from "../key/m1-keypair.js";
+import { isM1PrivateKey } from "../key/validation.js";
 
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
@@ -96,8 +95,8 @@ export class Seal extends IBytesDict {
 			error.type(EC_INVALID_PRIVATE_KEY, "not string")
 		);
 
-		const kp = isECDSAPrivateKey(privateKey)
-			? ecdsa.fromPrivateKey(privateKey)
+		const kp = isM1PrivateKey(privateKey)
+			? m1.fromPrivateKey(privateKey)
 			: null;
 
 		assert(

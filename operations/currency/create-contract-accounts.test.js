@@ -12,17 +12,17 @@ import { TEST_ACCOUNT, TEST_GENESIS } from "../../mitum.config";
 import { Keys, PublicKey } from "../../key/key";
 
 describe("test: create-contract-account", () => {
-	it("case: ecdsa; operation", () => {
+	it("case: m1; operation", () => {
 		const amounts = [new Amount("MCC", "1000"), new Amount("PEN", "1000")];
 		const keys = new Keys([new PublicKey(TEST_ACCOUNT.public, 100)], 100);
 		const item = new CreateContractAccountsItem(keys, amounts);
 		const fact = new CreateContractAccountsFact(
 			"2022-11-16T06:59:44.986806Z",
-			TEST_GENESIS.ecdsa.address,
+			TEST_GENESIS.m1.address,
 			[item]
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_GENESIS.ecdsa.private, null);
+		operation.sign(TEST_GENESIS.m1.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"79MQkuRZW26k4YXT7xhADF2JwJW4geMfFCVmwNcLsp4Q"
@@ -30,5 +30,5 @@ describe("test: create-contract-account", () => {
 		expect(keys.address.toString()).toBe(TEST_ACCOUNT.address);
 	});
 
-	it("case: schnorr; operation", () => {});
+	it("case: m2; operation", () => {});
 });

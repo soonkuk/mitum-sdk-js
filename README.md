@@ -41,7 +41,7 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  key/schnorr-keypair.test.js
+ PASS  key/m2-keypair.test.js
  PASS  operations/factsign.test.js
  PASS  key/key.test.js
  PASS  operations/currency/create-accounts.test.js
@@ -50,7 +50,7 @@ $ npm test
  PASS  operations/currency/transfers.test.js
  PASS  operations/currency/currency-policy-updater.test.js
  PASS  operations/seal.test.js
- PASS  key/ecdsa-keypair.test.js
+ PASS  key/m1-keypair.test.js
  PASS  utils/time.test.js
  PASS  operations/currency/currency-register.test.js
  PASS  operations/operation.test.js
@@ -96,8 +96,8 @@ To force certain signature types to be used for each operation, refer to [Force 
 
 __mitum-sdk__ supports two signature methods:
 
-- General ECDSA: v1
-- Schnorr DSA: v2
+- mitum1: m1
+- mitum2: m2
 
 You can generate key pairs in the following ways:
 
@@ -113,21 +113,21 @@ The following functions are prepared for key pair generation.
 ```js
 import { KPGen } from "mitum-sdk";
 
-// ecdsa key pair
+// m1 key pair
 var ekp1 = KPGen.random();
 var ekp2 = KPGen.randomN(/* the number of keypairs */);
 var ekp3 = KPGen.fromPrivateKey(/* string private key */);
 var ekp4 = KPGen.fromSeed(/* string seed */);
 
-// schnorr key pair
-const { schnorr } = KPGen;
-var skp1 = schnorr.random();
-var skp2 = schnorr.randomN(/* the number of keypairs */);
-var skp3 = schnorr.fromPrivateKey(/* string private key */);
-var skp4 = schnorr.fromSeed(/* string seed */);
+// m2 key pair
+const { m2 } = KPGen;
+var skp1 = m2.random();
+var skp2 = m2.randomN(/* the number of keypairs */);
+var skp3 = m2.fromPrivateKey(/* string private key */);
+var skp4 = m2.fromSeed(/* string seed */);
 ```
 
-_If you need a key pair for schnorr signatures, use `KPGen.schnorr.(function)` instead of `KPGen.(function)`._
+_If you need a key pair for m2 signatures, use `KPGen.m2.(function)` instead of `KPGen.(function)`._
 
 ### Random KeyPair
 
@@ -296,7 +296,7 @@ First, suppose you create an account with the following settings:
 import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
 
 // create 5 new public keys
-const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
+const { keys, keypairs } = KPGen.randomN(5); // use KPGen.m2.randomN(5) for m2 key pairs
 
 const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "500");
@@ -317,7 +317,7 @@ operation.sign(senderPrivate, null);
 // operation.request(/* digest api address; string */, /* headers; obj */);
 ```
 
-`KPGen.randomN(n)` and `KPGen.schnorr.randomN(n)` always return `Keys` with a threshold __100__.
+`KPGen.randomN(n)` and `KPGen.m2.randomN(n)` always return `Keys` with a threshold __100__.
 
 To generate `Keys` with thresholds and weights, use `PubKey` and `Keys` as follows:
 
@@ -550,7 +550,7 @@ Here, the weight and threshold are only used to generate the account address and
 import { TimeStamp, KPGen, Amount, Currency, Operation } from "mitum-sdk";
 
 // create 5 new public keys
-const { keys, keypairs } = KPGen.randomN(5); // use KPGen.schnorr.randomN(5) for schnorr key pairs
+const { keys, keypairs } = KPGen.randomN(5); // use KPGen.m2.randomN(5) for m2 key pairs
 
 const mccAmount = new Amount("MCC", "1000");
 const penAmount = new Amount("PEN", "500");

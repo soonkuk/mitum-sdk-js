@@ -1,10 +1,10 @@
 import bs58 from "bs58";
-import { schnorr } from "./schnorr-keypair";
+import { m2 } from "./m2-keypair";
 
-describe("test: schnorr; keypair generation", () => {
+describe("test: m2; keypair generation", () => {
 	it("case: random", () => {
-		const kp1 = schnorr.random();
-		const kp2 = schnorr.fromPrivateKey(kp1.privateKey.toString());
+		const kp1 = m2.random();
+		const kp2 = m2.fromPrivateKey(kp1.privateKey.toString());
 
 		expect(kp2.privateKey.toString()).toBe(kp1.privateKey.toString());
 		expect(kp2.publicKey.toString()).toBe(kp1.publicKey.toString());
@@ -55,7 +55,7 @@ describe("test: schnorr; keypair generation", () => {
 		];
 
 		testKps.forEach((tc) => {
-			const tkp = schnorr.fromPrivateKey(tc.priv);
+			const tkp = m2.fromPrivateKey(tc.priv);
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
@@ -92,7 +92,7 @@ describe("test: schnorr; keypair generation", () => {
 		];
 
 		testKps.forEach((tc) => {
-			const tkp = schnorr.fromSeed(tc.seed);
+			const tkp = m2.fromSeed(tc.seed);
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
@@ -100,7 +100,7 @@ describe("test: schnorr; keypair generation", () => {
 	});
 });
 
-describe("test: schnorr; sign", () => {
+describe("test: m2; sign", () => {
 	it("case: sign string msg", () => {
 		const tcs = [
 			{
@@ -151,7 +151,7 @@ describe("test: schnorr; sign", () => {
 		];
 
 		tcs.forEach((tc) => {
-			const kp = schnorr.fromPrivateKey(tc.priv);
+			const kp = m2.fromPrivateKey(tc.priv);
 			const sig = bs58.encode(kp.sign(tc.msg));
 
 			expect(sig).toBe(tc.sig);

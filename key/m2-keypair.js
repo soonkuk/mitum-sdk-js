@@ -22,9 +22,9 @@ import { sum256 } from "../utils/hash.js";
 
 import { Key } from "./key.js";
 import { KeyPair } from "./keypair.js";
-import { isSchnorrPrivateKey } from "./validation.js";
+import { isM2PrivateKey } from "./validation.js";
 
-class SchnorrKeyPair extends KeyPair {
+class M2KeyPair extends KeyPair {
 	constructor(privateKey) {
 		super(privateKey);
 	}
@@ -53,7 +53,7 @@ class SchnorrKeyPair extends KeyPair {
 }
 
 const random = () => {
-	return new SchnorrKeyPair(
+	return new M2KeyPair(
 		new Key(
 			bs58.encode(Buffer.from(secureRandom(32, { type: "Uint8Array" }))) +
 				SUFFIX_KEY_PRIVATE
@@ -67,11 +67,11 @@ const fromPrivateKey = (privateKey) => {
 		error.type(EC_INVALID_PRIVATE_KEY, "not string")
 	);
 	assert(
-		isSchnorrPrivateKey(privateKey),
+		isM2PrivateKey(privateKey),
 		error.format(EC_INVALID_PRIVATE_KEY, "invalid length or key suffix")
 	);
 
-	return new SchnorrKeyPair(new Key(privateKey));
+	return new M2KeyPair(new Key(privateKey));
 };
 
 const fromSeed = (seed) => {
@@ -89,7 +89,7 @@ const fromSeed = (seed) => {
 	k %= N;
 	k += BigInt(1);
 
-	return new SchnorrKeyPair(
+	return new M2KeyPair(
 		new Key(
 			bs58.encode(secp256k1.utils.hexToBytes(k.toString(16))) +
 				SUFFIX_KEY_PRIVATE
@@ -97,7 +97,7 @@ const fromSeed = (seed) => {
 	);
 };
 
-export const schnorr = {
+export const m2 = {
 	random,
 	fromPrivateKey,
 	fromSeed,

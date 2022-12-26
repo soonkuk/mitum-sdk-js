@@ -1,10 +1,10 @@
-import { ecdsaRandomN, schnorrRandomN } from "./address";
+import { M1RandomN, M2RandomN } from "./address";
 import { Keys, PublicKey } from "./key";
 
 describe("test: keys and keypairs generation", () => {
-	it("case: ecdsa; random n", () => {
+	it("case: m1; random n", () => {
 		for (let n = 1; n <= 10; n++) {
-			const { keys, keypairs } = ecdsaRandomN(n);
+			const { keys, keypairs } = M1RandomN(n);
 
 			const pks = keys.keys.map(
 				(k) => new PublicKey(k.toString(), k.weight.v)
@@ -20,9 +20,9 @@ describe("test: keys and keypairs generation", () => {
 		}
 	});
 
-	it("case: schnorr; random n", () => {
+	it("case: m2; random n", () => {
 		for (let n = 1; n <= 10; n++) {
-			const { keys, keypairs } = schnorrRandomN(n);
+			const { keys, keypairs } = M2RandomN(n);
 
 			const pks = keys.keys.map(
 				(k) => new PublicKey(k.toString(), k.weight.v)

@@ -12,7 +12,7 @@ import { Operation } from "../operation";
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
 describe("test: currency-policy-updater", () => {
-	it("case: ecdsa; nil feeer", () => {
+	it("case: m1; nil feeer", () => {
 		const feeer = new NilFeeer();
 		const policy = new CurrencyPolicy("33", feeer);
 
@@ -22,15 +22,15 @@ describe("test: currency-policy-updater", () => {
 			policy
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_NODE.ecdsa, null);
+		operation.sign(TEST_NODE.m1, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"5Mhz2DfpQ51G3SyNLcLgmCbp8yx5o53ykwre7DidT3Rr"
 		);
 	});
 
-	it("case: ecdsa; fixed feeer", () => {
-		const feeer = new FixedFeeer(TEST_GENESIS.ecdsa.address, "999");
+	it("case: m1; fixed feeer", () => {
+		const feeer = new FixedFeeer(TEST_GENESIS.m1.address, "999");
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const fact = new CurrencyPolicyUpdaterFact(
@@ -39,16 +39,16 @@ describe("test: currency-policy-updater", () => {
 			policy
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_NODE.ecdsa, null);
+		operation.sign(TEST_NODE.m1, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"4n6AxV17j2oMmQhk1qMqTWzd3dUuEW45v88aLmisoCgy"
 		);
 	});
 
-	it("case: ecdsa; ratio feeer", () => {
+	it("case: m1; ratio feeer", () => {
 		const feeer = new RatioFeeer(
-			TEST_GENESIS.ecdsa.address,
+			TEST_GENESIS.m1.address,
 			0.5,
 			"1",
 			"99"
@@ -61,16 +61,16 @@ describe("test: currency-policy-updater", () => {
 			policy
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_NODE.ecdsa, null);
+		operation.sign(TEST_NODE.m1, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"4h8RXMBj9qpEiWe3JrdnazhasuwVcBnyvVVNj8G3usrp"
 		);
 	});
 
-	it("case: schnorr; nil feeer", () => {});
+	it("case: m2; nil feeer", () => {});
 
-	it("case: schnorr; fixed feeer", () => {});
+	it("case: m2; fixed feeer", () => {});
 
-	it("case: schnorr; ratio feeer", () => {});
+	it("case: m2; ratio feeer", () => {});
 });

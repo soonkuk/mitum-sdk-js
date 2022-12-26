@@ -16,10 +16,10 @@ import { Hint } from "./base/hint.js";
 import { IBytes, IDict, IBytesDict } from "./base/interface.js";
 import { Token } from "./base/token.js";
 
-import { ecdsa } from "./key/ecdsa-keypair.js";
-import { schnorr } from "./key/schnorr-keypair.js";
+import { m1 } from "./key/m1-keypair.js";
+import { m2 } from "./key/m2-keypair.js";
 import { PublicKey, Keys } from "./key/key.js";
-import { Address, schnorrRandomN, ecdsaRandomN } from "./key/address.js";
+import { Address, M2RandomN, M1RandomN } from "./key/address.js";
 
 import { Fact } from "./operations/fact.js";
 import { Item } from "./operations/item.js";
@@ -68,12 +68,12 @@ import {
 } from "./operations/currency/withdraws.js";
 
 const KPGen = {
-	schnorr: {
-		...schnorr,
-		randomN: schnorrRandomN,
+	m2: {
+		...m2,
+		randomN: M2RandomN,
 	},
-	...ecdsa,
-	randomN: ecdsaRandomN,
+	...m1,
+	randomN: M1RandomN,
 };
 
 const PubKey = PublicKey;

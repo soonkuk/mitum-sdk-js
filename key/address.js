@@ -1,5 +1,5 @@
-import { ecdsa } from "./ecdsa-keypair.js";
-import { schnorr } from "./schnorr-keypair.js";
+import { m1 } from "./m1-keypair.js";
+import { m2 } from "./m2-keypair.js";
 import { isAddress, isNodeAddress } from "./validation.js";
 import { Keys, PublicKey } from "./key.js";
 
@@ -59,10 +59,10 @@ const randomN = (n, f) => {
 	};
 };
 
-export const ecdsaRandomN = (n) => {
-	return randomN(n, ecdsa.random);
+export const M1RandomN = (n) => {
+	return randomN(n, m1.random);
 };
 
-export const schnorrRandomN = (n) => {
-	return randomN(n, schnorr.random);
+export const M2RandomN = (n) => {
+	return randomN(n, m2.random);
 };

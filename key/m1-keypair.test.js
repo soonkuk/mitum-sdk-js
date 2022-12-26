@@ -1,10 +1,10 @@
 import bs58 from "bs58";
-import { ecdsa } from "./ecdsa-keypair";
+import { m1 } from "./m1-keypair";
 
-describe("test: ecdsa; keypair generation", () => {
+describe("test: m1; keypair generation", () => {
 	it("case: random", () => {
-		const kp1 = ecdsa.random();
-		const kp2 = ecdsa.fromPrivateKey(kp1.privateKey.toString());
+		const kp1 = m1.random();
+		const kp2 = m1.fromPrivateKey(kp1.privateKey.toString());
 
 		expect(kp2.privateKey.toString()).toBe(kp1.privateKey.toString());
 		expect(kp2.publicKey.toString()).toBe(kp1.publicKey.toString());
@@ -55,7 +55,7 @@ describe("test: ecdsa; keypair generation", () => {
 		];
 
 		testKps.forEach((tc) => {
-			const tkp = ecdsa.fromPrivateKey(tc.priv);
+			const tkp = m1.fromPrivateKey(tc.priv);
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
@@ -92,7 +92,7 @@ describe("test: ecdsa; keypair generation", () => {
 		];
 
 		testKps.forEach((tc) => {
-			const tkp = ecdsa.fromSeed(tc.seed);
+			const tkp = m1.fromSeed(tc.seed);
 
 			expect(tkp.privateKey.toString()).toBe(tc.priv);
 			expect(tkp.publicKey.toString()).toBe(tc.pub);
@@ -100,7 +100,7 @@ describe("test: ecdsa; keypair generation", () => {
 	});
 });
 
-describe("test: ecdsa; sign", () => {
+describe("test: m1; sign", () => {
 	it("case: sign string msg", () => {
 		const tcs = [
 			{
@@ -151,7 +151,7 @@ describe("test: ecdsa; sign", () => {
 		];
 
 		tcs.forEach((tc) => {
-			const kp = ecdsa.fromPrivateKey(tc.priv);
+			const kp = m1.fromPrivateKey(tc.priv);
 			const sig = bs58.encode(kp.sign(tc.msg));
 
 			expect(sig).toBe(tc.sig);

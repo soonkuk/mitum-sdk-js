@@ -10,13 +10,13 @@ import { Amount } from "./currency/amount";
 import { TransfersFact, TransfersItem } from "./currency/transfers";
 
 describe("test: operation", () => {
-	it("case: memo; schnorr", () => {
+	it("case: memo; m2", () => {
 		const item = new TransfersItem(TEST_ACCOUNT.address, [
 			new Amount("MCC", "10000000"),
 		]);
 		const fact = new TransfersFact(
 			"2022-12-13 03:24:26.767983 +0000 UTC",
-			TEST_GENESIS.schnorr.address,
+			TEST_GENESIS.m2.address,
 			[item]
 		);
 		const fs = new FactSign(

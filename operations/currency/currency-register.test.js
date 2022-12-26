@@ -14,14 +14,14 @@ import { Operation } from "../operation";
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
 
 describe("test: currency-register", () => {
-	it("case: ecdsa; nil feeer", () => {
+	it("case: m1; nil feeer", () => {
 		const feeer = new NilFeeer();
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const amount = new Amount("PEN", "99999999999999999999999");
 		const design = new CurrencyDesign(
 			amount,
-			TEST_GENESIS.ecdsa.address,
+			TEST_GENESIS.m1.address,
 			policy
 		);
 
@@ -30,21 +30,21 @@ describe("test: currency-register", () => {
 			design
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_NODE.ecdsa, null);
+		operation.sign(TEST_NODE.m1, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"3AtsTvXxZ3BYczqAYZAqbV7y76UW4mCEipvV4jWH7B4h"
 		);
 	});
 
-	it("case: ecdsa; fixed feeer", () => {
-		const feeer = new FixedFeeer(TEST_GENESIS.ecdsa.address, "999");
+	it("case: m1; fixed feeer", () => {
+		const feeer = new FixedFeeer(TEST_GENESIS.m1.address, "999");
 		const policy = new CurrencyPolicy("33", feeer);
 
 		const amount = new Amount("PEN", "99999999999999999999999");
 		const design = new CurrencyDesign(
 			amount,
-			TEST_GENESIS.ecdsa.address,
+			TEST_GENESIS.m1.address,
 			policy
 		);
 
@@ -53,17 +53,17 @@ describe("test: currency-register", () => {
 			design
 		);
 		const operation = new Operation(fact, "");
-		operation.sign(TEST_NODE.ecdsa, null);
+		operation.sign(TEST_NODE.m1, null);
 
 		expect(bs58.encode(fact.hash)).toBe(
 			"6j3PN6oPof46vyoUjDxMnEr5JCdco2b5USapBYLLf1xh"
 		);
 	});
 
-	it("case: ecdsa; ratio feeer", () => {
+	it("case: m1; ratio feeer", () => {
 		const ratio = (n, token) => {
 			const feeer = new RatioFeeer(
-				TEST_GENESIS.ecdsa.address,
+				TEST_GENESIS.m1.address,
 				n,
 				"1",
 				"99"
@@ -73,13 +73,13 @@ describe("test: currency-register", () => {
 			const amount = new Amount("PEN", "99999999999999999999999");
 			const design = new CurrencyDesign(
 				amount,
-				TEST_GENESIS.ecdsa.address,
+				TEST_GENESIS.m1.address,
 				policy
 			);
 
 			const fact = new CurrencyRegisterFact(token, design);
 			const operation = new Operation(fact, "");
-			operation.sign(TEST_NODE.ecdsa, null);
+			operation.sign(TEST_NODE.m1, null);
 
 			return bs58.encode(fact.hash);
 		};
@@ -93,9 +93,9 @@ describe("test: currency-register", () => {
 		expect(r2).toBe("DLsvsfkRGpHXrMXSyxYMGGmT48Jhhuro4bVNSojHJ7DB");
 	});
 
-	it("case: schnorr; nil feeer", () => {});
+	it("case: m2; nil feeer", () => {});
 
-	it("case: schnorr; fixed feeer", () => {});
+	it("case: m2; fixed feeer", () => {});
 
-	it("case: schnorr; ratio feeer", () => {});
+	it("case: m2; ratio feeer", () => {});
 });

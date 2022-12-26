@@ -30,7 +30,7 @@ export const isNodeAddressSuffix = (s) => {
 	return s === SUFFIX_NODE_ADDRESS;
 };
 
-export const isSchnorrPrivateKey = (s) => {
+export const isM2PrivateKey = (s) => {
 	if (typeof s !== "string") {
 		return false;
 	}
@@ -42,7 +42,7 @@ export const isSchnorrPrivateKey = (s) => {
 	return isPrivateKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
 
-export const isECDSAPrivateKey = (s) => {
+export const isM1PrivateKey = (s) => {
 	if (typeof s !== "string") {
 		return false;
 	}
@@ -70,7 +70,7 @@ export const isPublicKey = (s) => {
 	return isPublicKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
 
-export const isSchnorrKey = (s) => {
+export const isM2Key = (s) => {
 	if (typeof s !== "string") {
 		return false;
 	}
@@ -82,7 +82,7 @@ export const isSchnorrKey = (s) => {
 	return isKeySuffix(s.substring(s.length - SUFFIX_LENGTH));
 };
 
-export const isECDSAKey = (s) => {
+export const isM1Key = (s) => {
 	if (typeof s !== "string") {
 		return false;
 	}
@@ -91,7 +91,7 @@ export const isECDSAKey = (s) => {
 		return false;
 	}
 
-	if (!isECDSAPrivateKey(s)) {
+	if (!isM1PrivateKey(s)) {
 		return false;
 	}
 
@@ -99,7 +99,7 @@ export const isECDSAKey = (s) => {
 };
 
 export const isKey = (s) => {
-	return isSchnorrKey(s) || isECDSAKey(s);
+	return isM2Key(s) || isM1Key(s);
 };
 
 export const isAddress = (s) => {
