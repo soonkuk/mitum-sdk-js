@@ -17,6 +17,7 @@ import {
 	error,
 	EC_INVALID_ITEM,
 	EC_INVALID_ITEMS,
+	EC_INVALID_FACT,
 } from "../../base/error.js";
 
 import { Address } from "../../key/address.js";
@@ -62,11 +63,18 @@ export class TransfersFact extends Fact {
 			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
-		items.forEach((item) =>
+		const iarr = items.map((item) => {
 			assert(
 				item instanceof TransfersItem,
 				error.instance(EC_INVALID_ITEM, "not TransfersItem instance")
-			)
+			);
+
+			return item.receiver.toString();
+		});
+		const iset = new Set(iarr);
+		assert(
+			iarr.length === iset.size,
+			error.duplicate(EC_INVALID_FACT, "duplicate receivers in items")
 		);
 
 		this.items = items;

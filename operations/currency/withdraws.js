@@ -17,6 +17,7 @@ import {
 	error,
 	EC_INVALID_ITEM,
 	EC_INVALID_ITEMS,
+	EC_INVALID_FACT,
 } from "../../base/error.js";
 
 import { Address } from "../../key/address.js";
@@ -62,10 +63,20 @@ export class WithdrawsFact extends Fact {
 			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
-		items.forEach((item) =>
+		const iarr = items.map((item) => {
 			assert(
 				item instanceof WithdrawsItem,
 				error.instance(EC_INVALID_ITEM, "not WithdrawsItem instance")
+			);
+
+			return item.target.toString();
+		});
+		const iset = new Set(iarr);
+		assert(
+			iarr.length === iset.size,
+			error.duplicate(
+				EC_INVALID_FACT,
+				"duplicate target accounts in items"
 			)
 		);
 

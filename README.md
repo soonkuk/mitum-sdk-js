@@ -41,28 +41,29 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  key/m2-keypair.test.js
- PASS  operations/factsign.test.js
- PASS  key/key.test.js
- PASS  operations/currency/create-accounts.test.js
- PASS  key/address.test.js
- PASS  operations/currency/key-updater.test.js
- PASS  operations/currency/transfers.test.js
- PASS  operations/currency/currency-policy-updater.test.js
  PASS  operations/seal.test.js
- PASS  key/m1-keypair.test.js
- PASS  utils/time.test.js
- PASS  operations/currency/currency-register.test.js
- PASS  operations/operation.test.js
- PASS  utils/config.test.js
+ PASS  operations/currency/item.test.js
  PASS  operations/currency/suffrage-inflation.test.js
+ PASS  key/address.test.js
  PASS  operations/currency/create-contract-accounts.test.js
  PASS  operations/currency/withdraws.test.js
+ PASS  utils/config.test.js
+ PASS  operations/currency/create-accounts.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  operations/currency/transfers.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  operations/currency/key-updater.test.js
+ PASS  operations/factsign.test.js
+ PASS  key/m1-keypair.test.js
+ PASS  key/m2-keypair.test.js
+ PASS  operations/operation.test.js
+ PASS  key/key.test.js
+ PASS  utils/time.test.js
 
-Test Suites: 17 passed, 17 total
-Tests:       49 passed, 49 total
+Test Suites: 18 passed, 18 total
+Tests:       58 passed, 58 total
 Snapshots:   0 total
-Time:        1.507 s, estimated 2 s
+Time:        2.798 s
 Ran all test suites.
 ```
 

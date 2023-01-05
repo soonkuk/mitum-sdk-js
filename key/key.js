@@ -88,12 +88,19 @@ export class Keys extends IBytesDict {
 			error.range(EC_INVALID_KEYS, "array size out of range")
 		);
 
-		keys.forEach((key) => {
+		const karr = keys.map((key) => {
 			assert(
 				key instanceof PublicKey,
 				error.instance(EC_INVALID_KEYS, "not PublicKey instance")
 			);
+
+			return key.toString();
 		});
+		const kset = new Set(karr);
+		assert(
+			karr.length === kset.size,
+			error.duplicate(EC_INVALID_KEYS, "duplicate public keys in keys")
+		);
 
 		const sum = keys.reduce((s, k) => s + k.weight.big, BigInt(0));
 		assert(

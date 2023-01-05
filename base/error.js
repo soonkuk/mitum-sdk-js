@@ -75,6 +75,15 @@ const suffix = (code, msg) => {
 	return new SuffixError(msg, code);
 };
 
+class DuplicateItemsError extends CustomError {
+	constructor(msg, code) {
+		super(msg, code);
+	}
+}
+const duplicate = (code, msg) => {
+	return new DuplicateItemsError(msg, code);
+};
+
 class InvalidFormatError extends CustomError {
 	constructor(msg, code) {
 		super(msg, code);
@@ -123,6 +132,7 @@ const nimplement = (code, msg) => {
 export const error = {
 	runtime,
 	suffix,
+    duplicate,
 	format,
 	range,
 	type,

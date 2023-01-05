@@ -18,6 +18,7 @@ import {
 	EC_INVALID_ITEM,
 	EC_INVALID_ITEMS,
 	EC_INVALID_KEYS,
+    EC_INVALID_FACT,
 } from "../../base/error.js";
 
 import { Keys } from "../../key/key.js";
@@ -70,14 +71,21 @@ export class CreateContractAccountsFact extends Fact {
 			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
-		items.forEach((item) =>
+		const iarr = items.map((item) => {
 			assert(
 				item instanceof CreateContractAccountsItem,
 				error.instance(
 					EC_INVALID_ITEM,
 					"not CreateContractAccountsItem instance"
 				)
-			)
+			);
+
+			return item.keys.address.toString();
+		});
+		const iset = new Set(iarr);
+		assert(
+			iarr.length === iset.size,
+			error.duplicate(EC_INVALID_FACT, "duplicate account addresses in items")
 		);
 
 		this.items = items;

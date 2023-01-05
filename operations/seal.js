@@ -73,6 +73,13 @@ export class Seal extends IBytesDict {
 			}
 		});
 
+		const oarr = this.operations.map((op) => op.fact.hash);
+		const oset = new Set(oarr);
+		assert(
+			oarr.length === oset.size,
+			error.duplicate(EC_INVALID_SEAL, "duplicate facts")
+		);
+
 		this.signer = null;
 		this.signature = null;
 		this.signedAt = null;

@@ -8,6 +8,7 @@ import { SIG_TYPE } from "../../utils/config";
 import { TEST_GENESIS, TEST_ACCOUNT, TEST_ACCOUNT_R } from "../../mitum.config";
 
 import { Keys, PublicKey } from "../../key/key";
+import { TimeStamp } from "../../utils/time";
 
 describe("test: create-account", () => {
 	it("case: m1; operation", () => {
@@ -43,5 +44,24 @@ describe("test: create-account", () => {
 			"2NfVhz4yfRJ2ZexQgqcox67v6jzu2X5qYiDbYoeQaPgq"
 		);
 		expect(keys.address.toString()).toBe(TEST_ACCOUNT_R.address);
+	});
+
+	it("case: duplicate items", () => {
+		const amounts = [new Amount("MCC", "1000")];
+		const keys = new Keys([new PublicKey(TEST_ACCOUNT_R.public, 100)], 100);
+
+		const items = [
+			new CreateAccountsItem(keys, amounts),
+			new CreateAccountsItem(keys, amounts),
+		];
+
+		expect(
+			() =>
+				new CreateAccountsFact(
+					new TimeStamp().UTC(),
+					TEST_GENESIS.m2.address,
+					items
+				)
+		).toThrow(Error);
 	});
 });

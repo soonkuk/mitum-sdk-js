@@ -534,4 +534,13 @@ describe("test: address generation", () => {
 			expect(keys.address.toString()).toBe(tc.address);
 		});
 	});
+
+	it("case: duplicate keys", () => {
+		const pub = "kpZLdVYFJXVbS7aXkVi4qeYutZu5fFYH9Zber1TYEkuempu";
+
+		expect(
+			() =>
+				new Keys([new PublicKey(pub, 50), new PublicKey(pub, 50)], 100)
+		).toThrow(Error);
+	});
 });

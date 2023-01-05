@@ -52,7 +52,7 @@ export class Big extends IBytes {
 		const buf = new Uint8Array(size);
 
 		let n = bigInt(this.big);
-		for (var i = size - 1; i >= 0; i--) {
+		for (let i = size - 1; i >= 0; i--) {
 			buf[i] = n.mod(256);
 			n = n.divide(256);
 		}

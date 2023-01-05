@@ -23,12 +23,24 @@ export class CurrencyItem extends Item {
 			amounts.length > 0 && amounts.length <= MAX_AMOUNTS_IN_ITEM,
 			error.range(EC_INVALID_AMOUNTS, "array size out of range")
 		);
-		amounts.forEach((amount) => {
+
+		const carr = amounts.map((amount) => {
 			assert(
 				amount instanceof Amount,
 				error.instance(EC_INVALID_AMOUNT, "not Amount instance")
 			);
+
+			return amount.currency.toString();
 		});
+		const cset = new Set(carr);
+
+		assert(
+			carr.length === cset.size,
+			error.duplicate(
+				EC_INVALID_ITEM,
+				"duplicate amounts in currency item"
+			)
+		);
 
 		this.amounts = amounts;
 	}

@@ -6,6 +6,7 @@ import { Operation } from "../operation";
 
 import { SIG_TYPE } from "../../utils/config";
 import { TEST_ACCOUNT, TEST_ACCOUNT_R, TEST_GENESIS } from "../../mitum.config";
+import { TimeStamp } from "../../utils/time";
 
 describe("test: transfers", () => {
 	it("case: m1; operation", () => {
@@ -41,5 +42,25 @@ describe("test: transfers", () => {
 		expect(bs58.encode(fact.hash)).toBe(
 			"k1vnR6xnWBPoehfZGcbnfXBD8yZRmT4jsGfquRUPzjx"
 		);
+	});
+
+	it("case: duplicate items", () => {
+		const items = [
+			new TransfersItem(TEST_ACCOUNT.address, [
+				new Amount("MCC", "1000"),
+			]),
+			new TransfersItem(TEST_ACCOUNT.address, [
+				new Amount("PEN", "1000"),
+			]),
+		];
+
+		expect(
+			() =>
+				new TransfersFact(
+					new TimeStamp().UTC(),
+					TEST_GENESIS.m1.address,
+					items
+				)
+		).toThrow(Error);
 	});
 });

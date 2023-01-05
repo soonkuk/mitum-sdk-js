@@ -16,6 +16,7 @@ import {
 	EC_INVALID_AMOUNT,
 	EC_INVALID_ITEM,
 	EC_INVALID_ITEMS,
+	EC_INVALID_FACT,
 } from "../../base/error.js";
 import { IBytesDict } from "../../base/interface.js";
 
@@ -56,13 +57,25 @@ export class SuffrageInflationFact extends Fact {
 			error.range(EC_INVALID_ITEMS, "array size out of range")
 		);
 
-		items.forEach((item) =>
+		const iarr = items.map((item) => {
 			assert(
 				item instanceof SuffrageInflationItem,
 				error.instance(
 					EC_INVALID_ITEM,
 					"not SuffrageInflationItem instance"
 				)
+			);
+
+			return (
+				item.receiver.toString() + "-" + item.amount.currency.toString()
+			);
+		});
+		const iset = new Set(iarr);
+		assert(
+			iarr.length === iset.size,
+			error.duplicate(
+				EC_INVALID_FACT,
+				"duplicate receiver-currency in items"
 			)
 		);
 

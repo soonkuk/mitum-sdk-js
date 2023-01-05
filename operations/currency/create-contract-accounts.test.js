@@ -10,6 +10,7 @@ import { Operation } from "../operation";
 import { TEST_ACCOUNT, TEST_GENESIS } from "../../mitum.config";
 
 import { Keys, PublicKey } from "../../key/key";
+import { TimeStamp } from "../../utils/time";
 
 describe("test: create-contract-account", () => {
 	it("case: m1; operation", () => {
@@ -31,4 +32,23 @@ describe("test: create-contract-account", () => {
 	});
 
 	it("case: m2; operation", () => {});
+
+	it("case: duplicate items", () => {
+		const amounts = [new Amount("MCC", "1000")];
+		const keys = new Keys([new PublicKey(TEST_ACCOUNT.public, 100)], 100);
+
+		const items = [
+			new CreateContractAccountsItem(keys, amounts),
+			new CreateContractAccountsItem(keys, amounts),
+		];
+
+		expect(
+			() =>
+				new CreateContractAccountsFact(
+					new TimeStamp().UTC(),
+					TEST_GENESIS.m1.address,
+					items
+				)
+		).toThrow(Error);
+	});
 });

@@ -9,6 +9,7 @@ import {
 import { Operation } from "../operation";
 
 import { TEST_GENESIS, TEST_NODE } from "../../mitum.config";
+import { TimeStamp } from "../../utils/time";
 
 describe("test: suffrage-inflation", () => {
 	it("case: m1; operation", () => {
@@ -36,4 +37,21 @@ describe("test: suffrage-inflation", () => {
 	});
 
 	it("case: m2; operation", () => {});
+
+	it("case: duplicate items", () => {
+		const items = [
+			new SuffrageInflationItem(
+				TEST_GENESIS.m1.address,
+				new Amount("MCC", "9999999999999999999999")
+			),
+			new SuffrageInflationItem(
+				TEST_GENESIS.m1.address,
+				new Amount("MCC", "9999999999999999999999")
+			),
+		];
+
+		expect(
+			() => new SuffrageInflationFact(new TimeStamp().UTC(), items)
+		).toThrow(Error);
+	});
 });

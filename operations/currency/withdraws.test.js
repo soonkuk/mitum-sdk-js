@@ -5,6 +5,7 @@ import { WithdrawsFact, WithdrawsItem } from "./withdraws";
 import { Operation } from "../operation";
 
 import { TEST_ACCOUNT, TEST_GENESIS } from "../../mitum.config";
+import { TimeStamp } from "../../utils/time";
 
 describe("test: withdraw", () => {
 	it("case: m1; operation", () => {
@@ -25,4 +26,24 @@ describe("test: withdraw", () => {
 	});
 
 	it("case: m2; operation", () => {});
+
+	it("case: duplicate items", () => {
+		const item = [
+			new WithdrawsItem(TEST_ACCOUNT.address, [
+				new Amount("MCC", "1000"),
+			]),
+			new WithdrawsItem(TEST_ACCOUNT.address, [
+				new Amount("PEN", "1000"),
+			]),
+		];
+
+		expect(
+			() =>
+				new WithdrawsFact(
+					new TimeStamp().UTC(),
+					TEST_GENESIS.m1.address,
+					[item]
+				)
+		).toThrow(Error);
+	});
 });

@@ -8,6 +8,7 @@ import { Operation } from "./operation";
 
 import { Amount } from "./currency/amount";
 import { TransfersFact, TransfersItem } from "./currency/transfers";
+import { TimeStamp } from "../utils/time";
 
 describe("test: operation", () => {
 	it("case: memo; m2", () => {
@@ -40,5 +41,34 @@ describe("test: operation", () => {
 			"A88QiicaVofkeDMZq172W9DsaxwWF7PpnuLGSzQzoU1r"
 		);
 	});
-});
 
+	it("case: duplicate fact signs", () => {
+		const item = new TransfersItem(TEST_ACCOUNT.address, [
+			new Amount("MCC", "10000000"),
+		]);
+		const fact = new TransfersFact(
+			new TimeStamp().UTC(),
+			TEST_GENESIS.m1.address,
+			[item]
+		);
+		const op = new Operation(fact, "");
+
+		const fs = [];
+		for (let i = 0; i < 2; i++) {
+			fs.push(
+				new FactSign(
+					null,
+					"kYJADZP1XKNvUNn7XHY39yisp9QCfU1LtyxGw2HRjQwXmpu",
+					Buffer.from(
+						bs58.decode(
+							"AN1rKvsyryVhAw4dXZfWSRXfiFhWuvbtV9mcDLf9WRq8MhfrjdpXjBzC1nxgMyDmSL9FhjCohhcJukfLviJYqpKBDo5Jm2SxD"
+						)
+					),
+					new TimeStamp().UTC()
+				)
+			);
+		}
+
+		expect(() => op.setFactSigns(fs)).toThrow(Error);
+	});
+});

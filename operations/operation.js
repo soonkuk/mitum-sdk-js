@@ -60,12 +60,19 @@ export class Operation extends IBytesDict {
 				Array.isArray(factSigns),
 				error.type(EC_INVALID_FACTSIGN, "not Array")
 			);
-			factSigns.forEach((fs) => {
+			const farr = factSigns.map((fs) => {
 				assert(
 					fs instanceof FactSign,
 					error.instance(EC_INVALID_FACTSIGN, "not FactSign instance")
 				);
+				return fs.signer.toString();
 			});
+			const fset = new Set(farr);
+			assert(
+				farr.length === fset.size,
+				error.duplicate(EC_INVALID_FACTSIGN, "duplicate fact signs")
+			);
+
 			this.factSigns = factSigns;
 		}
 

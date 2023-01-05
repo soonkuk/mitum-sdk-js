@@ -64,4 +64,11 @@ describe("test: seal", () => {
 		const seal = new Seal([operation]);
 		expect(() => seal.dict()).toThrow(Error);
 	});
+
+	it("case: duplicate facts", () => {
+		const operation = new Operation(fact, "");
+		operation.sign(TEST_GENESIS.m1.private, null);
+
+		expect(() => new Seal([operation, operation])).toThrow(Error);
+	});
 });
