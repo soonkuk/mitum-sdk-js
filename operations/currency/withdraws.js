@@ -1,10 +1,6 @@
-import bs58 from "bs58";
-
 import { CurrencyItem } from "./item.js";
+import { OperationFact } from "../fact.js";
 
-import { Fact } from "../fact.js";
-
-import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js";
 import {
 	HINT_WITHDRAWS_ITEM_MUL_AMOUNTS,
 	HINT_WITHDRAWS_ITEM_SIN_AMOUNT,
@@ -16,8 +12,6 @@ import {
 	assert,
 	error,
 	EC_INVALID_ITEM,
-	EC_INVALID_ITEMS,
-	EC_INVALID_FACT,
 } from "../../base/error.js";
 
 import { Address } from "../../key/address.js";
@@ -49,57 +43,22 @@ export class WithdrawsItem extends CurrencyItem {
 			amounts: this.amounts.sort(sortBuf).map((amount) => amount.dict()),
 		};
 	}
+
+	toString() {
+		return this.target.toString();
+	}
 }
 
-export class WithdrawsFact extends Fact {
+export class WithdrawsFact extends OperationFact {
 	constructor(token, sender, items) {
-		super(HINT_WITHDRAWS_OPERATION_FACT, token);
-		this.sender = new Address(sender);
+		super(HINT_WITHDRAWS_OPERATION_FACT, token, sender, items);
 
-		assert(Array.isArray(items), error.type(EC_INVALID_ITEM, "not Array"));
-
-		assert(
-			items.length > 0 && items.length <= MAX_ITEMS_IN_FACT,
-			error.range(EC_INVALID_ITEMS, "array size out of range")
-		);
-
-		const iarr = items.map((item) => {
+		items.forEach((item) =>
 			assert(
 				item instanceof WithdrawsItem,
 				error.instance(EC_INVALID_ITEM, "not WithdrawsItem instance")
-			);
-
-			return item.target.toString();
-		});
-		const iset = new Set(iarr);
-		assert(
-			iarr.length === iset.size,
-			error.duplicate(
-				EC_INVALID_FACT,
-				"duplicate target accounts in items"
 			)
 		);
-
-		this.items = items;
-		this.hash = this.hashing();
-	}
-
-	bytes() {
-		return Buffer.concat([
-			this.token.bytes(),
-			this.sender.bytes(),
-			Buffer.concat(this.items.sort(sortBuf).map((item) => item.bytes())),
-		]);
-	}
-
-	dict() {
-		return {
-			_hint: this.hint.toString(),
-			hash: bs58.encode(this.hash),
-			token: this.token.toString(),
-			sender: this.sender.toString(),
-			items: this.items.sort(sortBuf).map((item) => item.dict()),
-		};
 	}
 
 	get opHint() {

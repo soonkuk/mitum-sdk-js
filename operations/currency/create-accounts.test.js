@@ -4,7 +4,6 @@ import { Amount } from "./amount";
 import { CreateAccountsFact, CreateAccountsItem } from "./create-accounts";
 import { Operation } from "../operation";
 
-import { SIG_TYPE } from "../../utils/config";
 import { TEST_GENESIS, TEST_ACCOUNT, TEST_ACCOUNT_R } from "../../mitum.config";
 
 import { Keys, PublicKey } from "../../key/key";
@@ -37,7 +36,6 @@ describe("test: create-account", () => {
 			[new CreateAccountsItem(keys, amounts)]
 		);
 		const operation = new Operation(fact, "");
-		operation.sigType = SIG_TYPE.M2;
 		operation.sign(TEST_GENESIS.m2.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(

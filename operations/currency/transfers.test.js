@@ -4,7 +4,6 @@ import { Amount } from "./amount";
 import { TransfersFact, TransfersItem } from "./transfers";
 import { Operation } from "../operation";
 
-import { SIG_TYPE } from "../../utils/config";
 import { TEST_ACCOUNT, TEST_ACCOUNT_R, TEST_GENESIS } from "../../mitum.config";
 import { TimeStamp } from "../../utils/time";
 
@@ -36,7 +35,6 @@ describe("test: transfers", () => {
 		);
 
 		const operation = new Operation(fact, "");
-		operation.sigType = SIG_TYPE.M2;
 		operation.sign(TEST_GENESIS.m2.private, null);
 
 		expect(bs58.encode(fact.hash)).toBe(

@@ -1,8 +1,7 @@
 import bs58 from "bs58";
 
 import { CurrencyDesign } from "./currency-design.js";
-
-import { Fact } from "../fact.js";
+import { NodeFact } from "../fact.js";
 
 import {
 	HINT_CURRENCY_REGISTER_OPERATION,
@@ -11,7 +10,7 @@ import {
 
 import { assert, error, EC_INVALID_CURRENCY_DESIGN } from "../../base/error.js";
 
-export class CurrencyRegisterFact extends Fact {
+export class CurrencyRegisterFact extends NodeFact {
 	constructor(token, design) {
 		super(HINT_CURRENCY_REGISTER_OPERATION_FACT, token);
 		assert(

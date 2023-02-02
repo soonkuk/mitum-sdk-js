@@ -1,8 +1,7 @@
 import bs58 from "bs58";
 
 import { Amount } from "./amount.js";
-
-import { Fact } from "../fact.js";
+import { NodeFact } from "../fact.js";
 
 import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js";
 import {
@@ -46,7 +45,7 @@ export class SuffrageInflationItem extends IBytesDict {
 	}
 }
 
-export class SuffrageInflationFact extends Fact {
+export class SuffrageInflationFact extends NodeFact {
 	constructor(token, items) {
 		super(HINT_SUFFRAGE_INFLATION_OPERATION_FACT, token);
 

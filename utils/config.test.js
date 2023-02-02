@@ -1,7 +1,7 @@
 import bs58 from "bs58";
 
 import { TimeStamp } from "./time";
-import { SIG_TYPE, useId, useSigType, useV } from "./config";
+import { useId, useV } from "./config";
 
 import { TEST_ACCOUNT, TEST_GENESIS } from "../mitum.config";
 import { Keys, PublicKey } from "../key/key";
@@ -75,49 +75,49 @@ describe("test: config", () => {
 		);
 	});
 
-	it("case: sig-type", () => {
-		const amount = new Amount("MCC", "100");
-		const key = new PublicKey(TEST_ACCOUNT.public, 100);
-		const keys = new Keys([key], 100);
-		const item = new CreateAccountsItem(keys, [amount]);
-		const fact = new CreateAccountsFact(
-			new TimeStamp().UTC(),
-			TEST_GENESIS.m1.address,
-			[item]
-		);
+	// it("case: sig-type", () => {
+	// 	const amount = new Amount("MCC", "100");
+	// 	const key = new PublicKey(TEST_ACCOUNT.public, 100);
+	// 	const keys = new Keys([key], 100);
+	// 	const item = new CreateAccountsItem(keys, [amount]);
+	// 	const fact = new CreateAccountsFact(
+	// 		new TimeStamp().UTC(),
+	// 		TEST_GENESIS.m1.address,
+	// 		[item]
+	// 	);
 
-		useSigType(SIG_TYPE.DEFAULT);
-		const operation1 = new Operation(fact, "");
-		operation1.sign(TEST_GENESIS.m1.private, null);
+	// 	useSigType(SIG_TYPE.DEFAULT);
+	// 	const operation1 = new Operation(fact, "");
+	// 	operation1.sign(TEST_GENESIS.m1.private, null);
 
-		useSigType(SIG_TYPE.M1);
-		const operation2 = new Operation(fact, "");
-		operation2.sign(TEST_GENESIS.m1.private, null);
+	// 	useSigType(SIG_TYPE.M1);
+	// 	const operation2 = new Operation(fact, "");
+	// 	operation2.sign(TEST_GENESIS.m1.private, null);
 
-		useSigType(SIG_TYPE.M2);
-		const operation3 = new Operation(fact, "");
-		operation3.sign(TEST_GENESIS.m1.private, null);
+	// 	useSigType(SIG_TYPE.M2);
+	// 	const operation3 = new Operation(fact, "");
+	// 	operation3.sign(TEST_GENESIS.m1.private, null);
 
-		useSigType(SIG_TYPE.M2_NODE);
-		const operation4 = new Operation(fact, "");
-		operation4.sign(TEST_GENESIS.m2.private, { node: "node0sas" });
+	// 	useSigType(SIG_TYPE.M2_NODE);
+	// 	const operation4 = new Operation(fact, "");
+	// 	operation4.sign(TEST_GENESIS.m2.private, { node: "node0sas" });
 
-		expect(bs58.encode(operation1.factSigns[0].sign)).toBe(
-			bs58.encode(operation2.factSigns[0].sign)
-		);
-		expect(bs58.encode(operation1.factSigns[0].sign)).not.toBe(
-			bs58.encode(operation3.factSigns[0].sign)
-		);
-		expect(bs58.encode(operation1.factSigns[0].sign)).not.toBe(
-			bs58.encode(operation4.factSigns[0].sign)
-		);
-		expect(bs58.encode(operation3.factSigns[0].sign)).not.toBe(
-			bs58.encode(operation4.factSigns[0].sign)
-		);
+	// 	expect(bs58.encode(operation1.factSigns[0].sign)).toBe(
+	// 		bs58.encode(operation2.factSigns[0].sign)
+	// 	);
+	// 	expect(bs58.encode(operation1.factSigns[0].sign)).not.toBe(
+	// 		bs58.encode(operation3.factSigns[0].sign)
+	// 	);
+	// 	expect(bs58.encode(operation1.factSigns[0].sign)).not.toBe(
+	// 		bs58.encode(operation4.factSigns[0].sign)
+	// 	);
+	// 	expect(bs58.encode(operation3.factSigns[0].sign)).not.toBe(
+	// 		bs58.encode(operation4.factSigns[0].sign)
+	// 	);
 
-		expect(operation4.factSigns[0].dict()).toHaveProperty(
-			"node",
-			"node0sas"
-		);
-	});
+	// 	expect(operation4.factSigns[0].dict()).toHaveProperty(
+	// 		"node",
+	// 		"node0sas"
+	// 	);
+	// });
 });

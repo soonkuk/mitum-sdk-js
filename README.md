@@ -42,28 +42,28 @@ $ npm test
 > jest
 
  PASS  operations/seal.test.js
- PASS  operations/currency/item.test.js
- PASS  operations/currency/suffrage-inflation.test.js
- PASS  key/address.test.js
- PASS  operations/currency/create-contract-accounts.test.js
- PASS  operations/currency/withdraws.test.js
- PASS  utils/config.test.js
- PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/currency-register.test.js
  PASS  operations/currency/transfers.test.js
+ PASS  key/address.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  utils/config.test.js
+ PASS  operations/currency/withdraws.test.js
+ PASS  operations/currency/create-contract-accounts.test.js
+ PASS  operations/currency/create-accounts.test.js
  PASS  operations/currency/currency-policy-updater.test.js
- PASS  operations/currency/key-updater.test.js
- PASS  operations/factsign.test.js
- PASS  key/m1-keypair.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
  PASS  key/m2-keypair.test.js
- PASS  operations/operation.test.js
+ PASS  operations/currency/key-updater.test.js
+ PASS  key/m1-keypair.test.js
  PASS  key/key.test.js
+ PASS  operations/factsign.test.js
+ PASS  operations/operation.test.js
+ PASS  operations/currency/item.test.js
  PASS  utils/time.test.js
 
 Test Suites: 18 passed, 18 total
-Tests:       58 passed, 58 total
+Tests:       55 passed, 55 total
 Snapshots:   0 total
-Time:        2.798 s
+Time:        2.889 s
 Ran all test suites.
 ```
 
@@ -90,8 +90,6 @@ Ran all test suites.
 |+|[License](#license)|
 
 To set the mitum version of all hints and the network id, refer to [Set version of hints](#set-version-of-hints) and [Set network id of operations](#set-network-id-of-operations).
-
-To force certain signature types to be used for each operation, refer to [Force certain signature types](#force-certain-signature-types).
 
 ## Generate KeyPairs
 
@@ -272,7 +270,7 @@ For general accounts:
 * key-updater
 * transfer
   
-For node accounts:
+For node:
 
 * currency-register
 * currency-policy-updater
@@ -287,7 +285,7 @@ __create-account__ is an operation to create a new general account.
 The rules for account creation are as described in [2. Get address from public keys](#get-address-from-public-keys).
 
 First, suppose you create an account with the following settings:
-
+ 
 * 5 public keys
 * each weight: 20
 * threshold: 100
@@ -458,7 +456,6 @@ const fact = new Currency.CurrencyRegisterFact(token, design);
 
 const memo = ""; // any string
 const operation = new Operation(fact, memo);
-operation.sigType = SIG_TYPE.M2_NODE;
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", { node: "node0sas" }); // node private, node address
 ```
 
@@ -485,7 +482,6 @@ const fact = new Currency.CurrencyPolicyUpdaterFact(token, currency, policy);
 
 const memo = ""; // any string
 const operation = new Operation(fact, memo);
-operation.sigType = SIG_TYPE.M2_NODE;
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", { node: "node0sas" }); // node private, node address
 ```
 
@@ -528,7 +524,6 @@ const fact = new Currency.SuffrageInflationFact(token, [imcc, ipen, itxt, ibts, 
 
 const memo = ""; // any string
 const operation = new Operation(fact, memo);
-operation.sigType = SIG_TYPE.M2_NODE;
 operation.sign("KxaTHDAQnmFeWWik5MqWXBYkhvp5EpWbsZzXeHDdTDb5NE1dVw8wmpr", { node: "node0sas" }); // node private, node address
 ```
 
@@ -641,51 +636,25 @@ import { useId } from "mitum-sdk";
 useId("mainnet");
 ```
 
-### Force certain signature types
-
-To force certain signature types to be used, add the following code to the part where the app is initialized or required.
-
-```js
-import { SIG_TYPE, useSigType } from "mitum-sdk";
-
-useSigType(SIG_TYPE.DEFAULT);
-useSigType(SIG_TYPE.M1); // equal to SIG_TYPE.DEFAULT
-useSigType(SIG_TYPE.M2); // signature used in mitum2
-useSigType(SIG_TYPE.M2_NODE);
-```
-
-In addition, you can force certain signature types to be used for each operation.
-
-```js
-import { SIG_TYPE } from "mitum-sdk";
-
-const op = new Operation(fact, memo);
-
-op.sigType = SIG_TYPE.DEFAULT; // or SIG_TYPE.M1
-op.sigType = SIG_TYPE.M2;
-op.sigType = SIG_TYPE.M2_NODE;// node signature used in mitum2
-```
-
 ### Options and other methods for __Operation__
 
-If __sig-type__ is one of __[DEFAULT, M1, M2]__, you don't need to include the option for the code `sign(priv, option)`.
+If your operation is for mitum1 and accounts of mitum2, you don't need to include the option for the code `sign(priv, option)`.
 Just leave it `null`.
 
-However, if __sig-type__ is __M2_NODE__, you must include the option `{ node: "node address; string" }`.
+However, if the operation is a node operation(not account operation) of mitum2, you must include the option `{ node: "node address; string" }`.
 
 ```js
 const operation = new Operation(/* fact, etc... */);
 
-operation.sign(/* sender's private key */, null); // DEFAULT, M1, M2
-operation.sign(/* sender's private key */, { node: "node addres" }); // M2_NODE
+operation.sign(/* sender's private key */, null); // mitum1(account, node), mitum2(account)
+operation.sign(/* sender's private key */, { node: "node addres" }); // mitum2(node)
 ```
 
 * Set fact-signs without signing
 
-Make sure to set `sig-type` before setting the fact-signs.
+All fact-signs must have the same instance type(M1FactSign | M2FactSign | M2NodeFactSign).
 
 ```js
-operaiton.sigType = SIG_TYPE.DEFAULT; // [ DEFAULT | M1 | M2 | M2_NODE ]
 operation.setFactSigns(/* FactSign instances */);
 ```
 
@@ -694,7 +663,9 @@ operation.setFactSigns(/* FactSign instances */);
 ```js
 import { FactSign } from "mitum-sdk";
 
-const factSign = new FactSign(/* node address */, /* signer */, /* signature; buffer */, /* signed_at */);
+const m1fs = new M1FactSign(/* signer */, /* signature; buffer */, /* signed_at */);
+const m2fs = new M2FactSign(/* signer */, /* signature; buffer */, /* signed_at */);
+const m2nodefs = new M2NodeFactSign(/* node address */, /* signer */, /* signature; buffer */, /* signed_at */);
 ```
 
 * Send the operation directly to the network via Digest API.

@@ -6,4 +6,11 @@ export class Item extends IBytesDict {
 		super();
 		this.hint = new Hint(hint);
 	}
+
+    toString() {
+        throw error.nimplement(
+			EC_NOT_IMPLEMENTED_DICT,
+			"unimplemented method toString()"
+		);
+    }
 }

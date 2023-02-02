@@ -1,9 +1,8 @@
 import bs58 from "bs58";
 
 import { TEST_ACCOUNT, TEST_GENESIS } from "../mitum.config";
-import { SIG_TYPE } from "../utils/config";
 
-import { FactSign } from "./factsign";
+import { M1FactSign, M2FactSign } from "./factsign";
 import { Operation } from "./operation";
 
 import { Amount } from "./currency/amount";
@@ -20,8 +19,7 @@ describe("test: operation", () => {
 			TEST_GENESIS.m2.address,
 			[item]
 		);
-		const fs = new FactSign(
-			null,
+		const fs = new M2FactSign(
 			"kYJADZP1XKNvUNn7XHY39yisp9QCfU1LtyxGw2HRjQwXmpu",
 			Buffer.from(
 				bs58.decode(
@@ -31,7 +29,6 @@ describe("test: operation", () => {
 			"2022-12-13T03:24:26.768075Z"
 		);
 		const op = new Operation(fact, "transfers test");
-		op.sigType = SIG_TYPE.M2;
 		op.setFactSigns([fs]);
 
 		expect(bs58.encode(fact.hash)).toBe(
@@ -56,8 +53,7 @@ describe("test: operation", () => {
 		const fs = [];
 		for (let i = 0; i < 2; i++) {
 			fs.push(
-				new FactSign(
-					null,
+				new M1FactSign(
 					"kYJADZP1XKNvUNn7XHY39yisp9QCfU1LtyxGw2HRjQwXmpu",
 					Buffer.from(
 						bs58.decode(

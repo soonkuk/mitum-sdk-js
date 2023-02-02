@@ -46,7 +46,7 @@ export class Seal extends IBytesDict {
 		this.operations = operations.map((op) => {
 			if (op instanceof Operation) {
 				assert(
-					[SIG_TYPE.DEFAULT, SIG_TYPE.M1].includes(op.sigType),
+					[SIG_TYPE.DEFAULT, SIG_TYPE.M1].includes(op._findSigType()),
 					error.runtime(
 						EC_INVALID_SIG_TYPE,
 						"not m1 sig-type; seal is only available on mitum1"

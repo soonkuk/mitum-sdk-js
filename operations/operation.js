@@ -3,7 +3,12 @@ import bs58 from "bs58";
 import axios from "axios";
 
 import { Fact } from "./fact.js";
-import { FactSign } from "./factsign.js";
+import {
+	FactSign,
+	M1FactSign,
+	M2FactSign,
+	M2NodeFactSign,
+} from "./factsign.js";
 
 import {
 	assert,
@@ -15,12 +20,13 @@ import {
 	EC_INVALID_PRIVATE_KEY,
 	EC_FILE_CREATION_FAILED,
 	EC_INVALID_SIG_TYPE,
+	EC_INVALID_OPERATION,
 } from "../base/error.js";
 import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
-import { id, sigType, SIG_TYPE } from "../utils/config.js";
+import { id, SIG_TYPE } from "../utils/config.js";
 import { sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
@@ -50,42 +56,99 @@ export class Operation extends IBytesDict {
 
 		this.factSigns = [];
 		this.hash = null;
-
-		this.sigType = sigType();
 	}
 
 	setFactSigns(factSigns) {
-		if (factSigns) {
-			assert(
-				Array.isArray(factSigns),
-				error.type(EC_INVALID_FACTSIGN, "not Array")
-			);
-			const farr = factSigns.map((fs) => {
-				assert(
-					fs instanceof FactSign,
-					error.instance(EC_INVALID_FACTSIGN, "not FactSign instance")
-				);
-				return fs.signer.toString();
-			});
-			const fset = new Set(farr);
-			assert(
-				farr.length === fset.size,
-				error.duplicate(EC_INVALID_FACTSIGN, "duplicate fact signs")
-			);
-
-			this.factSigns = factSigns;
+		if (!factSigns) {
+			return;
 		}
+
+		assert(
+			Array.isArray(factSigns),
+			error.type(EC_INVALID_FACTSIGN, "not Array")
+		);
+
+		const farr = factSigns.map((fs) => {
+			assert(
+				fs instanceof FactSign,
+				error.instance(EC_INVALID_FACTSIGN, "not FactSign instance")
+			);
+			return fs.signer.toString();
+		});
+		const fset = new Set(farr);
+		assert(
+			farr.length === fset.size,
+			error.duplicate(EC_INVALID_FACTSIGN, "duplicate fact signs")
+		);
+
+		const fsTypes = this.factSigns.map(
+			(fs) => Object.getPrototypeOf(fs).constructor.name
+		);
+		const fsSet = new Set(fsTypes);
+		assert(
+			fsSet.size === 1,
+			error.duplicate(
+				EC_INVALID_OPERATION,
+				"multiple sig-type in operation"
+			)
+		);
+
+		this.factSigns = factSigns;
 
 		this.hash = this.hashing();
 	}
 
+	_findSigType() {
+		if (this.factSigns.length < 1) {
+			return null;
+		}
+
+		const fsTypes = this.factSigns.map(
+			(fs) => Object.getPrototypeOf(fs).constructor.name
+		);
+		const fsSet = new Set(fsTypes);
+		assert(
+			fsSet.size === 1,
+			error.duplicate(
+				EC_INVALID_OPERATION,
+				"multiple sig-type in operation"
+			)
+		);
+
+		return Array.from(fsSet)[0];
+	}
+
 	hashing() {
-		switch (this.sigType) {
-			case SIG_TYPE.DEFAULT:
-				return sum256(this.bytes());
+		const sigType = this._findSigType();
+
+		if (!sigType) {
+			throw error.runtime(EC_INVALID_SIG_TYPE, "empty fact signs");
+		}
+
+		switch (sigType) {
+			case SIG_TYPE.M1:
+				return sum256(
+					Buffer.concat([this.bytes(), Buffer.from(this.memo)])
+				);
 			case SIG_TYPE.M2:
 			case SIG_TYPE.M2_NODE:
-				return sum256(this.m2Bytes());
+				return sum256(this.bytes());
+			default:
+				throw error.runtime(EC_INVALID_SIG_TYPE, "invalid sig-type");
+		}
+	}
+
+	forceHashing(sigType) {
+		switch (sigType) {
+			case SIG_TYPE.M1:
+				this.hash = sum256(
+					Buffer.concat([this.bytes(), Buffer.from(this.memo)])
+				);
+				break;
+			case SIG_TYPE.M2:
+			case SIG_TYPE.M2_NODE:
+				this.hash = sum256(this.bytes());
+				break;
 			default:
 				throw error.runtime(EC_INVALID_SIG_TYPE, "invalid sig-type");
 		}
@@ -95,60 +158,85 @@ export class Operation extends IBytesDict {
 		const now = new TimeStamp();
 		const kp = findKp(privateKey);
 
-		let node = null;
-		if (this.sigType === SIG_TYPE.M2_NODE) {
+		const sigType = this._findSigType();
+
+		let node =
+			option && Object.prototype.hasOwnProperty.call(option, "node")
+				? new Address(option.node)
+				: null;
+
+		if (sigType === SIG_TYPE.M2_NODE) {
 			assert(
-				option && Object.prototype.hasOwnProperty.call(option, "node"),
+				node,
 				error.runtime(
 					EC_INVALID_FACTSIGN,
 					"no node address in sig option"
 				)
 			);
-			node = new Address(option.node);
 		}
 
-		let msg = undefined;
-		switch (this.sigType) {
-			case SIG_TYPE.DEFAULT:
-				msg = Buffer.concat([this.fact.hash, this.id.bytes()]);
-				break;
-			case SIG_TYPE.M2:
-				msg = Buffer.concat([
+		const m1fs = getM1FactSign(
+			kp.keypair.publicKey,
+			kp.keypair.sign(Buffer.concat([this.fact.hash, this.id.bytes()])),
+			now
+		);
+		const m2fs = getM2FactSign(
+			kp.keypair.publicKey,
+			kp.keypair.sign(
+				Buffer.concat([this.id.bytes(), this.fact.hash, now.bytes()])
+			),
+			now
+		);
+		const m2nodefs = getM2NodeFactSign(
+			node,
+			kp.keypair.publicKey,
+			kp.keypair.sign(
+				Buffer.concat([
 					this.id.bytes(),
+					node ? node.bytes() : Buffer.from([]),
 					this.fact.hash,
 					now.bytes(),
-				]);
-				break;
-			case SIG_TYPE.M2_NODE:
-				msg = Buffer.concat([
-					this.id.bytes(),
-					node.bytes(),
-					this.fact.hash,
-					now.bytes(),
-				]);
-				break;
-			default:
-				throw error.runtime(EC_INVALID_SIG_TYPE, "invalid sig-type");
-		}
+				])
+			),
+			now
+		);
 
 		let factSign = null;
-		try {
-			factSign = new FactSign(
-				node ? node.toString() : null,
-				kp.keypair.publicKey.toString(),
-				kp.keypair.sign(msg),
-				now.toString()
-			);
-		} catch (e) {
-			throw error.runtime(
-				EC_FACTSIGN_CREATION_FAILED,
-				"create-factsign failed"
-			);
+		if (!sigType) {
+			if (node) {
+				assert(
+					kp.type == "m2",
+					error.runtime(EC_INVALID_FACTSIGN, "not mitum2 private key")
+				);
+				factSign = m2nodefs;
+			} else {
+				if (kp.type == "m2") {
+					factSign = m2fs;
+				} else if (kp.type == "m1") {
+					factSign = m1fs;
+				}
+			}
+		}
+
+		switch (sigType) {
+			case SIG_TYPE.M1:
+				factSign = m1fs;
+				break;
+			case SIG_TYPE.M2:
+				factSign = m2fs;
+				break;
+			case SIG_TYPE.M2_NODE:
+				factSign = m2nodefs;
+				break;
+			default:
 		}
 
 		assert(
 			factSign !== null,
-			error.runtime(EC_FACTSIGN_CREATION_FAILED, "null factsign")
+			error.runtime(
+				EC_FACTSIGN_CREATION_FAILED,
+				"factsign creation failed; null factsign"
+			)
 		);
 
 		const idx = this.factSigns
@@ -164,14 +252,10 @@ export class Operation extends IBytesDict {
 	}
 
 	bytes() {
-		return Buffer.concat([
-			this.fact.hash,
-			Buffer.concat(this.factSigns.sort(sortBuf).map((fs) => fs.bytes())),
-			Buffer.from(this.memo),
-		]);
-	}
+		if (!this.factSigns) {
+			return this.fact.hash;
+		}
 
-	m2Bytes() {
 		return Buffer.concat([
 			this.fact.hash,
 			Buffer.concat(this.factSigns.sort(sortBuf).map((fs) => fs.bytes())),
@@ -190,7 +274,7 @@ export class Operation extends IBytesDict {
 			? this.factSigns.sort(sortBuf).map((fs) => fs.dict())
 			: [];
 
-		switch (this.sigType) {
+		switch (this._findSigType()) {
 			case SIG_TYPE.DEFAULT:
 				op.fact_signs = signs;
 				break;
@@ -254,4 +338,33 @@ const findKp = (privateKey) => {
 	);
 
 	return { type: keyType, keypair: kp };
+};
+
+const getM1FactSign = (publicKey, signature, now) => {
+	try {
+		return new M1FactSign(publicKey.toString(), signature, now.toString());
+	} catch (e) {
+		return null;
+	}
+};
+
+const getM2FactSign = (publicKey, signature, now) => {
+	try {
+		return new M2FactSign(publicKey.toString(), signature, now.toString());
+	} catch (e) {
+		return null;
+	}
+};
+
+const getM2NodeFactSign = (node, publicKey, signature, now) => {
+	try {
+		return new M2NodeFactSign(
+			node.toString(),
+			publicKey.toString(),
+			signature,
+			now.toString()
+		);
+	} catch (e) {
+		return null;
+	}
 };

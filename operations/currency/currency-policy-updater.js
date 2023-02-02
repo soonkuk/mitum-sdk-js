@@ -2,7 +2,7 @@ import bs58 from "bs58";
 
 import { CurrencyPolicy } from "./currency-design.js";
 
-import { Fact } from "../fact.js";
+import { NodeFact } from "../fact.js";
 
 import {
 	HINT_CURRENCY_POLICY_UPDATER_OPERATION,
@@ -12,7 +12,7 @@ import {
 import { assert, error, EC_INVALID_CURRENCY_POLICY } from "../../base/error.js";
 import { CurrencyID } from "../../base/ID.js";
 
-export class CurrencyPolicyUpdaterFact extends Fact {
+export class CurrencyPolicyUpdaterFact extends NodeFact {
 	constructor(token, currency, policy) {
 		super(HINT_CURRENCY_POLICY_UPDATER_OPERATION_FACT, token);
 		this.currency = new CurrencyID(currency);

@@ -1,4 +1,4 @@
-import { useV, useId, SIG_TYPE, useSigType } from "./utils/config.js";
+import { useV, useId, SIG_TYPE } from "./utils/config.js";
 import { TimeStamp, FullTimeStamp } from "./utils/time.js";
 import { sha256, sum256 } from "./utils/hash.js";
 import { Big, Float } from "./utils/number.js";
@@ -21,9 +21,9 @@ import { m2 } from "./key/m2-keypair.js";
 import { PublicKey, Keys } from "./key/key.js";
 import { Address, M2RandomN, M1RandomN } from "./key/address.js";
 
-import { Fact } from "./operations/fact.js";
 import { Item } from "./operations/item.js";
-import { FactSign } from "./operations/factsign.js";
+import { Fact, OperationFact, NodeFact } from "./operations/fact.js";
+import { FactSign, M1FactSign, M2FactSign, M2NodeFactSign } from "./operations/factsign.js";
 import { Operation } from "./operations/operation.js";
 import { Seal } from "./operations/seal.js";
 
@@ -128,7 +128,6 @@ const util = {
 export {
 	useV,
 	useId,
-	useSigType,
 	SIG_TYPE,
 	alias,
 	err,
@@ -144,7 +143,12 @@ export {
 	Address,
 	Hint,
 	Fact,
+    OperationFact,
+    NodeFact,
 	FactSign,
+    M1FactSign,
+    M2FactSign,
+    M2NodeFactSign,
 	Item,
 	ID,
 	Big,
