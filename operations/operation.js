@@ -81,7 +81,7 @@ export class Operation extends IBytesDict {
 			error.duplicate(EC_INVALID_FACTSIGN, "duplicate fact signs")
 		);
 
-		const fsTypes = this.factSigns.map(
+		const fsTypes = factSigns.map(
 			(fs) => Object.getPrototypeOf(fs).constructor.name
 		);
 		const fsSet = new Set(fsTypes);
