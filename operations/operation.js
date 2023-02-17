@@ -26,6 +26,7 @@ import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
+import { exist } from "../utils/tools.js";
 import { id, SIG_TYPE } from "../utils/config.js";
 import { sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
@@ -161,9 +162,7 @@ export class Operation extends IBytesDict {
 		const sigType = this._findSigType();
 
 		let node =
-			option && Object.prototype.hasOwnProperty.call(option, "node")
-				? new Address(option.node)
-				: null;
+			option && exist(option, "node") ? new Address(option.node) : null;
 
 		if (sigType === SIG_TYPE.M2_NODE) {
 			assert(
@@ -256,9 +255,11 @@ export class Operation extends IBytesDict {
 			return this.fact.hash;
 		}
 
+		this.factSigns.sort(sortBuf);
+
 		return Buffer.concat([
 			this.fact.hash,
-			Buffer.concat(this.factSigns.sort(sortBuf).map((fs) => fs.bytes())),
+			Buffer.concat(this.factSigns.map((fs) => fs.bytes())),
 		]);
 	}
 
@@ -270,9 +271,8 @@ export class Operation extends IBytesDict {
 			hash: this.hash ? bs58.encode(this.hash) : "",
 		};
 
-		const signs = this.factSigns
-			? this.factSigns.sort(sortBuf).map((fs) => fs.dict())
-			: [];
+		this.factSigns.sort(sortBuf);
+		const signs = this.factSigns.map((fs) => fs.dict());
 
 		switch (this._findSigType()) {
 			case SIG_TYPE.DEFAULT:
@@ -319,25 +319,21 @@ const findKp = (privateKey) => {
 		error.type(EC_INVALID_PRIVATE_KEY, "not string")
 	);
 
-	const keyType = isM2PrivateKey(privateKey)
-		? "m2"
-		: isM1PrivateKey(privateKey)
-		? "m1"
-		: null;
-
-	const kp =
-		keyType === "m2"
-			? m2.fromPrivateKey(privateKey)
-			: keyType === "m1"
-			? m1.fromPrivateKey(privateKey)
-			: null;
+	const kp = {};
+	if (isM1PrivateKey(privateKey)) {
+		kp["type"] = "m1";
+		kp["keypair"] = m1.fromPrivateKey(privateKey);
+	} else if (isM2PrivateKey(privateKey)) {
+		kp["type"] = "m2";
+		kp["keypair"] = m2.fromPrivateKey(privateKey);
+	}
 
 	assert(
-		kp !== null && keyType !== null,
+		exist(kp, "keypair") && exist(kp, "type"),
 		error.format(EC_INVALID_PRIVATE_KEY, "wrong private key")
 	);
 
-	return { type: keyType, keypair: kp };
+	return kp;
 };
 
 const getM1FactSign = (publicKey, signature, now) => {

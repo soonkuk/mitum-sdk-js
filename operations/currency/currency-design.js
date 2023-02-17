@@ -98,12 +98,21 @@ class CurrencyFeeer extends IBytesDict {
 	constructor(ht) {
 		super();
 		this.hint = new Hint(ht);
+		this.exchangeMinAmount = null;
+	}
+
+	setExchangeMinAmount(n) {
+		this.exchangeMinAmount = new Big(n);
 	}
 }
 
 export class NilFeeer extends CurrencyFeeer {
 	constructor() {
 		super(HINT_CURRENCY_FEEER_NIL);
+	}
+
+	setExchangeMinAmount(_) {
+		this.exchangeMinAmount = null;
 	}
 
 	bytes() {
@@ -125,15 +134,27 @@ export class FixedFeeer extends CurrencyFeeer {
 	}
 
 	bytes() {
-		return Buffer.concat([this.receiver.bytes(), this.amount.bytes()]);
+		const b = Buffer.concat([this.receiver.bytes(), this.amount.bytes()]);
+
+		if (this.exchangeMinAmount) {
+			return Buffer.concat([b, this.exchangeMinAmount.bytes()]);
+		}
+
+		return b;
 	}
 
 	dict() {
-		return {
+		const feeer = {
 			_hint: this.hint.toString(),
 			receiver: this.receiver.toString(),
 			amount: this.amount.toString(),
 		};
+
+		if (this.exchangeMinAmount) {
+			feeer["exchange_min_amount"] = this.exchangeMinAmount.toString();
+		}
+
+		return feeer;
 	}
 }
 
@@ -153,21 +174,33 @@ export class RatioFeeer extends CurrencyFeeer {
 	}
 
 	bytes() {
-		return Buffer.concat([
+		const b = Buffer.concat([
 			this.receiver.bytes(),
 			this.ratio.bytes(),
 			this.min.bytes(),
 			this.max.bytes(),
 		]);
+
+		if (this.exchangeMinAmount) {
+			return Buffer.concat([b, this.exchangeMinAmount.bytes()]);
+		}
+
+		return b;
 	}
 
 	dict() {
-		return {
+		const feeer = {
 			_hint: this.hint.toString(),
 			receiver: this.receiver.toString(),
 			ratio: this.ratio.n,
 			min: this.min.toString(),
 			max: this.max.toString(),
 		};
+
+		if (this.exchangeMinAmount) {
+			feeer["exchange_min_amount"] = this.exchangeMinAmount.toString();
+		}
+
+		return feeer;
 	}
 }

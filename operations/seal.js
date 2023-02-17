@@ -20,6 +20,7 @@ import {
 import { m1 } from "../key/m1-keypair.js";
 import { isM1PrivateKey } from "../key/validation.js";
 
+import { exist } from "../utils/tools.js";
 import { sum256 } from "../utils/hash.js";
 import { TimeStamp } from "../utils/time.js";
 import { id, SIG_TYPE } from "../utils/config.js";
@@ -54,15 +55,13 @@ export class Seal extends IBytesDict {
 				);
 				return op.dict();
 			} else {
-				const exist = (v) =>
-					Object.prototype.hasOwnProperty.call(op, v);
 				assert(
 					typeof op === "object" &&
-						exist("hash") &&
-						exist("_hint") &&
-						exist("memo") &&
-						exist("fact") &&
-						exist("fact_signs"),
+						exist(op, "hash") &&
+						exist(op, "_hint") &&
+						exist(op, "memo") &&
+						exist(op, "fact") &&
+						exist(op, "fact_signs"),
 					error.format(
 						EC_INVALID_OPERATION,
 						"invalid operation; or, node-operation cannot be included in seal"
