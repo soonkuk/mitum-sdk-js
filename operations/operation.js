@@ -20,6 +20,7 @@ import {
 	EC_FILE_CREATION_FAILED,
 	EC_INVALID_SIG_TYPE,
 	EC_INVALID_OPERATION,
+	EC_INVALID_PRIVATE_KEY,
 } from "../base/error.js";
 import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
@@ -152,7 +153,6 @@ export class Operation extends IBytesDict {
 	}
 
 	sign(privateKey, option) {
-		const now = new TimeStamp();
 		const kp = findKeyPair(privateKey);
 
 		const sigType = this._findSigType();
@@ -170,60 +170,29 @@ export class Operation extends IBytesDict {
 			);
 		}
 
-		const m1fs = getM1FactSign(
-			kp.keypair.publicKey,
-			kp.keypair.sign(Buffer.concat([this.fact.hash, this.id.bytes()])),
-			now
-		);
-		const m2fs = getM2FactSign(
-			kp.keypair.publicKey,
-			kp.keypair.sign(
-				Buffer.concat([this.id.bytes(), this.fact.hash, now.bytes()])
-			),
-			now
-		);
-		const m2nodefs = getM2NodeFactSign(
-			node,
-			kp.keypair.publicKey,
-			kp.keypair.sign(
-				Buffer.concat([
-					this.id.bytes(),
-					node ? node.bytes() : Buffer.from([]),
-					this.fact.hash,
-					now.bytes(),
-				])
-			),
-			now
-		);
-
 		let factSign = null;
-		if (!sigType) {
-			if (node) {
-				assert(
-					kp.type == "m2",
-					error.runtime(EC_INVALID_FACTSIGN, "not mitum2 private key")
-				);
-				factSign = m2nodefs;
-			} else {
-				if (kp.type == "m2") {
-					factSign = m2fs;
-				} else if (kp.type == "m1") {
-					factSign = m1fs;
-				}
-			}
-		}
 
 		switch (sigType) {
 			case SIG_TYPE.M1:
-				factSign = m1fs;
+				assert(kp.type === "m1", error.runtime(EC_INVALID_PRIVATE_KEY, "not m1 keypair"));
+				factSign = getM1FactSign(kp.keypair, this.fact.hash, this.id);
 				break;
 			case SIG_TYPE.M2:
-				factSign = m2fs;
+				assert(kp.type === "m2", error.runtime(EC_INVALID_PRIVATE_KEY, "not m2 keypair"));
+				factSign = getM2FactSign(kp.keypair, this.fact.hash, this.id);
 				break;
 			case SIG_TYPE.M2_NODE:
-				factSign = m2nodefs;
+				assert(kp.type === "m2", error.runtime(EC_INVALID_PRIVATE_KEY, "not m2 keypair"));
+				factSign = getM2NodeFactSign(node, kp.keypair, this.fact.hash, this.id);
 				break;
 			default:
+				if (kp.type === "m1") {
+					factSign = getM1FactSign(kp.keypair, this.fact.hash, this.id);
+				} else if (kp.type === "m2" && node) {
+					factSign = getM2NodeFactSign(node, kp.keypair, this.fact.hash, this.id);
+				} else if (kp.type === "m2") {
+					factSign = getM2FactSign(kp.keypair, this.fact.hash, this.id);
+				}
 		}
 
 		assert(
@@ -316,30 +285,51 @@ export class Operation extends IBytesDict {
 	}
 }
 
-const getM1FactSign = (publicKey, signature, now) => {
+const getM1FactSign = (kp, hash, id) => {
 	try {
-		return new M1FactSign(publicKey.toString(), signature, now.toString());
+		return new M1FactSign(
+			kp.publicKey.toString(),
+			kp.sign(Buffer.concat([hash, id.bytes()])),
+			new TimeStamp().toString(),
+		)
 	} catch (e) {
 		return null;
 	}
 };
 
-const getM2FactSign = (publicKey, signature, now) => {
+const getM2FactSign = (kp, hash, id) => {
+	const now = new TimeStamp();
+
 	try {
-		return new M2FactSign(publicKey.toString(), signature, now.toString());
+		return new M2FactSign(
+			kp.publicKey.toString(),
+			kp.sign(
+				Buffer.concat([id.bytes(), hash, now.bytes()])
+			),
+			now.toString()
+		)
 	} catch (e) {
 		return null;
 	}
 };
 
-const getM2NodeFactSign = (node, publicKey, signature, now) => {
+const getM2NodeFactSign = (node, kp, hash, id) => {
+	const now = new TimeStamp();
+	
 	try {
 		return new M2NodeFactSign(
 			node.toString(),
-			publicKey.toString(),
-			signature,
+			kp.publicKey.toString(),
+			kp.sign(
+				Buffer.concat([
+					id.bytes(),
+					node ? node.bytes() : Buffer.from([]),
+					hash,
+					now.bytes(),
+				])
+			),
 			now.toString()
-		);
+		)
 	} catch (e) {
 		return null;
 	}
