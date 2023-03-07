@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ProtoconNet/mitum-sdkjs.git"
+		"url": "git+https://github.com/ProtoconNet/mitum-sdk-js.git"
 	},
 	"keywords": [
 		"mitum",
@@ -20,9 +20,9 @@
 	"author": "protocon",
 	"license": "GPL-3.0-or-later",
 	"bugs": {
-		"url": "https://github.com/ProtoconNet/mitum-sdkjs/issues"
+		"url": "https://github.com/ProtoconNet/mitum-sdk-js/issues"
 	},
-	"homepage": "https://github.com/ProtoconNet/mitum-sdkjs#readme",
+	"homepage": "https://github.com/ProtoconNet/mitum-sdk-js#readme",
 	"dependencies": {
 		"@noble/hashes": "^1.1.3",
 		"@noble/secp256k1": "^1.7.0",
