@@ -27,6 +27,8 @@ import { FactSign, M1FactSign, M2FactSign, M2NodeFactSign } from "./operations/f
 import { Operation } from "./operations/operation.js";
 import { Seal } from "./operations/seal.js";
 
+import { Signer } from "./operations/signer.js";
+
 import { Amount } from "./operations/currency/amount.js";
 import {
 	CreateAccountsItem,
@@ -157,5 +159,6 @@ export {
 	ContractID,
 	Operation,
 	Seal,
+	Signer,
 	Currency,
 };

@@ -21,6 +21,7 @@ import {
 	EC_INVALID_SIG_TYPE,
 	EC_INVALID_OPERATION,
 	EC_INVALID_PRIVATE_KEY,
+	EC_INVALID_NETWORK_ID,
 } from "../base/error.js";
 import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
@@ -37,7 +38,7 @@ import { Address } from "../key/address.js";
 export class Operation extends IBytesDict {
 	constructor(fact, memo) {
 		super();
-		this.id = new ID(id());
+		this.id = new ID(id(), EC_INVALID_NETWORK_ID);
 
 		assert(
 			fact instanceof Fact,

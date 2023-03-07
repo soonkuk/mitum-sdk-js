@@ -41,29 +41,30 @@ $ npm test
 > mitum-sdk@0.0.1 test
 > jest
 
- PASS  operations/seal.test.js
- PASS  operations/currency/transfers.test.js
- PASS  key/address.test.js
- PASS  operations/currency/currency-register.test.js
- PASS  utils/config.test.js
- PASS  operations/currency/withdraws.test.js
- PASS  operations/currency/create-contract-accounts.test.js
- PASS  operations/currency/create-accounts.test.js
- PASS  operations/currency/currency-policy-updater.test.js
- PASS  operations/currency/suffrage-inflation.test.js
- PASS  key/m2-keypair.test.js
- PASS  operations/currency/key-updater.test.js
+ PASS  operations/signer.test.js
  PASS  key/m1-keypair.test.js
- PASS  key/key.test.js
+ PASS  operations/seal.test.js
+ PASS  key/m2-keypair.test.js
+ PASS  operations/currency/currency-register.test.js
+ PASS  operations/currency/key-updater.test.js
+ PASS  operations/currency/create-contract-accounts.test.js
  PASS  operations/factsign.test.js
+ PASS  operations/currency/create-accounts.test.js
+ PASS  utils/config.test.js
+ PASS  operations/currency/currency-policy-updater.test.js
+ PASS  operations/currency/transfers.test.js
+ PASS  operations/currency/suffrage-inflation.test.js
+ PASS  operations/currency/withdraws.test.js
  PASS  operations/operation.test.js
- PASS  operations/currency/item.test.js
+ PASS  key/key.test.js
  PASS  utils/time.test.js
+ PASS  operations/currency/item.test.js
+ PASS  key/address.test.js (10.588 s)
 
-Test Suites: 18 passed, 18 total
-Tests:       55 passed, 55 total
+Test Suites: 19 passed, 19 total
+Tests:       61 passed, 61 total
 Snapshots:   0 total
-Time:        2.889 s
+Time:        10.941 s
 Ran all test suites.
 ```
 
@@ -86,6 +87,7 @@ Ran all test suites.
 |-|[create-contract-account](#create-contract-account)|
 |-|[withdraw](#withdraw)|
 |4|[Generate seal](#generate-seal)|
+|5|[Add sign to operation json](#add-sign-to-operation-json)|
 |+|[Appendix](#appendix)|
 |+|[License](#license)|
 
@@ -608,6 +610,21 @@ const seal = new Seal([operation0, operation1, operation2, ...]); // Operation i
 seal.sign(nodePrivateKey);
 
 // seal.dict(); seal object
+```
+
+## Add sign to operation json
+
+You can add a new signature to a operation json using __Signer__ class.
+
+```js
+import { Signer } from "mitum-sdk";
+
+const json = { /* your operation json */ };
+
+const signer = new Signer("KzFERQKNQbPA8cdsX5tCiCZvR4KgBou41cgtPk69XueFbaEjrczbmpr");
+
+const general = signer.sign(json); // m1 and m2 general operation
+const m2node = signer.M2NodeSign(json, "node address"); // m2 node operation
 ```
 
 ## Appendix
