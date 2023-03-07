@@ -14,6 +14,7 @@ import {
 	error,
 	EC_INVALID_KEY_PAIR,
 	EC_NOT_IMPLEMENTED_METHOD,
+	EC_INVALID_SEED,
 } from "../base/error.js";
 
 import { Big } from "../utils/number.js";
@@ -51,7 +52,10 @@ export class KeyPair {
 
 export const K = (seed) => {
 	seed = Buffer.from(bs58.encode(sum256(Buffer.from(seed))));
-	seed = seed.subarray(0, seed.length - (seed.length < 44 ? 3 : 4));
+	
+	assert(seed.length >= 40, error.format(EC_INVALID_SEED, "invalid length"))
+	
+	seed = seed.subarray(0, 40);
 
 	const N = secp256k1.CURVE.n - BigInt(1);
 	let k = new Big(seed).big;
