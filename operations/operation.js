@@ -271,6 +271,10 @@ export class Operation extends IBytesDict {
 			hash: this.hash ? bs58.encode(this.hash) : "",
 		};
 
+		if (this.factSigns.length < 1) {
+			return op;
+		}
+
 		this.factSigns.sort(sortBuf);
 		const signs = this.factSigns.map((fs) => fs.dict());
 
