@@ -17,7 +17,6 @@ import {
 	EC_INVALID_FACT,
 	EC_INVALID_FACTSIGN,
 	EC_INVALID_MEMO,
-	EC_INVALID_PRIVATE_KEY,
 	EC_FILE_CREATION_FAILED,
 	EC_INVALID_SIG_TYPE,
 	EC_INVALID_OPERATION,
@@ -26,16 +25,13 @@ import { ID } from "../base/ID.js";
 import { Hint } from "../base/hint.js";
 import { IBytesDict } from "../base/interface.js";
 
-import { exist } from "../utils/tools.js";
-import { id, SIG_TYPE } from "../utils/config.js";
-import { sortBuf } from "../utils/string.js";
 import { sum256 } from "../utils/hash.js";
+import { sortBuf } from "../utils/string.js";
 import { TimeStamp } from "../utils/time.js";
+import { id, SIG_TYPE } from "../utils/config.js";
+import { exist, findKeyPair } from "../utils/tools.js";
 
 import { Address } from "../key/address.js";
-import { m1 } from "../key/m1-keypair.js";
-import { m2 } from "../key/m2-keypair.js";
-import { isM1PrivateKey, isM2PrivateKey } from "../key/validation.js";
 
 export class Operation extends IBytesDict {
 	constructor(fact, memo) {
@@ -157,7 +153,7 @@ export class Operation extends IBytesDict {
 
 	sign(privateKey, option) {
 		const now = new TimeStamp();
-		const kp = findKp(privateKey);
+		const kp = findKeyPair(privateKey);
 
 		const sigType = this._findSigType();
 
@@ -266,7 +262,6 @@ export class Operation extends IBytesDict {
 	dict() {
 		const op = {
 			_hint: this.hint.toString(),
-			memo: this.memo,
 			fact: this.fact.dict(),
 			hash: this.hash ? bs58.encode(this.hash) : "",
 		};
@@ -280,15 +275,19 @@ export class Operation extends IBytesDict {
 
 		switch (this._findSigType()) {
 			case SIG_TYPE.DEFAULT:
+				op.memo = this.memo;
 				op.fact_signs = signs;
 				break;
 			case SIG_TYPE.M2:
 			case SIG_TYPE.M2_NODE:
+				if (this.memo != null) {
+					op.memo = this.memo;
+				}
 				op.signs = signs
 					? signs.map((fs) => {
-							delete fs["_hint"];
-							return fs;
-					  })
+						delete fs["_hint"];
+						return fs;
+					})
 					: [];
 				break;
 			default:
@@ -316,29 +315,6 @@ export class Operation extends IBytesDict {
 		return axios.post(url, this.dict());
 	}
 }
-
-const findKp = (privateKey) => {
-	assert(
-		typeof privateKey === "string",
-		error.type(EC_INVALID_PRIVATE_KEY, "not string")
-	);
-
-	const kp = {};
-	if (isM1PrivateKey(privateKey)) {
-		kp["type"] = "m1";
-		kp["keypair"] = m1.fromPrivateKey(privateKey);
-	} else if (isM2PrivateKey(privateKey)) {
-		kp["type"] = "m2";
-		kp["keypair"] = m2.fromPrivateKey(privateKey);
-	}
-
-	assert(
-		exist(kp, "keypair") && exist(kp, "type"),
-		error.format(EC_INVALID_PRIVATE_KEY, "wrong private key")
-	);
-
-	return kp;
-};
 
 const getM1FactSign = (publicKey, signature, now) => {
 	try {
