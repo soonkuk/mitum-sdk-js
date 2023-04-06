@@ -250,7 +250,7 @@ export class Operation extends IBytesDict {
 				break;
 			case SIG_TYPE.M2:
 			case SIG_TYPE.M2_NODE:
-				if (this.memo != null) {
+				if (this.memo != "") {
 					op.memo = this.memo;
 				}
 				op.signs = signs
