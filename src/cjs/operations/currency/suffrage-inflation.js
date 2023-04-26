@@ -39,6 +39,7 @@ class SuffrageInflationItem extends IBytesDict {
 
 	dict() {
 		return {
+			_hint: this.hint.toString(),
 			receiver: this.receiver.toString(),
 			amount: this.amount.dict(),
 		};
