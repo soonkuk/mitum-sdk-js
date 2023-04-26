@@ -18,12 +18,12 @@ const {
 	EC_INVALID_ITEMS,
 	EC_INVALID_FACT,
 } = require("../../base/error.js");
-const { IBytesDict } = require("../../base/interface.js");
+const { Item } = require("../item.js");
 
 const { Address } = require("../../key/address.js");
 const { sortBuf } = require("../../utils/string.js");
 
-class SuffrageInflationItem extends IBytesDict {
+class SuffrageInflationItem extends Item {
 	constructor(receiver, amount) {
 		super(HINT_SUFFRAGE_INFLATION_ITEM);
 		assert(

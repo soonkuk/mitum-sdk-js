@@ -18,12 +18,12 @@ import {
 	EC_INVALID_ITEMS,
 	EC_INVALID_FACT,
 } from "../../base/error.js";
-import { IBytesDict } from "../../base/interface.js";
+import { Item } from "../item.js";
 
 import { Address } from "../../key/address.js";
 import { sortBuf } from "../../utils/string.js";
 
-export class SuffrageInflationItem extends IBytesDict {
+export class SuffrageInflationItem extends Item {
 	constructor(receiver, amount) {
 		super(HINT_SUFFRAGE_INFLATION_ITEM);
 		assert(
