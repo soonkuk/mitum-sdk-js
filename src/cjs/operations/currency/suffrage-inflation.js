@@ -7,6 +7,7 @@ const { MAX_ITEMS_IN_FACT } = require("../../mitum.config.js");
 const {
 	HINT_SUFFRAGE_INFLATION_OPERATION,
 	HINT_SUFFRAGE_INFLATION_OPERATION_FACT,
+	HINT_SUFFRAGE_INFLATION_ITEM,
 } = require("../../alias/currency.js");
 
 const {
@@ -24,7 +25,7 @@ const { sortBuf } = require("../../utils/string.js");
 
 class SuffrageInflationItem extends IBytesDict {
 	constructor(receiver, amount) {
-		super();
+		super(HINT_SUFFRAGE_INFLATION_ITEM);
 		assert(
 			amount instanceof Amount,
 			error.instance(EC_INVALID_AMOUNT, "not Amount instance")

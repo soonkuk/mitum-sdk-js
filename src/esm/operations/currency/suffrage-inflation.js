@@ -7,6 +7,7 @@ import { MAX_ITEMS_IN_FACT } from "../../mitum.config.js";
 import {
 	HINT_SUFFRAGE_INFLATION_OPERATION,
 	HINT_SUFFRAGE_INFLATION_OPERATION_FACT,
+	HINT_SUFFRAGE_INFLATION_ITEM,
 } from "../../alias/currency.js";
 
 import {
@@ -24,7 +25,7 @@ import { sortBuf } from "../../utils/string.js";
 
 export class SuffrageInflationItem extends IBytesDict {
 	constructor(receiver, amount) {
-		super();
+		super(HINT_SUFFRAGE_INFLATION_ITEM);
 		assert(
 			amount instanceof Amount,
 			error.instance(EC_INVALID_AMOUNT, "not Amount instance")
