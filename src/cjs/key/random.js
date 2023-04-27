@@ -33,14 +33,14 @@ const randomN = (n, f) => {
     };
 };
 
-export const M1RandomN = (n) => {
+exports.M1RandomN = (n) => {
     return randomN(n, m1.random);
 };
 
-export const M2RandomN = (n) => {
+exports.M2RandomN = (n) => {
     return randomN(n, m2.random);
 };
 
-export const M2EtherRandomN = (n) => {
+exports.M2EtherRandomN = (n) => {
     return randomN(n, m2ether.random);
 };

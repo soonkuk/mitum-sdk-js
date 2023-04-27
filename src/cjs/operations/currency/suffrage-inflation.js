@@ -7,6 +7,7 @@ const { MAX_ITEMS_IN_FACT } = require("../../mitum.config.js");
 const {
 	HINT_SUFFRAGE_INFLATION_OPERATION,
 	HINT_SUFFRAGE_INFLATION_OPERATION_FACT,
+	HINT_SUFFRAGE_INFLATION_ITEM,
 } = require("../../alias/currency.js");
 
 const {
@@ -17,14 +18,14 @@ const {
 	EC_INVALID_ITEMS,
 	EC_INVALID_FACT,
 } = require("../../base/error.js");
-const { IBytesDict } = require("../../base/interface.js");
+const { Item } = require("../item.js");
 
 const { Address } = require("../../key/address.js");
 const { sortBuf } = require("../../utils/string.js");
 
-class SuffrageInflationItem extends IBytesDict {
+class SuffrageInflationItem extends Item {
 	constructor(receiver, amount) {
-		super();
+		super(HINT_SUFFRAGE_INFLATION_ITEM);
 		assert(
 			amount instanceof Amount,
 			error.instance(EC_INVALID_AMOUNT, "not Amount instance")
@@ -39,6 +40,7 @@ class SuffrageInflationItem extends IBytesDict {
 
 	dict() {
 		return {
+			_hint: this.hint.toString(),
 			receiver: this.receiver.toString(),
 			amount: this.amount.dict(),
 		};

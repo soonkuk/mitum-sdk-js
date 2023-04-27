@@ -21,7 +21,7 @@ export const HINT_CURRENCY_REGISTER_OPERATION = "mitum-currency-currency-registe
 export const HINT_CURRENCY_POLICY_UPDATER_OPERATION_FACT = "mitum-currency-currency-policy-updater-operation-fact";
 export const HINT_CURRENCY_POLICY_UPDATER_OPERATION = "mitum-currency-currency-policy-updater-operation";
 
-// export const HINT_SUFFRAGE_INFLATION_ITEM = "";
+export const HINT_SUFFRAGE_INFLATION_ITEM = "mitum-currency-suffrage-inflation-item";
 export const HINT_SUFFRAGE_INFLATION_OPERATION_FACT = "mitum-currency-suffrage-inflation-operation-fact";
 export const HINT_SUFFRAGE_INFLATION_OPERATION = "mitum-currency-suffrage-inflation-operation";
 
