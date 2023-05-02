@@ -37,45 +37,13 @@ const { Operation } = require("./operations/operation.js");
 
 const { Signer } = require("./operations/signer.js");
 
-const { Amount } = require("./operations/currency/amount.js");
 const {
-	CreateAccountsItem,
-	CreateAccountsFact,
-} = require("./operations/currency/create-accounts.js");
-
-const { KeyUpdaterFact } = require("./operations/currency/key-updater.js");
+	AppendTimeStampFact,	
+} = require("./operations/timestamp/append-timestamp.js")
 
 const {
-	TransfersItem,
-	TransfersFact,
-} = require("./operations/currency/transfers.js");
-
-const {
-	CurrencyDesign,
-	CurrencyPolicy,
-	NilFeeer,
-	FixedFeeer,
-	RatioFeeer,
-} = require("./operations/currency/currency-design.js");
-
-const { CurrencyRegisterFact } = require("./operations/currency/currency-register.js");
-
-const { CurrencyPolicyUpdaterFact } = require("./operations/currency/currency-policy-updater.js");
-
-const {
-	SuffrageInflationItem,
-	SuffrageInflationFact,
-} = require("./operations/currency/suffrage-inflation.js");
-
-const {
-	CreateContractAccountsItem,
-	CreateContractAccountsFact,
-} = require("./operations/currency/create-contract-accounts.js");
-
-const {
-	WithdrawsItem,
-	WithdrawsFact,
-} = require("./operations/currency/withdraws.js");
+	ServiceRegisterFact,
+} = require("./operations/timestamp/service-register.js")
 
 const KPGen = {
 	m2: {
@@ -92,26 +60,10 @@ const KPGen = {
 
 const PubKey = PublicKey;
 
-const Currency = {
-	CreateAccountsItem,
-	CreateAccountsFact,
-	KeyUpdaterFact,
-	TransfersItem,
-	TransfersFact,
-	CurrencyDesign,
-	CurrencyPolicy,
-	NilFeeer,
-	FixedFeeer,
-	RatioFeeer,
-	CurrencyRegisterFact,
-	CurrencyPolicyUpdaterFact,
-	SuffrageInflationItem,
-	SuffrageInflationFact,
-	CreateContractAccountsItem,
-	CreateContractAccountsFact,
-	WithdrawsItem,
-	WithdrawsFact,
-};
+const TimeStampService = {
+	AppendTimeStampFact,
+	ServiceRegisterFact,
+}
 
 const alias = {
 	key: {
@@ -180,5 +132,5 @@ module.exports = {
 	Operation,
 	Seal,
 	Signer,
-	Currency,
+	TimeStampService,
 };
