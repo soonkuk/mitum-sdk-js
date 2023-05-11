@@ -77,6 +77,14 @@ const {
 	WithdrawsFact,
 } = require("./operations/currency/withdraws.js");
 
+const {
+	AppendTimeStampFact,	
+} = require("./operations/timestamp/append-timestamp.js")
+
+const {
+	ServiceRegisterFact,
+} = require("./operations/timestamp/service-register.js")
+
 const KPGen = {
 	m2: {
 		...m2,
@@ -91,6 +99,11 @@ const KPGen = {
 };
 
 const PubKey = PublicKey;
+
+const TimeStampService = {
+	AppendTimeStampFact,
+	ServiceRegisterFact,
+}
 
 const Currency = {
 	CreateAccountsItem,
@@ -181,4 +194,5 @@ module.exports = {
 	Seal,
 	Signer,
 	Currency,
+	TimeStampService,
 };
