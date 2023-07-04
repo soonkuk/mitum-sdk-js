@@ -1,5 +1,5 @@
-const HINT_TIEMSTAMP_APPEND_OPERATION = "mitum-timestamp-append-operation";
-const HINT_TIEMSTAMP_APPEND_OPERATION_FACT = "mitum-timestamp-append-operation-fact";
+const HINT_TIMESTAMP_APPEND_OPERATION = "mitum-timestamp-append-operation";
+const HINT_TIMESTAMP_APPEND_OPERATION_FACT = "mitum-timestamp-append-operation-fact";
 
 const bs58 = require("bs58");
 
@@ -11,7 +11,7 @@ const { Big } = require("../../utils/number.js");
 
 exports.AppendTimeStampFact = class AppendTimeStampFact extends Fact {
 	constructor(token, sender, target, service, project, requestTs, data, currency) {
-		super(HINT_TIEMSTAMP_APPEND_OPERATION_FACT, token, sender, target, service, project, requestTs, data, currency);
+		super(HINT_TIMESTAMP_APPEND_OPERATION_FACT, token);
 		this.sender = new Address(sender);
 		this.target = new Address(target);
 		this.service = new ContractID(service)
@@ -51,6 +51,6 @@ exports.AppendTimeStampFact = class AppendTimeStampFact extends Fact {
 	}
 
 	get opHint() {
-		return HINT_TIEMSTAMP_APPEND_OPERATION;
+		return HINT_TIMESTAMP_APPEND_OPERATION;
 	}
 };

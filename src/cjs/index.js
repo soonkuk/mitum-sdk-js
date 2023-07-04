@@ -85,6 +85,49 @@ const {
 	ServiceRegisterFact,
 } = require("./operations/timestamp/service-register.js")
 
+const {
+	AddTemplateFact,
+} = require("./operations/credential/add-template.js")
+
+const {
+	CreateCredentialServiceFact,
+} = require("./operations/credential/service-register.js")
+
+const {
+	ApproveItem,
+	ApproveFact,
+} = require("./operations/nft/approve.js")
+
+const {
+	CollectionPolicyUpdaterFact,
+} = require("./operations/nft/collection-policy-updater.js")
+
+const {
+	CollectionRegisterFact,
+} = require("./operations/nft/collection-register.js")
+
+const {
+	DelegateItem,
+	DelegateFact,
+} = require("./operations/nft/delegate.js")
+
+const {
+	MintItem,
+	MintFact,
+} = require("./operations/nft/mint.js")
+
+const {
+	NFTSigner,
+	NFTSigners,
+	NFTSignItem,
+	NFTSignFact,
+} = require("./operations/nft/nft-sign.js")
+
+const {
+	NFTTransferItem,
+	NFTTransferFact,
+} = require("./operations/nft/nft-transfer.js")
+
 const KPGen = {
 	m2: {
 		...m2,
@@ -100,9 +143,32 @@ const KPGen = {
 
 const PubKey = PublicKey;
 
+const CredentialService = {
+	AddTemplateFact,
+	CreateCredentialServiceFact,
+}
+
+
 const TimeStampService = {
 	AppendTimeStampFact,
 	ServiceRegisterFact,
+}
+
+const NFT = {
+	ApproveItem,
+	ApproveFact,
+	CollectionPolicyUpdaterFact,
+	CollectionRegisterFact,
+	DelegateItem,
+	DelegateFact,
+	MintItem,
+	MintFact,
+	NFTSigner,
+	NFTSigners,
+	NFTSignItem,
+	NFTSignFact,
+	NFTTransferItem,
+	NFTTransferFact,
 }
 
 const Currency = {
@@ -195,4 +261,6 @@ module.exports = {
 	Signer,
 	Currency,
 	TimeStampService,
+	CredentialService,
+	NFT,
 };

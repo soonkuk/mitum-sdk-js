@@ -46,6 +46,7 @@ class CurrencyDesign extends IBytesDict {
 	}
 
 	bytes() {
+		console.log(this.aggregate)
 		return Buffer.concat([
 			this.amount.bytes(),
 			this.genesis.bytes(),
@@ -177,12 +178,12 @@ class RatioFeeer extends CurrencyFeeer {
 		const b = Buffer.concat([
 			this.receiver.bytes(),
 			this.ratio.bytes(),
-			this.min.bytes(),
-			this.max.bytes(),
+			this.min.fillBytes(),
+			this.max.fillBytes(),
 		]);
 
 		if (this.exchangeMinAmount) {
-			return Buffer.concat([b, this.exchangeMinAmount.bytes()]);
+			return Buffer.concat([b, this.exchangeMinAmount.fillBytes()]);
 		}
 
 		return b;
@@ -193,12 +194,12 @@ class RatioFeeer extends CurrencyFeeer {
 			_hint: this.hint.toString(),
 			receiver: this.receiver.toString(),
 			ratio: this.ratio.n,
-			min: this.min.toString(),
-			max: this.max.toString(),
+			min: this.min.v,
+			max: this.max.v,
 		};
 
 		if (this.exchangeMinAmount) {
-			feeer["exchange_min_amount"] = this.exchangeMinAmount.toString();
+			feeer["exchange_min_amount"] = this.exchangeMinAmount.v;
 		}
 
 		return feeer;

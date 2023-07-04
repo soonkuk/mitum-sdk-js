@@ -10,7 +10,7 @@ const { Address } = require("../../key/address.js");
 
 exports.ServiceRegisterFact = class ServiceRegisterFact extends Fact {
 	constructor(token, sender, target, service, currency) {
-		super(HINT_TIEMSTAMP_SERVICE_REGISTER_OPERATION_FACT, token, sender, target, service, currency);
+		super(HINT_TIEMSTAMP_SERVICE_REGISTER_OPERATION_FACT, token);
 		this.sender = new Address(sender);
 		this.target = new Address(target);
 		this.service = new ContractID(service)

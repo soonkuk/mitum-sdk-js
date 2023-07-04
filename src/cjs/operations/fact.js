@@ -72,6 +72,19 @@ class OperationFact extends Fact {
 	}
 
 	bytes() {
+
+		// let b = Buffer.concat([
+		// 	this.token.bytes(),
+		// 	this.sender.bytes(),
+		// 	Buffer.concat(this.items.sort(sortBuf).map((item) => item.bytes())),
+		// ])
+		// let binaryString = ""
+		// for (let i = 0; i < b.length; i++) {
+		// 	const byte = b[i];
+		// 	binaryString += byte.toString(2).padStart(8, '0'); // 바이너리 문자열 생성
+		// }
+		// console.log(binaryString)
+
 		return Buffer.concat([
 			this.token.bytes(),
 			this.sender.bytes(),

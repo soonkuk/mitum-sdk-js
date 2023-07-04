@@ -16,6 +16,7 @@ const {
 class ID extends IBytes {
 	constructor(s, ec) {
 		super();
+
 		assert(typeof s === "string", error.type(ec, "not string"));
 		this.s = s;
 	}

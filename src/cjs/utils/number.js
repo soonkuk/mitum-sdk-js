@@ -44,7 +44,7 @@ class Big extends IBytes {
 			error.range(EC_INVALID_BIG_INTEGER, "big out of range")
 		);
 
-		return Buffer.from(new Int64.Uint64LE(Number(this.big)).toBuffer());
+		return Buffer.from(new Int64.Uint64BE(Number(this.big)).toBuffer());
 	}
 
 	bytes() {
